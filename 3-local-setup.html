@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Local Setup | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Local Setup | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="analythium/hosting-shiny-book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Local Setup | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@analythium" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2024-07-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="2-hosting-concepts.html"/>
+<link rel="next" href="4-examples.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.umd.cjs"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.4/reactable.js"></script>
+<script>
+  // Fathom Analytics code to come here
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-background.html"><a href="1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-background.html"><a href="1-background.html#data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-background.html"><a href="1-background.html#enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-background.html"><a href="1-background.html#application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-background.html"><a href="1-background.html#application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-background.html"><a href="1-background.html#the-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-background.html"><a href="1-background.html#the-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-background.html"><a href="1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#website-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-local-setup.html"><a href="3-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-local-setup.html"><a href="3-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-local-setup.html"><a href="3-local-setup.html#r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-local-setup.html"><a href="3-local-setup.html#install-python"><i class="fa fa-check"></i><b>3.1.2</b> Install Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-local-setup.html"><a href="3-local-setup.html#web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-local-setup.html"><a href="3-local-setup.html#quarto"><i class="fa fa-check"></i><b>3.1.4</b> Quarto</a></li>
+<li class="chapter" data-level="3.1.5" data-path="3-local-setup.html"><a href="3-local-setup.html#docker-desktop"><i class="fa fa-check"></i><b>3.1.5</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-local-setup.html"><a href="3-local-setup.html#the-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-local-setup.html"><a href="3-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-local-setup.html"><a href="3-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-local-setup.html"><a href="3-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-local-setup.html"><a href="3-local-setup.html#super-user-access"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-local-setup.html"><a href="3-local-setup.html#source-code-management-with-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-local-setup.html"><a href="3-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-local-setup.html"><a href="3-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-local-setup.html"><a href="3-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-local-setup.html"><a href="3-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-local-setup.html"><a href="3-local-setup.html#servers-1"><i class="fa fa-check"></i><b>3.4</b> Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-local-setup.html"><a href="3-local-setup.html#secure-shell-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-local-setup.html"><a href="3-local-setup.html#readability-on-the-command-line"><i class="fa fa-check"></i><b>3.5</b> Readability on the Command Line</a></li>
+<li class="chapter" data-level="3.6" data-path="3-local-setup.html"><a href="3-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-examples.html"><a href="4-examples.html"><i class="fa fa-check"></i><b>4</b> Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-examples.html"><a href="4-examples.html#old-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-examples.html"><a href="4-examples.html#bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="4-examples.html"><a href="4-examples.html#the-bananas-data-set"><i class="fa fa-check"></i><b>4.2.1</b> The Bananas Data Set</a></li>
+<li class="chapter" data-level="4.2.2" data-path="4-examples.html"><a href="4-examples.html#model-training"><i class="fa fa-check"></i><b>4.2.2</b> Model Training</a></li>
+<li class="chapter" data-level="4.2.3" data-path="4-examples.html"><a href="4-examples.html#the-shiny-app"><i class="fa fa-check"></i><b>4.2.3</b> The Shiny App</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="4-examples.html"><a href="4-examples.html#load-balancing-test"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-examples.html"><a href="4-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-user-interface"><i class="fa fa-check"></i><b>5.1.1</b> The User Interface</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-server-function"><i class="fa fa-check"></i><b>5.1.2</b> The Server Function</a></li>
+<li class="chapter" data-level="5.1.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-express"><i class="fa fa-check"></i><b>5.1.3</b> Shiny Express</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#organizing-shiny-apps"><i class="fa fa-check"></i><b>5.2</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#single-file"><i class="fa fa-check"></i><b>5.2.1</b> Single file</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#multiple-files"><i class="fa fa-check"></i><b>5.2.2</b> Multiple Files</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-app-with-nested-files-structure"><i class="fa fa-check"></i><b>5.2.3</b> Shiny App with Nested Files Structure</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#programmatic-cases"><i class="fa fa-check"></i><b>5.2.4</b> Programmatic Cases</a></li>
+<li class="chapter" data-level="5.2.5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-app-as-an-r-package"><i class="fa fa-check"></i><b>5.2.5</b> Shiny App as an R Package</a></li>
+<li class="chapter" data-level="5.2.6" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#dynamic-documents"><i class="fa fa-check"></i><b>5.2.6</b> Dynamic Documents</a></li>
+<li class="chapter" data-level="5.2.7" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.7</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#running-shiny-apps-locally"><i class="fa fa-check"></i><b>5.3</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+<li class="chapter" data-level="5.3.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-shiny-app-lifecycle"><i class="fa fa-check"></i><b>5.3.3</b> The Shiny App Lifecycle</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#sharing-the-shiny-app-code"><i class="fa fa-check"></i><b>5.4</b> Sharing the Shiny App Code</a></li>
+<li class="chapter" data-level="5.5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>6</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-concepts"><i class="fa fa-check"></i><b>6.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-engine"><i class="fa fa-check"></i><b>6.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="6.1.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-registries"><i class="fa fa-check"></i><b>6.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="6.1.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#images"><i class="fa fa-check"></i><b>6.1.3</b> Images</a></li>
+<li class="chapter" data-level="6.1.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile"><i class="fa fa-check"></i><b>6.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="6.1.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#containers"><i class="fa fa-check"></i><b>6.1.5</b> Containers</a></li>
+<li class="chapter" data-level="6.1.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-docker-command-line"><i class="fa fa-check"></i><b>6.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#working-with-existing-images"><i class="fa fa-check"></i><b>6.2</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#image-names-and-tags"><i class="fa fa-check"></i><b>6.2.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="6.2.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pulling-an-image"><i class="fa fa-check"></i><b>6.2.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="6.2.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-login"><i class="fa fa-check"></i><b>6.2.3</b> Docker Login</a></li>
+<li class="chapter" data-level="6.2.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#running-a-container"><i class="fa fa-check"></i><b>6.2.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#building-a-new-image"><i class="fa fa-check"></i><b>6.3</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-for-shiny"><i class="fa fa-check"></i><b>6.3.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="6.3.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#buildx-and-buildkit"><i class="fa fa-check"></i><b>6.3.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="6.3.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#inspecting-the-image"><i class="fa fa-check"></i><b>6.3.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="6.3.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-for-python"><i class="fa fa-check"></i><b>6.3.4</b> R for Python</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#managing-images-and-containers"><i class="fa fa-check"></i><b>6.4</b> Managing Images and Containers</a></li>
+<li class="chapter" data-level="6.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#sharing-images"><i class="fa fa-check"></i><b>6.5</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pushing-images"><i class="fa fa-check"></i><b>6.5.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="6.5.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-registries"><i class="fa fa-check"></i><b>6.5.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="6.5.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#log-in-to-a-registry"><i class="fa fa-check"></i><b>6.5.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="6.5.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#local-registry"><i class="fa fa-check"></i><b>6.5.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile-1"><i class="fa fa-check"></i><b>6.6</b> The Dockerfile</a></li>
+<li class="chapter" data-level="6.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shiny-apps-with-dependencies-use-bananas"><i class="fa fa-check"></i><b>6.7</b> Shiny Apps With Dependencies (use bananas)</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#parent-images"><i class="fa fa-check"></i><b>6.7.1</b> Parent Images</a></li>
+<li class="chapter" data-level="6.7.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#system-libraries"><i class="fa fa-check"></i><b>6.7.2</b> system libraries</a></li>
+<li class="chapter" data-level="6.7.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-dependencies"><i class="fa fa-check"></i><b>6.7.3</b> R dependencies</a></li>
+<li class="chapter" data-level="6.7.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#python-requirements"><i class="fa fa-check"></i><b>6.7.4</b> Python requirements</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#best-practices"><i class="fa fa-check"></i><b>6.8</b> Best Practices</a>
+<ul>
+<li class="chapter" data-level="6.8.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#minimize-dependencies"><i class="fa fa-check"></i><b>6.8.1</b> Minimize dependencies</a></li>
+<li class="chapter" data-level="6.8.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#use-caching"><i class="fa fa-check"></i><b>6.8.2</b> Use caching</a></li>
+<li class="chapter" data-level="6.8.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#order-layers"><i class="fa fa-check"></i><b>6.8.3</b> Order layers</a></li>
+<li class="chapter" data-level="6.8.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#switch-user"><i class="fa fa-check"></i><b>6.8.4</b> Switch user</a></li>
+<li class="chapter" data-level="6.8.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds"><i class="fa fa-check"></i><b>6.8.5</b> Multi-stage Builds</a></li>
+<li class="chapter" data-level="6.8.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#other-considerations"><i class="fa fa-check"></i><b>6.8.6</b> Other considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#what-else"><i class="fa fa-check"></i><b>6.9</b> WHAT ELSE</a>
+<ul>
+<li class="chapter" data-level="6.9.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#layers-and-caching"><i class="fa fa-check"></i><b>6.9.1</b> Layers and Caching</a></li>
+<li class="chapter" data-level="6.9.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#hardware-architectures"><i class="fa fa-check"></i><b>6.9.2</b> Hardware Architectures</a></li>
+<li class="chapter" data-level="6.9.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds-1"><i class="fa fa-check"></i><b>6.9.3</b> Multi-stage builds</a></li>
+<li class="chapter" data-level="6.9.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#mounting-volumes"><i class="fa fa-check"></i><b>6.9.4</b> Mounting volumes</a></li>
+<li class="chapter" data-level="6.9.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#ports"><i class="fa fa-check"></i><b>6.9.5</b> Ports</a></li>
+<li class="chapter" data-level="6.9.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#uid"><i class="fa fa-check"></i><b>6.9.6</b> UID</a></li>
+<li class="chapter" data-level="6.9.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting"><i class="fa fa-check"></i><b>6.9.7</b> Troubleshooting</a></li>
+<li class="chapter" data-level="6.9.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shinylive-1"><i class="fa fa-check"></i><b>6.9.8</b> Shinylive</a></li>
+<li class="chapter" data-level="6.9.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#rmd"><i class="fa fa-check"></i><b>6.9.9</b> Rmd</a></li>
+<li class="chapter" data-level="6.9.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#quarto-1"><i class="fa fa-check"></i><b>6.9.10</b> Quarto</a></li>
+<li class="chapter" data-level="6.9.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#using-buildkit"><i class="fa fa-check"></i><b>6.9.11</b> Using BuildKit</a></li>
+</ul></li>
+<li class="chapter" data-level="6.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-orchestration"><i class="fa fa-check"></i><b>6.10</b> Container Orchestration</a>
+<ul>
+<li class="chapter" data-level="6.10.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-compose"><i class="fa fa-check"></i><b>6.10.1</b> Docker Compose</a></li>
+</ul></li>
+<li class="chapter" data-level="6.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting-1"><i class="fa fa-check"></i><b>6.11</b> Troubleshooting</a></li>
+<li class="chapter" data-level="6.12" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#summary-5"><i class="fa fa-check"></i><b>6.12</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="7" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html"><i class="fa fa-check"></i><b>7</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>7.1</b> Start with the why</a></li>
+<li class="chapter" data-level="7.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#list-your-requirements"><i class="fa fa-check"></i><b>7.2</b> List your requirements</a></li>
+<li class="chapter" data-level="7.3" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#identify-your-constraints"><i class="fa fa-check"></i><b>7.3</b> Identify your constraints</a></li>
+<li class="chapter" data-level="7.4" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#options-at-a-glance"><i class="fa fa-check"></i><b>7.4</b> Options at a glance</a></li>
+<li class="chapter" data-level="7.5" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#hosting-patterns"><i class="fa fa-check"></i><b>7.5</b> Hosting Patterns</a></li>
+<li class="chapter" data-level="7.6" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#the-cloud"><i class="fa fa-check"></i><b>7.6</b> The Cloud</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#servers-2"><i class="fa fa-check"></i><b>7.6.1</b> Servers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#custom-domain-names"><i class="fa fa-check"></i><b>7.7</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="7.8" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#reverse-proxies"><i class="fa fa-check"></i><b>7.8</b> Reverse Proxies</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#install-caddy"><i class="fa fa-check"></i><b>7.8.1</b> Install Caddy</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#monitoring-processes"><i class="fa fa-check"></i><b>7.9</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="7.10" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#systemctl"><i class="fa fa-check"></i><b>7.10</b> Systemctl</a></li>
+<li class="chapter" data-level="7.11" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>7.11</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="7.12" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#networkingfirewalls"><i class="fa fa-check"></i><b>7.12</b> Networking/Firewalls</a>
+<ul>
+<li class="chapter" data-level="7.12.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#systemd"><i class="fa fa-check"></i><b>7.12.1</b> systemd</a></li>
+</ul></li>
+<li class="chapter" data-level="7.13" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-shiny-apps"><i class="fa fa-check"></i><b>7.13</b> Static Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.13.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-without-containers-r-vs-python"><i class="fa fa-check"></i><b>7.13.1</b> Compiling without containers (R vs Python)</a></li>
+<li class="chapter" data-level="7.13.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-with-containers"><i class="fa fa-check"></i><b>7.13.2</b> Compiling with containers</a></li>
+<li class="chapter" data-level="7.13.3" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-hosting-options"><i class="fa fa-check"></i><b>7.13.3</b> Static Hosting Options</a></li>
+</ul></li>
+<li class="chapter" data-level="7.14" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#dynamic-shiny-apps"><i class="fa fa-check"></i><b>7.14</b> Dynamic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.14.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#hosting-platforms-paas"><i class="fa fa-check"></i><b>7.14.1</b> Hosting platforms (PaaS)</a></li>
+<li class="chapter" data-level="7.14.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#reverse-proxy-required"><i class="fa fa-check"></i><b>7.14.2</b> Reverse Proxy Required</a></li>
+</ul></li>
+<li class="chapter" data-level="7.15" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-static-files-with-shinylive"><i class="fa fa-check"></i><b>7.15</b> Deploying Static Files with Shinylive</a></li>
+<li class="chapter" data-level="7.16" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-shiny-apps-to-shinyapps.io"><i class="fa fa-check"></i><b>7.16</b> Deploying Shiny Apps to Shinyapps.io</a>
+<ul>
+<li class="chapter" data-level="7.16.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#r-2"><i class="fa fa-check"></i><b>7.16.1</b> R</a></li>
+<li class="chapter" data-level="7.16.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#python-1"><i class="fa fa-check"></i><b>7.16.2</b> Python</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html"><i class="fa fa-check"></i><b>8</b> Considerations for Hosting Production Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#security"><i class="fa fa-check"></i><b>8.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#certificates"><i class="fa fa-check"></i><b>8.1.1</b> Certificates</a></li>
+<li class="chapter" data-level="8.1.2" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#storing-secrets"><i class="fa fa-check"></i><b>8.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="8.1.3" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#shiny-app-authentication"><i class="fa fa-check"></i><b>8.1.3</b> Shiny App Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#performance-availability-and-monitoring"><i class="fa fa-check"></i><b>8.2</b> Performance, Availability, and Monitoring</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#scaling"><i class="fa fa-check"></i><b>8.2.1</b> Scaling</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#operations-and-maintenance"><i class="fa fa-check"></i><b>8.3</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#cicd"><i class="fa fa-check"></i><b>8.3.1</b> CI/CD</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#embedding-onto-your-website"><i class="fa fa-check"></i><b>8.4</b> Embedding Onto Your Website</a></li>
+<li class="chapter" data-level="8.5" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#other-stuff"><i class="fa fa-check"></i><b>8.5</b> OTHER STUFF</a></li>
+</ul></li>
+<li class="part"><span><b>IV What Is Next?</b></span></li>
+<li class="chapter" data-level="9" data-path="9-information-about-hosting.html"><a href="9-information-about-hosting.html"><i class="fa fa-check"></i><b>9</b> Information about hosting</a></li>
+<li class="chapter" data-level="10" data-path="10-conclusions.html"><a href="10-conclusions.html"><i class="fa fa-check"></i><b>10</b> Conclusions</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-bananas.html"><a href="appendix-bananas.html"><i class="fa fa-check"></i>The Bananas Data Set</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html"><i class="fa fa-check"></i>Shiny App for Testing Load Balancing</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-python-version"><i class="fa fa-check"></i>The Python Version</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-r-version"><i class="fa fa-check"></i>The R Version</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#shinylive-2"><i class="fa fa-check"></i>Shinylive</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#test-load-balancing"><i class="fa fa-check"></i>Test Load Balancing</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html"><i class="fa fa-check"></i>How to Pick the Right Hosting Option</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#start-with-the-why-1"><i class="fa fa-check"></i>Start with the Why</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#list-your-requirements-1"><i class="fa fa-check"></i>List Your Requirements</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#identify-your-constraints-1"><i class="fa fa-check"></i>Identify Your Constraints</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#options-at-a-glance-1"><i class="fa fa-check"></i>Options at a glance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix-setup.html"><a href="appendix-setup.html"><i class="fa fa-check"></i>Setting Up Your Development Environment</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='https://hosting.analythium.io/content/images/size/w600/2021/03/banner-1.png' alt="Hosting Shiny">
+</html>
+<div id="local-setup" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Local Setup<a href="3-local-setup.html#local-setup" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>To make your Shiny applications accessible for a wider audience, you must
+have some tools available locally on your laptop or desktop — sorry, a
+tablet or a phone are not recommended devices for this.
+You will become familiar with several tools used to manage your code
+locally or communicate with remote machines.</p>
+<p>By the end of this chapter, you should have obtained the knowledge and the
+local setup of tools to connect to a remote server and run a Shiny app from
+the command line.</p>
+<div id="installing-your-developer-tools" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Installing Your Developer Tools<a href="3-local-setup.html#installing-your-developer-tools" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="r" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> R<a href="3-local-setup.html#r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>R is a programming language designed mainly for statistical computation, but it
+has been extended with packages to support tasks like developing web apps with
+Shiny.</p>
+<p>To begin, you must install the appropriate binary for your operating system
+available at <a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a> under the “Download and Install R”
+section.</p>
+<p>Next, you should install an integrated development environment or IDE of your choice.
+One of the most popular ways to develop in R is to use the <a href="">RStudio Desktop</a>
+developed by Posit (formerly RStudio). You can download the binary from
+<a href="https://posit.co/download/rstudio-desktop/" class="uri">https://posit.co/download/rstudio-desktop/</a>.</p>
+<p>Another increasingly popular IDE option for R is Microsoft’s VisualStudio Code,
+or VS Code for short. You can download the installer from
+<a href="https://code.visualstudio.com/download" class="uri">https://code.visualstudio.com/download</a>.
+It is recommended to use the R extension for VS Code that relies on the
+<code>languageserver</code> R package <span class="citation">(<a href="#ref-R-languageserver">Lai 2023</a>)</span>.
+You can find setup instructions in the
+<a href="https://github.com/REditorSupport/vscode-R">REditorSupport/vscode-R</a>
+GitHub repository.
+Another useful extension is the Shiny VS Code extension from the
+VS Code Marketplace or the Open VSX Registry.</p>
+<p>To install Shiny, you can run the command <code>install.packages("shiny")</code> in the
+R console. You will need a few other packages too:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="3-local-setup.html#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">&quot;bslib&quot;</span>, <span class="st">&quot;shinylive&quot;</span>, <span class="st">&quot;htmltools&quot;</span>, <span class="st">&quot;rmarkdown&quot;</span>))</span></code></pre></div>
+<p>FIXME: list other R packages.</p>
+</div>
+<div id="install-python" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Install Python<a href="3-local-setup.html#install-python" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As a scripting language, Python is versatile and can be developed in different
+environments including text editors and IDEs. The recommended IDE for developing
+in Shiny with Python is VS Code.</p>
+<p>To use the IDE for Python, you must ensure that Python can run on your operating
+system. Operating systems like MacOS and Linux should already have come bundled
+with a version of Python, but it may be an older version. Therefore, we recommend
+installing the latest Python version for MacOS and Windows from
+<a href="https://www.python.org/downloads/" class="uri">https://www.python.org/downloads/</a>. For Linux/Unix based operating systems,
+we recommend installing Python using the command line with the following
+commands:</p>
+<p>Install Shiny with <code>pip install shiny</code>. Some of the examples will use Shinylive,
+you can install it with <code>pip install shinylive</code>.
+FIXME: CHECK this, how to install Python and <code>pip</code> etc.</p>
+<p>The Shiny VS Code extension from the
+VS Code Marketplace or the Open VSX Registry works with R and Python as well.
+Python itself also has VS Code extensions that can be used.</p>
+<p>A rathe new IDE option that R and Python users should keep an eye on is
+<a href="https://github.com/posit-dev/positron">Positron</a> by Posit as it promises to be
+an extensible, polyglot tool for writing code and exploring data.</p>
+</div>
+<div id="web-browser" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Web Browser<a href="3-local-setup.html#web-browser" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You likely already have a web browser on your local machine. Most people use
+Chrome, Saferi, Edge, Firefox.</p>
+</div>
+<div id="quarto" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Quarto<a href="3-local-setup.html#quarto" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Quarto is a open-source scientific and technical publishing system by Posit that
+can include Shiny apps. You can find install instructions at <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a>.</p>
+</div>
+<div id="docker-desktop" class="section level3 hasAnchor" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Docker Desktop<a href="3-local-setup.html#docker-desktop" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To download and install Docker for your platform of choice, visit the
+<a href="https://docs.docker.com/get-docker/">Docker download page</a> and
+follow the instructions.</p>
+<p>If you are a Mac OS X user on Apple Silicone (M1 chip and above), you might want
+to enable virtualization to be able to run and build images for AMD64 architecture.
+Otherwise the images might have poor performance or fail on other platforms.
+Go to the Settings in Docker Desktop, and under the General tab check
+the “Use Virtualization framework” and
+“Use Rosetta for x86_64/amd64 emulation on Apple Silicon” boxes.</p>
+</div>
+</div>
+<div id="the-command-line" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> The Command Line<a href="3-local-setup.html#the-command-line" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The command line is a text-based user interface to control a computer. Instead of
+using a mouse, you use your keyboard to type commands to control the computer. This is
+different than the graphical user interfaces (GUIs) used in modern day operating systems
+like Windows, Mac OSX, and Ubuntu Desktop Linux. The command line is important for
+managing your Shiny app deployment on a remote server where there might not be a GUI
+for you to control the remote server.</p>
+<p>Depending on your operating system, there are different options for the command line.</p>
+<p>On Windows, we recommend installing <a href="https://learn.microsoft.com/en-us/windows/wsl/install">Windows Subsytem Linux</a>
+in order to use a Linux based command line. This is because some commands that
+we describe in this book may be incompatible with Windows based command lines
+like PowerShell (comes preinstalled on Windows) or <a href="https://git-scm.com/downloads">Git Bash</a>.</p>
+<p>For Mac OS X, we recommend using the built-in terminal application. You will be
+able to run the commands that we describe in the book.</p>
+<p>For Linux-based systems like Ubuntu , you can also use the built-in terminal application.</p>
+<p>Our book will cover commands using a “*nix based command line”. This means the
+Windows Subsytem Linux terminal or the built-in terminals with Mac OS X or Ubuntu.</p>
+<p>The terminal is also available from inside your IDE (RStudio or VS Code),
+which means that you won’t have to change windows to access it.</p>
+<p>Now let’s review some of the most common shell commands that we’ll need in the
+absence of a graphical user interface (GUI).</p>
+<div id="navigation" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Navigation<a href="3-local-setup.html#navigation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Navigating through the command line might seem daunting at first.
+However, it is quite simple once you memorize 3 key commands involving directories.</p>
+<div id="current-working-directory" class="section level4 hasAnchor" number="3.2.1.1">
+<h4><span class="header-section-number">3.2.1.1</span> Current Working Directory<a href="3-local-setup.html#current-working-directory" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To know which directory you are in, you can type the <code>pwd</code> command. This will give
+you the path of the “working directory” that you are in.</p>
+</div>
+<div id="listing-directory" class="section level4 hasAnchor" number="3.2.1.2">
+<h4><span class="header-section-number">3.2.1.2</span> Listing Directory<a href="3-local-setup.html#listing-directory" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The <code>ls</code> command is used to list all files in a directory.
+This is important to know when you are trying to find a file on the command line.</p>
+</div>
+<div id="change-directory" class="section level4 hasAnchor" number="3.2.1.3">
+<h4><span class="header-section-number">3.2.1.3</span> Change Directory<a href="3-local-setup.html#change-directory" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The <code>cd</code> command is used to change directories and traverse a computer. For
+example, you may want to change your working directory to a nested folder of your
+current working directory. In order to do so, you would type <code>cd</code> in the command
+line and typing a space after, and then press <code>tab</code> to see the available
+directories to traverse to. With the correct directory in mind, you can type
+the directory name after and press enter to change directories.</p>
+<p>To verify that you are in the new directory, your command line should indicate
+the current directory that you are in. If you are still unsure, you can use the
+<code>pwd</code> command to get the path of your current working directory.</p>
+<p>By running <code>cd ..</code> you can go up one directory. To go up 2 directories, you can
+run: <code>cd ../..</code>.</p>
+</div>
+</div>
+<div id="editing-files" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Editing Files<a href="3-local-setup.html#editing-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Once you can navigate through the computer with command line. The next important
+task to know about is editing files with a text editor. There are many
+popular text editors that usually come bundled with your *nix based command line
+including: <code>nano</code>, <code>vim</code>, and <code>emacs</code>. Vim and Emacs are much more complex
+and require more technical knowledge to edit and save files. Therefore,
+if your are just staring out, we recommend using Nano.</p>
+<p>Nano is a user-friendly text editor that allows you to edit files from the
+command line. To begin, you can type <code>nano</code> followed by a space and the name of
+the file you want to edit, e.g. <code>nano app.R</code>. If the name of the file does not
+exist, nano will create the file for you when you save it.</p>
+<p>To navigate through a file with Nano, you can use your arrow keys to move the
+cursor. You can add text to the file by typing on your keyboard.</p>
+<p>The instructions for nano are at the bottom of the editor. The <code>^</code> stands for
+the CTRL key and the letter beside it stands for the key you press to run the
+command. Press the CTRL key together with the letter on the keyboard to execute
+a command.</p>
+<p>To save the file, you would press <code>CTRL + O</code> and confirm the prompts with enter.
+To exit nano, you would press <code>CTRL + X</code>.</p>
+</div>
+<div id="file-and-directory-operations" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> File and Directory Operations<a href="3-local-setup.html#file-and-directory-operations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>It is also important to know about how to move, copy, and delete files and
+directories. Furthermore it is also important to know how to create directories.</p>
+<div id="making-directories" class="section level4 hasAnchor" number="3.2.3.1">
+<h4><span class="header-section-number">3.2.3.1</span> Making Directories<a href="3-local-setup.html#making-directories" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To make a directory you would type <code>mkdir</code> followed by a space and the directory name.
+To confirm that the directory is created, you can run the <code>ls</code> command and see that
+the folder has been created. You can even try to navigate to it with the <code>cd</code> command.</p>
+</div>
+<div id="moving-files-and-directories" class="section level4 hasAnchor" number="3.2.3.2">
+<h4><span class="header-section-number">3.2.3.2</span> Moving Files and Directories<a href="3-local-setup.html#moving-files-and-directories" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To move a file or directory, you would simply type
+<code>mv &lt;path to file you want to move&gt; &lt;destination path&gt;</code>.
+You can verify that a file or directory has moved with <code>ls &lt;destination path&gt;</code>
+and you should see that in its new location.</p>
+</div>
+<div id="copying-files-and-directories" class="section level4 hasAnchor" number="3.2.3.3">
+<h4><span class="header-section-number">3.2.3.3</span> Copying Files and Directories<a href="3-local-setup.html#copying-files-and-directories" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Copying files is similar to moving files. To copy a file, you would run
+<code>cp &lt;path to file you want to copy&gt; &lt;destination path and filename&gt;</code>.</p>
+<p>To copy a directory, you will need to add the <code>-r</code> flag so that the whole
+directory is copied “recursively”. The command you would run would be:
+<code>cp -r &lt;path to directory you want to copy&gt; &lt;destination path and directory name&gt;</code>.</p>
+<p>You can verify that a file or directory has been copied with
+<code>ls &lt;destination path&gt;</code> and you should see that in its new location.</p>
+</div>
+<div id="deleting-files-and-directories" class="section level4 hasAnchor" number="3.2.3.4">
+<h4><span class="header-section-number">3.2.3.4</span> Deleting Files and Directories<a href="3-local-setup.html#deleting-files-and-directories" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To delete files run: <code>rm &lt;path to file you want to delete&gt;</code>.</p>
+<p>For deleting directories, you will need to add the <code>-r</code> flag so that the whole
+directory is deleted “recursively”. The command to delete directories is:
+<code>rm -r &lt;path to directory you want to delete&gt;</code>.</p>
+<p>You can verify that a file or directory has been removed with
+<code>ls &lt;path to old file or directory&gt;</code>. There should be an error saying that the
+file and directory do not exist.</p>
+</div>
+</div>
+<div id="super-user-access" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Super User Access<a href="3-local-setup.html#super-user-access" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>At times you may find that you do not have the correct permissions to edit a
+file or even view a directory. Therefore, you must use super user access to gain
+the correct permissions for your current user.</p>
+<p>If you are looking for super user permissions for a single command you can run:
+<code>sudo &lt;command&gt;</code>. Command in this case can be any command line command including
+the ones we have described earlier in the chapter like <code>rm</code>.
+For example, you could run <code>sudo rm test.txt</code> where we are using super user access
+to delete the test file.</p>
+<p>You may also find that you need super user permissions for multiple commands.
+In this case you can start a command line as a super user by running <code>sudo -i</code>
+and following the prompts. To exit out of the super user command line you can
+press <code>CTRL + D</code> or run the command <code>logout</code> or <code>exit</code>.</p>
+</div>
+</div>
+<div id="source-code-management-with-git" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Source Code Management with Git<a href="3-local-setup.html#source-code-management-with-git" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Source code management is important to keep centralized versions of your Shiny
+application source code. By centralizing your source code, you can have one
+source truth of your application code that can be duplicated anywhere. Source
+code management also helps to save different versions of a file without creating
+multiple copies of a file.</p>
+<p>Git is one of the most popular version control systems for software. In this
+section, we will be describing how to get started with Git.</p>
+<p>Git comes installed by default on most Mac OS X and Linux machines.
+On Windows you can install Git from <a href="https://git-scm.com/download/" class="uri">https://git-scm.com/download/</a>.
+Try <code>git version</code> in the terminal to test if Git is installed properly.</p>
+<div id="git-services" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Git Services<a href="3-local-setup.html#git-services" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Git services help host your source code remotely. Two of the most popular Git
+services are GitHub and GitLab. Both are good choices and the instructions in
+this section apply to both services. However, we recommend using GitHub as later
+in the book we describe continuous deployment and continuous integration (CICD)
+that relies on GitHub Actions.</p>
+</div>
+<div id="git-commands" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Git Commands<a href="3-local-setup.html#git-commands" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To follow along with the commands, you will first need to sign up for your Git
+service. Following sign up, you should create an empty repository which will
+host your source code.</p>
+<p>In this book, we will outline how to use Git from the command line. There are
+also graphical user interfaces (GUIs) for git. However, when connecting remotely
+to a server, a GUI to use the server is unavailable.</p>
+<p>We recommend that you set your default Git text editor to nano with this command:
+<code>git config --global core.editor "nano"</code>. Often the default editor is set to
+Vim or emacs which is harder to use.</p>
+<div id="cloning-repositories" class="section level4 hasAnchor" number="3.3.2.1">
+<h4><span class="header-section-number">3.3.2.1</span> Cloning Repositories<a href="3-local-setup.html#cloning-repositories" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Once you have created a repository, you can clone it to your computer.
+To do so, you would run <code>git clone &lt;repository url&gt;</code> and enter the appropriate
+credentials. For example, you can clone the GitHub repository with
+one of our Shiny app examples, the Old Faithful example as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="3-local-setup.html#cb2-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/h10y/faithful.git</span></code></pre></div>
+<p>If you are cloning a <em>private</em> GitHub repository, you must setup an access token
+to be used as a password for the <code>git clone</code> command.
+For private GitLab repositories, you would use the same password to be used as
+you would sign in on the website, but you can also create an access token.</p>
+</div>
+<div id="creating-a-commit" class="section level4 hasAnchor" number="3.3.2.2">
+<h4><span class="header-section-number">3.3.2.2</span> Creating a Commit<a href="3-local-setup.html#creating-a-commit" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>When you have cloned the repository, you can begin adding file changes via a
+commit. To begin, you would add or modify files in the repository directory.
+After you have made changes, you can create a commit using three commands.</p>
+<p>First, you would run <code>git add .</code> from the root directory of your repository.
+This command stages your changes for the commit. The <code>.</code> signifies the current
+directory and all its files and directories in it.</p>
+<p>Next, you would run <code>git commit -m "&lt;message for your commit&gt;"</code> to create a
+commit with a message. The <code>-m</code> flag indicates that you will have a message for
+your commit. You must enclose your message within quotation marks. A commit must
+always have a message.</p>
+<p>Finally, once you have created your commit, you can push your changes with
+<code>git push</code>.</p>
+</div>
+<div id="pulling-changes" class="section level4 hasAnchor" number="3.3.2.3">
+<h4><span class="header-section-number">3.3.2.3</span> Pulling Changes<a href="3-local-setup.html#pulling-changes" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>You might have multiple copies of your repository on different computers.
+In such cases, to keep the changes of files and directories in sync, you can
+run the <code>git pull</code> command.</p>
+<p>It should be noted that if you make changes in your repository without
+committing them, you must commit your changes before performing a pull.</p>
+<p>If you have committed changes and the repository has been updated elsewhere,
+merge conflicts may arise. To detect which files have conflicts, you can run
+the <code>git diff --check</code> command which shows the files and line numbers that
+have conflicts. The conflicts in the files will appear as <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> at the
+top with the current changes you have under it. This is separated with <code>=======</code>
+and the changes that are conflicting under it. The conflicting changes are
+concluded with <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; &lt;branch name&gt;</code>.</p>
+<p>You must delete the <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> and enclosing <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; &lt;branch name&gt;</code>,
+keeping only the change that you want and running <code>git commit</code> to resolve any
+conflicts for your repository.</p>
+</div>
+<div id="status-of-repository" class="section level4 hasAnchor" number="3.3.2.4">
+<h4><span class="header-section-number">3.3.2.4</span> Status of Repository<a href="3-local-setup.html#status-of-repository" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To determine what files you changed and are not tracking, you can run the
+<code>git status</code> command. This command will give you the files you have modified and
+files that are not yet tracked by git. This command will also tell you how many
+changes you have locally that haven’t been pushed to the git service yet.</p>
+</div>
+</div>
+<div id="gitignore" class="section level3 hasAnchor" number="3.3.3">
+<h3><span class="header-section-number">3.3.3</span> .gitignore<a href="3-local-setup.html#gitignore" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Often there are extraneous files that are artifacts of running your Shiny
+application or contain sensitive information, like passwords or access tokens,
+and do not need to be committed. To ignore these files, you can create a
+<code>.gitignore</code> file in the root of your repository.</p>
+<p>To generate a <code>.gitignore</code> file, you can visit <a href="https://gitignore.io">gitignore.io</a>
+which will generate a file with the files and directories to ignore for an
+operating system, programming language, or tool. We recommend selecting:
+linux, macOS, windows, R, and Python as a base <code>.gitignore</code>.</p>
+</div>
+<div id="branching" class="section level3 hasAnchor" number="3.3.4">
+<h3><span class="header-section-number">3.3.4</span> Branching<a href="3-local-setup.html#branching" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Branching is a more advanced concept in Git that is useful when you have
+multiple people working on the same files. In this subsection, we will briefly
+touch on the basics of git branching.</p>
+<p>A branch is a copy of a repository that you can work on and make changes for a
+specific feature. Once that feature has been completed you can merge it back to
+your <code>main</code> branch. This allows multiple people to work on the same codebase.</p>
+<p>To see the branches that exist in your repository, run the <code>git branch</code> command.</p>
+<p>To create a branch in your repository, run the <code>git checkout -b &lt;branch name&gt;</code>
+command. It should be noted that when you first try to push your new branch
+with <code>git push</code>, you will be unsuccessful since the remote repository has no
+idea of the branch. Therefore you must run
+<code>git push --set-upstream origin &lt;branch name&gt;</code>. Do not worry if you cannot
+remember this command! Git will give you a reminder of the command to run to
+push a new branch.</p>
+<p>To switch branches, run the <code>git checkout &lt;branch name&gt; command</code>.
+To merge the changes of one branch to your current branch, run the
+<code>git merge &lt;branch name&gt;</code> command.</p>
+<p>There is an option to review merges on GitHub and GitLab. On GitHub, you would
+open a pull request. On GitLab, you would open a merge request. Both of these
+options are not part of Git itself, but offered by Git services so that code
+development can be more collaborative. A pull request or merge request, allows
+you to preview the merged changes, comment on specific lines of the changes,
+and fix any conflicts before merging.</p>
+<p>Often, you can use Git-based workflows to make changes to your Shiny application
+codebase. The GitHub workflow is a lightweight workflow that leverages pull
+requests for collaborative development. Developers create feature branches from
+the main branch, make changes, and then open pull requests to propose these
+changes for review. Once reviewed and approved, the changes are merged into the
+main branch.</p>
+</div>
+</div>
+<div id="servers-1" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Servers<a href="3-local-setup.html#servers-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Your Shiny App deployment is likely going to live on a remote computer that is
+always running, aptly named a “server”. In this section, we will be explaining
+how to connect remotely to servers via SSH from the command line.</p>
+<p>Servers running remotely often do not contain a graphical user interface, and
+therefore it is recommended to become familiar with the command line.
+Once connected, you can run the command line commands explained in the previous
+sections of this chapter.</p>
+<p>The commands in the following subsections require the setup of a server.
+We outline how to do so in Part IV. However, you can also just read along to
+familiarize yourself with the basic concepts of using a remote server.</p>
+<div id="secure-shell-ssh" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Secure Shell (SSH)<a href="3-local-setup.html#secure-shell-ssh" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The secure shell protocol (SSH) is used to securely connect with a remote computer.
+The connection works via public key cryptography. This means that a public key
+lives on the server and you have a private key on your local machine.
+The private key on your local machine matches with the public key on the remote
+machine to verify your identity.</p>
+<p>There are two common ways to authenticate with SSH: using a password, or using a
+private/public key pair. It is recommended to use the private/public key pair
+method as it is much harder to guess a private key compared to a password.</p>
+<div id="password-authentication" class="section level4 hasAnchor" number="3.4.1.1">
+<h4><span class="header-section-number">3.4.1.1</span> Password Authentication<a href="3-local-setup.html#password-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To authenticate with a password, you can run this command:
+<code>ssh &lt;user name&gt;@&lt;server ip address&gt;</code>.</p>
+<p>When you authenticate with a password, a private/public key pair is automatically
+generated for you. However, this method is less secure because a password is
+easier to guess compared to a randomly generated key file.</p>
+</div>
+<div id="key-based-authentication" class="section level4 hasAnchor" number="3.4.1.2">
+<h4><span class="header-section-number">3.4.1.2</span> Key-based Authentication<a href="3-local-setup.html#key-based-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To authenticate with a key file, you can run this command:
+<code>ssh -i &lt;location of key file&gt; &lt;user name&gt;@&lt;server ip address&gt;</code>.</p>
+<p>By running this command, the remote computer can verify that the user logging
+in with the public key that is stored on the remote computer.</p>
+<p>We outline how to generate a key in Part IV.</p>
+</div>
+</div>
+</div>
+<div id="readability-on-the-command-line" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Readability on the Command Line<a href="3-local-setup.html#readability-on-the-command-line" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Sometimes commands are too long or it would help reading them if we could
+put the parts on multiple lines without “hitting Enter” (executing) too early.
+This is where the backslash (<code>\</code>) comes in. We can use the <code>\</code> to write
+multi-line commands. For example these two dummy examples are identical:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="3-local-setup.html#cb3-1" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-i</span> ~/.ssh/id_rsa root@123.456.78.90</span>
+<span id="cb3-2"><a href="3-local-setup.html#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="3-local-setup.html#cb3-3" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-i</span> ~/.ssh/id_rsa <span class="dt">\</span></span>
+<span id="cb3-4"><a href="3-local-setup.html#cb3-4" tabindex="-1"></a>    root@123.456.78.90</span></code></pre></div>
+</div>
+<div id="summary-2" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Summary<a href="3-local-setup.html#summary-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You have all the knowledge and tools installed on your local computer to
+effectively develop your Shiny app and to interact with remote servers and
+online services.</p>
+<p>Before we review the different ways of developing and hosting your Shiny app,
+we quickly introduce a few example apps. We will use these apps to demonstrate
+the steps for the hosting options.</p>
+
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-R-languageserver" class="csl-entry">
+Lai, Randy. 2023. <em>Languageserver: Language Server Protocol</em>. <a href="https://CRAN.R-project.org/package=languageserver">https://CRAN.R-project.org/package=languageserver</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="2-hosting-concepts.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4-examples.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/analythium/hosting-shiny-book/edit/main/01-03-tools.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

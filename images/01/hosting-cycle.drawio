@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" modified="2024-06-29T05:19:56.515Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0" etag="F_RTSXVFqXa7ZMFJbpEF" version="24.5.5" type="dropbox">
+  <diagram name="Page-1" id="ALxjp6_uH2wn0X92kFWS">
+    <mxGraphModel dx="799" dy="524" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-1" value="&lt;div&gt;What options&lt;/div&gt;&lt;div&gt;are there?&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="180" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-2" value="&lt;div&gt;Which one should&lt;/div&gt;&lt;div&gt;I choose?&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="290" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-4" value="&lt;div&gt;How can I&lt;/div&gt;&lt;div&gt;make it work?&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="414" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-5" value="I am stuck. Where can I get help?" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="520" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-6" value="My needs have changed" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="290" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-7" value="&lt;div&gt;My hosting option&lt;/div&gt;&lt;div&gt;is working&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="414" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-9" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-7" target="T-EGLuceTleQ6SiZiBLL-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="390" as="sourcePoint" />
+            <mxPoint x="620" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="390" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-10" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-6" target="T-EGLuceTleQ6SiZiBLL-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="260" as="sourcePoint" />
+            <mxPoint x="450" y="210" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="420" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-11" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-5" target="T-EGLuceTleQ6SiZiBLL-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="390" as="sourcePoint" />
+            <mxPoint x="620" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="430" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-12" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-4" target="T-EGLuceTleQ6SiZiBLL-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="390" as="sourcePoint" />
+            <mxPoint x="620" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="730" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-13" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-2" target="T-EGLuceTleQ6SiZiBLL-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="390" as="sourcePoint" />
+            <mxPoint x="620" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="760" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-14" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-1" target="T-EGLuceTleQ6SiZiBLL-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="390" as="sourcePoint" />
+            <mxPoint x="620" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="730" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-15" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-4" target="T-EGLuceTleQ6SiZiBLL-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="570" y="390" as="sourcePoint" />
+            <mxPoint x="620" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="580" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-16" value="I am new to Shiny hosting" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="370" y="110" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="T-EGLuceTleQ6SiZiBLL-17" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" edge="1" parent="1" source="T-EGLuceTleQ6SiZiBLL-16" target="T-EGLuceTleQ6SiZiBLL-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="460" y="120" as="sourcePoint" />
+            <mxPoint x="510" y="70" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="570" y="125" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

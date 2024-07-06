@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>References | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="References | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="analythium/hosting-shiny-book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="References | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@analythium" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2024-07-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="appendix-setup.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.umd.cjs"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.4/reactable.js"></script>
+<script>
+  // Fathom Analytics code to come here
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-background.html"><a href="1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-background.html"><a href="1-background.html#data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-background.html"><a href="1-background.html#enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-background.html"><a href="1-background.html#application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-background.html"><a href="1-background.html#application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-background.html"><a href="1-background.html#the-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-background.html"><a href="1-background.html#the-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-background.html"><a href="1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#website-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-local-setup.html"><a href="3-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-local-setup.html"><a href="3-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-local-setup.html"><a href="3-local-setup.html#r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-local-setup.html"><a href="3-local-setup.html#install-python"><i class="fa fa-check"></i><b>3.1.2</b> Install Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-local-setup.html"><a href="3-local-setup.html#web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-local-setup.html"><a href="3-local-setup.html#quarto"><i class="fa fa-check"></i><b>3.1.4</b> Quarto</a></li>
+<li class="chapter" data-level="3.1.5" data-path="3-local-setup.html"><a href="3-local-setup.html#docker-desktop"><i class="fa fa-check"></i><b>3.1.5</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-local-setup.html"><a href="3-local-setup.html#the-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-local-setup.html"><a href="3-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-local-setup.html"><a href="3-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-local-setup.html"><a href="3-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-local-setup.html"><a href="3-local-setup.html#super-user-access"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-local-setup.html"><a href="3-local-setup.html#source-code-management-with-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-local-setup.html"><a href="3-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-local-setup.html"><a href="3-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-local-setup.html"><a href="3-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-local-setup.html"><a href="3-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-local-setup.html"><a href="3-local-setup.html#servers-1"><i class="fa fa-check"></i><b>3.4</b> Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-local-setup.html"><a href="3-local-setup.html#secure-shell-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-local-setup.html"><a href="3-local-setup.html#readability-on-the-command-line"><i class="fa fa-check"></i><b>3.5</b> Readability on the Command Line</a></li>
+<li class="chapter" data-level="3.6" data-path="3-local-setup.html"><a href="3-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-examples.html"><a href="4-examples.html"><i class="fa fa-check"></i><b>4</b> Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-examples.html"><a href="4-examples.html#old-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-examples.html"><a href="4-examples.html#bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="4-examples.html"><a href="4-examples.html#the-bananas-data-set"><i class="fa fa-check"></i><b>4.2.1</b> The Bananas Data Set</a></li>
+<li class="chapter" data-level="4.2.2" data-path="4-examples.html"><a href="4-examples.html#model-training"><i class="fa fa-check"></i><b>4.2.2</b> Model Training</a></li>
+<li class="chapter" data-level="4.2.3" data-path="4-examples.html"><a href="4-examples.html#the-shiny-app"><i class="fa fa-check"></i><b>4.2.3</b> The Shiny App</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="4-examples.html"><a href="4-examples.html#load-balancing-test"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-examples.html"><a href="4-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-user-interface"><i class="fa fa-check"></i><b>5.1.1</b> The User Interface</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-server-function"><i class="fa fa-check"></i><b>5.1.2</b> The Server Function</a></li>
+<li class="chapter" data-level="5.1.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-express"><i class="fa fa-check"></i><b>5.1.3</b> Shiny Express</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#organizing-shiny-apps"><i class="fa fa-check"></i><b>5.2</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#single-file"><i class="fa fa-check"></i><b>5.2.1</b> Single file</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#multiple-files"><i class="fa fa-check"></i><b>5.2.2</b> Multiple Files</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-app-with-nested-files-structure"><i class="fa fa-check"></i><b>5.2.3</b> Shiny App with Nested Files Structure</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#programmatic-cases"><i class="fa fa-check"></i><b>5.2.4</b> Programmatic Cases</a></li>
+<li class="chapter" data-level="5.2.5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-app-as-an-r-package"><i class="fa fa-check"></i><b>5.2.5</b> Shiny App as an R Package</a></li>
+<li class="chapter" data-level="5.2.6" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#dynamic-documents"><i class="fa fa-check"></i><b>5.2.6</b> Dynamic Documents</a></li>
+<li class="chapter" data-level="5.2.7" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.7</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#running-shiny-apps-locally"><i class="fa fa-check"></i><b>5.3</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+<li class="chapter" data-level="5.3.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-shiny-app-lifecycle"><i class="fa fa-check"></i><b>5.3.3</b> The Shiny App Lifecycle</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#sharing-the-shiny-app-code"><i class="fa fa-check"></i><b>5.4</b> Sharing the Shiny App Code</a></li>
+<li class="chapter" data-level="5.5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>6</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-concepts"><i class="fa fa-check"></i><b>6.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-engine"><i class="fa fa-check"></i><b>6.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="6.1.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-registries"><i class="fa fa-check"></i><b>6.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="6.1.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#images"><i class="fa fa-check"></i><b>6.1.3</b> Images</a></li>
+<li class="chapter" data-level="6.1.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile"><i class="fa fa-check"></i><b>6.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="6.1.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#containers"><i class="fa fa-check"></i><b>6.1.5</b> Containers</a></li>
+<li class="chapter" data-level="6.1.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-docker-command-line"><i class="fa fa-check"></i><b>6.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#working-with-existing-images"><i class="fa fa-check"></i><b>6.2</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#image-names-and-tags"><i class="fa fa-check"></i><b>6.2.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="6.2.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pulling-an-image"><i class="fa fa-check"></i><b>6.2.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="6.2.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-login"><i class="fa fa-check"></i><b>6.2.3</b> Docker Login</a></li>
+<li class="chapter" data-level="6.2.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#running-a-container"><i class="fa fa-check"></i><b>6.2.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#building-a-new-image"><i class="fa fa-check"></i><b>6.3</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-for-shiny"><i class="fa fa-check"></i><b>6.3.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="6.3.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#buildx-and-buildkit"><i class="fa fa-check"></i><b>6.3.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="6.3.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#inspecting-the-image"><i class="fa fa-check"></i><b>6.3.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="6.3.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-for-python"><i class="fa fa-check"></i><b>6.3.4</b> R for Python</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#managing-images-and-containers"><i class="fa fa-check"></i><b>6.4</b> Managing Images and Containers</a></li>
+<li class="chapter" data-level="6.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#sharing-images"><i class="fa fa-check"></i><b>6.5</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pushing-images"><i class="fa fa-check"></i><b>6.5.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="6.5.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-registries"><i class="fa fa-check"></i><b>6.5.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="6.5.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#log-in-to-a-registry"><i class="fa fa-check"></i><b>6.5.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="6.5.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#local-registry"><i class="fa fa-check"></i><b>6.5.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile-1"><i class="fa fa-check"></i><b>6.6</b> The Dockerfile</a></li>
+<li class="chapter" data-level="6.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shiny-apps-with-dependencies-use-bananas"><i class="fa fa-check"></i><b>6.7</b> Shiny Apps With Dependencies (use bananas)</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#parent-images"><i class="fa fa-check"></i><b>6.7.1</b> Parent Images</a></li>
+<li class="chapter" data-level="6.7.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#system-libraries"><i class="fa fa-check"></i><b>6.7.2</b> system libraries</a></li>
+<li class="chapter" data-level="6.7.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-dependencies"><i class="fa fa-check"></i><b>6.7.3</b> R dependencies</a></li>
+<li class="chapter" data-level="6.7.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#python-requirements"><i class="fa fa-check"></i><b>6.7.4</b> Python requirements</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#best-practices"><i class="fa fa-check"></i><b>6.8</b> Best Practices</a>
+<ul>
+<li class="chapter" data-level="6.8.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#minimize-dependencies"><i class="fa fa-check"></i><b>6.8.1</b> Minimize dependencies</a></li>
+<li class="chapter" data-level="6.8.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#use-caching"><i class="fa fa-check"></i><b>6.8.2</b> Use caching</a></li>
+<li class="chapter" data-level="6.8.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#order-layers"><i class="fa fa-check"></i><b>6.8.3</b> Order layers</a></li>
+<li class="chapter" data-level="6.8.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#switch-user"><i class="fa fa-check"></i><b>6.8.4</b> Switch user</a></li>
+<li class="chapter" data-level="6.8.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds"><i class="fa fa-check"></i><b>6.8.5</b> Multi-stage Builds</a></li>
+<li class="chapter" data-level="6.8.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#other-considerations"><i class="fa fa-check"></i><b>6.8.6</b> Other considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#what-else"><i class="fa fa-check"></i><b>6.9</b> WHAT ELSE</a>
+<ul>
+<li class="chapter" data-level="6.9.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#layers-and-caching"><i class="fa fa-check"></i><b>6.9.1</b> Layers and Caching</a></li>
+<li class="chapter" data-level="6.9.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#hardware-architectures"><i class="fa fa-check"></i><b>6.9.2</b> Hardware Architectures</a></li>
+<li class="chapter" data-level="6.9.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds-1"><i class="fa fa-check"></i><b>6.9.3</b> Multi-stage builds</a></li>
+<li class="chapter" data-level="6.9.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#mounting-volumes"><i class="fa fa-check"></i><b>6.9.4</b> Mounting volumes</a></li>
+<li class="chapter" data-level="6.9.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#ports"><i class="fa fa-check"></i><b>6.9.5</b> Ports</a></li>
+<li class="chapter" data-level="6.9.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#uid"><i class="fa fa-check"></i><b>6.9.6</b> UID</a></li>
+<li class="chapter" data-level="6.9.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting"><i class="fa fa-check"></i><b>6.9.7</b> Troubleshooting</a></li>
+<li class="chapter" data-level="6.9.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shinylive-1"><i class="fa fa-check"></i><b>6.9.8</b> Shinylive</a></li>
+<li class="chapter" data-level="6.9.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#rmd"><i class="fa fa-check"></i><b>6.9.9</b> Rmd</a></li>
+<li class="chapter" data-level="6.9.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#quarto-1"><i class="fa fa-check"></i><b>6.9.10</b> Quarto</a></li>
+<li class="chapter" data-level="6.9.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#using-buildkit"><i class="fa fa-check"></i><b>6.9.11</b> Using BuildKit</a></li>
+</ul></li>
+<li class="chapter" data-level="6.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-orchestration"><i class="fa fa-check"></i><b>6.10</b> Container Orchestration</a>
+<ul>
+<li class="chapter" data-level="6.10.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-compose"><i class="fa fa-check"></i><b>6.10.1</b> Docker Compose</a></li>
+</ul></li>
+<li class="chapter" data-level="6.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting-1"><i class="fa fa-check"></i><b>6.11</b> Troubleshooting</a></li>
+<li class="chapter" data-level="6.12" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#summary-5"><i class="fa fa-check"></i><b>6.12</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="7" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html"><i class="fa fa-check"></i><b>7</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>7.1</b> Start with the why</a></li>
+<li class="chapter" data-level="7.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#list-your-requirements"><i class="fa fa-check"></i><b>7.2</b> List your requirements</a></li>
+<li class="chapter" data-level="7.3" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#identify-your-constraints"><i class="fa fa-check"></i><b>7.3</b> Identify your constraints</a></li>
+<li class="chapter" data-level="7.4" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#options-at-a-glance"><i class="fa fa-check"></i><b>7.4</b> Options at a glance</a></li>
+<li class="chapter" data-level="7.5" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#hosting-patterns"><i class="fa fa-check"></i><b>7.5</b> Hosting Patterns</a></li>
+<li class="chapter" data-level="7.6" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#the-cloud"><i class="fa fa-check"></i><b>7.6</b> The Cloud</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#servers-2"><i class="fa fa-check"></i><b>7.6.1</b> Servers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#custom-domain-names"><i class="fa fa-check"></i><b>7.7</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="7.8" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#reverse-proxies"><i class="fa fa-check"></i><b>7.8</b> Reverse Proxies</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#install-caddy"><i class="fa fa-check"></i><b>7.8.1</b> Install Caddy</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#monitoring-processes"><i class="fa fa-check"></i><b>7.9</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="7.10" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#systemctl"><i class="fa fa-check"></i><b>7.10</b> Systemctl</a></li>
+<li class="chapter" data-level="7.11" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>7.11</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="7.12" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#networkingfirewalls"><i class="fa fa-check"></i><b>7.12</b> Networking/Firewalls</a>
+<ul>
+<li class="chapter" data-level="7.12.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#systemd"><i class="fa fa-check"></i><b>7.12.1</b> systemd</a></li>
+</ul></li>
+<li class="chapter" data-level="7.13" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-shiny-apps"><i class="fa fa-check"></i><b>7.13</b> Static Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.13.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-without-containers-r-vs-python"><i class="fa fa-check"></i><b>7.13.1</b> Compiling without containers (R vs Python)</a></li>
+<li class="chapter" data-level="7.13.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-with-containers"><i class="fa fa-check"></i><b>7.13.2</b> Compiling with containers</a></li>
+<li class="chapter" data-level="7.13.3" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-hosting-options"><i class="fa fa-check"></i><b>7.13.3</b> Static Hosting Options</a></li>
+</ul></li>
+<li class="chapter" data-level="7.14" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#dynamic-shiny-apps"><i class="fa fa-check"></i><b>7.14</b> Dynamic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.14.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#hosting-platforms-paas"><i class="fa fa-check"></i><b>7.14.1</b> Hosting platforms (PaaS)</a></li>
+<li class="chapter" data-level="7.14.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#reverse-proxy-required"><i class="fa fa-check"></i><b>7.14.2</b> Reverse Proxy Required</a></li>
+</ul></li>
+<li class="chapter" data-level="7.15" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-static-files-with-shinylive"><i class="fa fa-check"></i><b>7.15</b> Deploying Static Files with Shinylive</a></li>
+<li class="chapter" data-level="7.16" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-shiny-apps-to-shinyapps.io"><i class="fa fa-check"></i><b>7.16</b> Deploying Shiny Apps to Shinyapps.io</a>
+<ul>
+<li class="chapter" data-level="7.16.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#r-2"><i class="fa fa-check"></i><b>7.16.1</b> R</a></li>
+<li class="chapter" data-level="7.16.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#python-1"><i class="fa fa-check"></i><b>7.16.2</b> Python</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html"><i class="fa fa-check"></i><b>8</b> Considerations for Hosting Production Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#security"><i class="fa fa-check"></i><b>8.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#certificates"><i class="fa fa-check"></i><b>8.1.1</b> Certificates</a></li>
+<li class="chapter" data-level="8.1.2" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#storing-secrets"><i class="fa fa-check"></i><b>8.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="8.1.3" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#shiny-app-authentication"><i class="fa fa-check"></i><b>8.1.3</b> Shiny App Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#performance-availability-and-monitoring"><i class="fa fa-check"></i><b>8.2</b> Performance, Availability, and Monitoring</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#scaling"><i class="fa fa-check"></i><b>8.2.1</b> Scaling</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#operations-and-maintenance"><i class="fa fa-check"></i><b>8.3</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#cicd"><i class="fa fa-check"></i><b>8.3.1</b> CI/CD</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#embedding-onto-your-website"><i class="fa fa-check"></i><b>8.4</b> Embedding Onto Your Website</a></li>
+<li class="chapter" data-level="8.5" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#other-stuff"><i class="fa fa-check"></i><b>8.5</b> OTHER STUFF</a></li>
+</ul></li>
+<li class="part"><span><b>IV What Is Next?</b></span></li>
+<li class="chapter" data-level="9" data-path="9-information-about-hosting.html"><a href="9-information-about-hosting.html"><i class="fa fa-check"></i><b>9</b> Information about hosting</a></li>
+<li class="chapter" data-level="10" data-path="10-conclusions.html"><a href="10-conclusions.html"><i class="fa fa-check"></i><b>10</b> Conclusions</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-bananas.html"><a href="appendix-bananas.html"><i class="fa fa-check"></i>The Bananas Data Set</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html"><i class="fa fa-check"></i>Shiny App for Testing Load Balancing</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-python-version"><i class="fa fa-check"></i>The Python Version</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-r-version"><i class="fa fa-check"></i>The R Version</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#shinylive-2"><i class="fa fa-check"></i>Shinylive</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#test-load-balancing"><i class="fa fa-check"></i>Test Load Balancing</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html"><i class="fa fa-check"></i>How to Pick the Right Hosting Option</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#start-with-the-why-1"><i class="fa fa-check"></i>Start with the Why</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#list-your-requirements-1"><i class="fa fa-check"></i>List Your Requirements</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#identify-your-constraints-1"><i class="fa fa-check"></i>Identify Your Constraints</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#options-at-a-glance-1"><i class="fa fa-check"></i>Options at a glance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix-setup.html"><a href="appendix-setup.html"><i class="fa fa-check"></i>Setting Up Your Development Environment</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='https://hosting.analythium.io/content/images/size/w600/2021/03/banner-1.png' alt="Hosting Shiny">
+</html>
+<div id="references" class="section level1 unnumbered hasAnchor">
+<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div class="csl-entry">
+Aden-Buie, Garrick, Carson Sievert, Richard Iannone, JJ Allaire, and Barbara Borges. 2023. <em>Flexdashboard: R Markdown Format for Flexible Dashboards</em>. <a href="https://CRAN.R-project.org/package=flexdashboard">https://CRAN.R-project.org/package=flexdashboard</a>.
+</div>
+<div class="csl-entry">
+Allaire, JJ, Yihui Xie, Christophe Dervieux, Jonathan McPherson, Javier Luraschi, Kevin Ushey, Aron Atkins, et al. 2024. <em>Rmarkdown: Dynamic Documents for r</em>. <a href="https://github.com/rstudio/rmarkdown">https://github.com/rstudio/rmarkdown</a>.
+</div>
+<div class="csl-entry">
+Chang, Winston, Joe Cheng, JJ Allaire, Carson Sievert, Barret Schloerke, Yihui Xie, Jeff Allen, Jonathan McPherson, Alan Dipert, and Barbara Borges. 2024. <em>Shiny: Web Application Framework for r</em>. <a href="https://CRAN.R-project.org/package=shiny">https://CRAN.R-project.org/package=shiny</a>.
+</div>
+<div class="csl-entry">
+Cheng, Joe, Winston Chang, Steve Reid, James Brown, Bob Trower, and Alexander Peslyak. 2024. <em>Httpuv: HTTP and WebSocket Server Library</em>. <a href="https://CRAN.R-project.org/package=httpuv">https://CRAN.R-project.org/package=httpuv</a>.
+</div>
+<div class="csl-entry">
+Coene, J. 2021. <em>Javascript for r</em>. Chapman &amp; Hall/CRC the r Series. CRC Press. <a href="https://books.google.ch/books?id=ntUxEAAAQBAJ">https://books.google.ch/books?id=ntUxEAAAQBAJ</a>.
+</div>
+<div class="csl-entry">
+Coene, John. 2022. <em>Leprechaun: Create Simple ’Shiny’ Applications as Packages</em>. <a href="https://CRAN.R-project.org/package=leprechaun">https://CRAN.R-project.org/package=leprechaun</a>.
+</div>
+<div class="csl-entry">
+Fay, Colin, Vincent Guyader, Sébastien Rochette, and Cervan Girard. 2023. <em>Golem: A Framework for Robust Shiny Applications</em>. <a href="https://CRAN.R-project.org/package=golem">https://CRAN.R-project.org/package=golem</a>.
+</div>
+<div class="csl-entry">
+Fay, Colin, Sébastien Rochette, Vincent Guyader, and Cervan Girard. 2021. <em>Engineering Production-Grade <span>Shiny</span> Apps</em>. Chapman &amp; Hall. <a href="https://engineering-shiny.org/">https://engineering-shiny.org/</a>.
+</div>
+<div class="csl-entry">
+Gold, Alex. 2024. <em>DevOps for Data Science</em>. Chapman &amp; Hall. <a href="https://do4ds.com/">https://do4ds.com/</a>.
+</div>
+<div class="csl-entry">
+Granjon, David. 2022. <em>Outstanding User Interfaces with Shiny</em>. Chapman &amp; Hall. <a href="https://unleash-shiny.rinterface.com/">https://unleash-shiny.rinterface.com/</a>.
+</div>
+<div class="csl-entry">
+Hadley, Wickham, and Jennifer Bryan. 2023. <em>R Packages</em>. 2nd ed. O’Reilly Media, Inc. <a href="https://r-pkgs.org/">https://r-pkgs.org/</a>.
+</div>
+<div class="csl-entry">
+Hunter, J. D. 2007. <span>“Matplotlib: A 2D Graphics Environment.”</span> <em>Computing in Science &amp; Engineering</em> 9 (3): 90–95. <a href="https://doi.org/10.1109/MCSE.2007.55">https://doi.org/10.1109/MCSE.2007.55</a>.
+</div>
+<div class="csl-entry">
+Knuth, Donald. 1992. <em>Literate Programming</em>. Center for the Study of Language; Information—CSLI.
+</div>
+<div class="csl-entry">
+Lai, Randy. 2023. <em>Languageserver: Language Server Protocol</em>. <a href="https://CRAN.R-project.org/package=languageserver">https://CRAN.R-project.org/package=languageserver</a>.
+</div>
+<div class="csl-entry">
+Leisch, Friedrich. 2002. <span>“Sweave, Part i: Mixing r and LaTeX.”</span> <em>R News</em> 2: 28–31.
+</div>
+<div class="csl-entry">
+Meyer, David, Evgenia Dimitriadou, Kurt Hornik, Andreas Weingessel, and Friedrich Leisch. 2023. <em>E1071: Misc Functions of the Department of Statistics, Probability Theory Group (Formerly: E1071), TU Wien</em>. <a href="https://CRAN.R-project.org/package=e1071">https://CRAN.R-project.org/package=e1071</a>.
+</div>
+<div class="csl-entry">
+Pedregosa, F., G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, et al. 2011. <span>“Scikit-Learn: Machine Learning in <span>P</span>ython.”</span> <em>Journal of Machine Learning Research</em> 12: 2825–30.
+</div>
+<div class="csl-entry">
+R Core Team. 2024. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div class="csl-entry">
+Rudolph, Konrad. 2024. <em>Box: Write Reusable, Composable and Modular r Code</em>. <a href="https://CRAN.R-project.org/package=box">https://CRAN.R-project.org/package=box</a>.
+</div>
+<div class="csl-entry">
+Schloerke, Barret. 2024. <em>Shinytest2: Testing for Shiny Applications</em>. <a href="https://CRAN.R-project.org/package=shinytest2">https://CRAN.R-project.org/package=shinytest2</a>.
+</div>
+<div class="csl-entry">
+Ushey, Kevin, JJ Allaire, and Yuan Tang. 2024. <em>Reticulate: Interface to ’Python’</em>. <a href="https://CRAN.R-project.org/package=reticulate">https://CRAN.R-project.org/package=reticulate</a>.
+</div>
+<div class="csl-entry">
+Waskom, Michael L. 2021. <span>“Seaborn: Statistical Data Visualization.”</span> <em>Journal of Open Source Software</em> 6 (60): 3021. <a href="https://doi.org/10.21105/joss.03021">https://doi.org/10.21105/joss.03021</a>.
+</div>
+<div class="csl-entry">
+Wickham, Hadley. 2021. <em>Mastering <span>Shiny</span></em>. O’Reilly Media, Inc. <a href="https://mastering-shiny.org/">https://mastering-shiny.org/</a>.
+</div>
+<div class="csl-entry">
+Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster. 2024. <em>Roxygen2: In-Line Documentation for r</em>. <a href="https://CRAN.R-project.org/package=roxygen2">https://CRAN.R-project.org/package=roxygen2</a>.
+</div>
+<div class="csl-entry">
+Xie, Yihui. 2024. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in r</em>. <a href="https://yihui.org/knitr/">https://yihui.org/knitr/</a>.
+</div>
+<div class="csl-entry">
+Żyła, Kamil, Jakub Nowicki, Leszek Siemiński, Marek Rogala, Recle Vibal, Tymoteusz Makowski, and Rodrigo Basa. 2024. <em>Rhino: A Framework for Enterprise Shiny Applications</em>. <a href="https://CRAN.R-project.org/package=rhino">https://CRAN.R-project.org/package=rhino</a>.
+</div>
+</div>
+</div>
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="appendix-setup.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/analythium/hosting-shiny-book/edit/main/05-99-references.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

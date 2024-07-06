@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Containerizing Shiny Apps | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Containerizing Shiny Apps | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="analythium/hosting-shiny-book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Containerizing Shiny Apps | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@analythium" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2024-07-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="5-developing-shiny-apps.html"/>
+<link rel="next" href="7-a-review-of-shiny-hosting-options.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.umd.cjs"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.4/reactable.js"></script>
+<script>
+  // Fathom Analytics code to come here
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-background.html"><a href="1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-background.html"><a href="1-background.html#data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-background.html"><a href="1-background.html#enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-background.html"><a href="1-background.html#application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-background.html"><a href="1-background.html#application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-background.html"><a href="1-background.html#the-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-background.html"><a href="1-background.html#the-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-background.html"><a href="1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#website-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-hosting-concepts.html"><a href="2-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-local-setup.html"><a href="3-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-local-setup.html"><a href="3-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-local-setup.html"><a href="3-local-setup.html#r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-local-setup.html"><a href="3-local-setup.html#install-python"><i class="fa fa-check"></i><b>3.1.2</b> Install Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-local-setup.html"><a href="3-local-setup.html#web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-local-setup.html"><a href="3-local-setup.html#quarto"><i class="fa fa-check"></i><b>3.1.4</b> Quarto</a></li>
+<li class="chapter" data-level="3.1.5" data-path="3-local-setup.html"><a href="3-local-setup.html#docker-desktop"><i class="fa fa-check"></i><b>3.1.5</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-local-setup.html"><a href="3-local-setup.html#the-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-local-setup.html"><a href="3-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-local-setup.html"><a href="3-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-local-setup.html"><a href="3-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-local-setup.html"><a href="3-local-setup.html#super-user-access"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-local-setup.html"><a href="3-local-setup.html#source-code-management-with-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-local-setup.html"><a href="3-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-local-setup.html"><a href="3-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-local-setup.html"><a href="3-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-local-setup.html"><a href="3-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-local-setup.html"><a href="3-local-setup.html#servers-1"><i class="fa fa-check"></i><b>3.4</b> Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-local-setup.html"><a href="3-local-setup.html#secure-shell-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-local-setup.html"><a href="3-local-setup.html#readability-on-the-command-line"><i class="fa fa-check"></i><b>3.5</b> Readability on the Command Line</a></li>
+<li class="chapter" data-level="3.6" data-path="3-local-setup.html"><a href="3-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-examples.html"><a href="4-examples.html"><i class="fa fa-check"></i><b>4</b> Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-examples.html"><a href="4-examples.html#old-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-examples.html"><a href="4-examples.html#bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="4-examples.html"><a href="4-examples.html#the-bananas-data-set"><i class="fa fa-check"></i><b>4.2.1</b> The Bananas Data Set</a></li>
+<li class="chapter" data-level="4.2.2" data-path="4-examples.html"><a href="4-examples.html#model-training"><i class="fa fa-check"></i><b>4.2.2</b> Model Training</a></li>
+<li class="chapter" data-level="4.2.3" data-path="4-examples.html"><a href="4-examples.html#the-shiny-app"><i class="fa fa-check"></i><b>4.2.3</b> The Shiny App</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="4-examples.html"><a href="4-examples.html#load-balancing-test"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-examples.html"><a href="4-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-user-interface"><i class="fa fa-check"></i><b>5.1.1</b> The User Interface</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-server-function"><i class="fa fa-check"></i><b>5.1.2</b> The Server Function</a></li>
+<li class="chapter" data-level="5.1.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-express"><i class="fa fa-check"></i><b>5.1.3</b> Shiny Express</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#organizing-shiny-apps"><i class="fa fa-check"></i><b>5.2</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#single-file"><i class="fa fa-check"></i><b>5.2.1</b> Single file</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#multiple-files"><i class="fa fa-check"></i><b>5.2.2</b> Multiple Files</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-app-with-nested-files-structure"><i class="fa fa-check"></i><b>5.2.3</b> Shiny App with Nested Files Structure</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#programmatic-cases"><i class="fa fa-check"></i><b>5.2.4</b> Programmatic Cases</a></li>
+<li class="chapter" data-level="5.2.5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shiny-app-as-an-r-package"><i class="fa fa-check"></i><b>5.2.5</b> Shiny App as an R Package</a></li>
+<li class="chapter" data-level="5.2.6" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#dynamic-documents"><i class="fa fa-check"></i><b>5.2.6</b> Dynamic Documents</a></li>
+<li class="chapter" data-level="5.2.7" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.7</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#running-shiny-apps-locally"><i class="fa fa-check"></i><b>5.3</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+<li class="chapter" data-level="5.3.3" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#the-shiny-app-lifecycle"><i class="fa fa-check"></i><b>5.3.3</b> The Shiny App Lifecycle</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#sharing-the-shiny-app-code"><i class="fa fa-check"></i><b>5.4</b> Sharing the Shiny App Code</a></li>
+<li class="chapter" data-level="5.5" data-path="5-developing-shiny-apps.html"><a href="5-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>6</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-concepts"><i class="fa fa-check"></i><b>6.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-engine"><i class="fa fa-check"></i><b>6.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="6.1.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-registries"><i class="fa fa-check"></i><b>6.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="6.1.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#images"><i class="fa fa-check"></i><b>6.1.3</b> Images</a></li>
+<li class="chapter" data-level="6.1.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile"><i class="fa fa-check"></i><b>6.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="6.1.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#containers"><i class="fa fa-check"></i><b>6.1.5</b> Containers</a></li>
+<li class="chapter" data-level="6.1.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-docker-command-line"><i class="fa fa-check"></i><b>6.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#working-with-existing-images"><i class="fa fa-check"></i><b>6.2</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#image-names-and-tags"><i class="fa fa-check"></i><b>6.2.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="6.2.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pulling-an-image"><i class="fa fa-check"></i><b>6.2.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="6.2.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-login"><i class="fa fa-check"></i><b>6.2.3</b> Docker Login</a></li>
+<li class="chapter" data-level="6.2.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#running-a-container"><i class="fa fa-check"></i><b>6.2.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#building-a-new-image"><i class="fa fa-check"></i><b>6.3</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-for-shiny"><i class="fa fa-check"></i><b>6.3.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="6.3.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#buildx-and-buildkit"><i class="fa fa-check"></i><b>6.3.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="6.3.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#inspecting-the-image"><i class="fa fa-check"></i><b>6.3.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="6.3.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-for-python"><i class="fa fa-check"></i><b>6.3.4</b> R for Python</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#managing-images-and-containers"><i class="fa fa-check"></i><b>6.4</b> Managing Images and Containers</a></li>
+<li class="chapter" data-level="6.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#sharing-images"><i class="fa fa-check"></i><b>6.5</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pushing-images"><i class="fa fa-check"></i><b>6.5.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="6.5.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-registries"><i class="fa fa-check"></i><b>6.5.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="6.5.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#log-in-to-a-registry"><i class="fa fa-check"></i><b>6.5.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="6.5.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#local-registry"><i class="fa fa-check"></i><b>6.5.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile-1"><i class="fa fa-check"></i><b>6.6</b> The Dockerfile</a></li>
+<li class="chapter" data-level="6.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shiny-apps-with-dependencies-use-bananas"><i class="fa fa-check"></i><b>6.7</b> Shiny Apps With Dependencies (use bananas)</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#parent-images"><i class="fa fa-check"></i><b>6.7.1</b> Parent Images</a></li>
+<li class="chapter" data-level="6.7.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#system-libraries"><i class="fa fa-check"></i><b>6.7.2</b> system libraries</a></li>
+<li class="chapter" data-level="6.7.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-dependencies"><i class="fa fa-check"></i><b>6.7.3</b> R dependencies</a></li>
+<li class="chapter" data-level="6.7.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#python-requirements"><i class="fa fa-check"></i><b>6.7.4</b> Python requirements</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#best-practices"><i class="fa fa-check"></i><b>6.8</b> Best Practices</a>
+<ul>
+<li class="chapter" data-level="6.8.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#minimize-dependencies"><i class="fa fa-check"></i><b>6.8.1</b> Minimize dependencies</a></li>
+<li class="chapter" data-level="6.8.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#use-caching"><i class="fa fa-check"></i><b>6.8.2</b> Use caching</a></li>
+<li class="chapter" data-level="6.8.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#order-layers"><i class="fa fa-check"></i><b>6.8.3</b> Order layers</a></li>
+<li class="chapter" data-level="6.8.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#switch-user"><i class="fa fa-check"></i><b>6.8.4</b> Switch user</a></li>
+<li class="chapter" data-level="6.8.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds"><i class="fa fa-check"></i><b>6.8.5</b> Multi-stage Builds</a></li>
+<li class="chapter" data-level="6.8.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#other-considerations"><i class="fa fa-check"></i><b>6.8.6</b> Other considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#what-else"><i class="fa fa-check"></i><b>6.9</b> WHAT ELSE</a>
+<ul>
+<li class="chapter" data-level="6.9.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#layers-and-caching"><i class="fa fa-check"></i><b>6.9.1</b> Layers and Caching</a></li>
+<li class="chapter" data-level="6.9.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#hardware-architectures"><i class="fa fa-check"></i><b>6.9.2</b> Hardware Architectures</a></li>
+<li class="chapter" data-level="6.9.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds-1"><i class="fa fa-check"></i><b>6.9.3</b> Multi-stage builds</a></li>
+<li class="chapter" data-level="6.9.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#mounting-volumes"><i class="fa fa-check"></i><b>6.9.4</b> Mounting volumes</a></li>
+<li class="chapter" data-level="6.9.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#ports"><i class="fa fa-check"></i><b>6.9.5</b> Ports</a></li>
+<li class="chapter" data-level="6.9.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#uid"><i class="fa fa-check"></i><b>6.9.6</b> UID</a></li>
+<li class="chapter" data-level="6.9.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting"><i class="fa fa-check"></i><b>6.9.7</b> Troubleshooting</a></li>
+<li class="chapter" data-level="6.9.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shinylive-1"><i class="fa fa-check"></i><b>6.9.8</b> Shinylive</a></li>
+<li class="chapter" data-level="6.9.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#rmd"><i class="fa fa-check"></i><b>6.9.9</b> Rmd</a></li>
+<li class="chapter" data-level="6.9.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#quarto-1"><i class="fa fa-check"></i><b>6.9.10</b> Quarto</a></li>
+<li class="chapter" data-level="6.9.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#using-buildkit"><i class="fa fa-check"></i><b>6.9.11</b> Using BuildKit</a></li>
+</ul></li>
+<li class="chapter" data-level="6.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-orchestration"><i class="fa fa-check"></i><b>6.10</b> Container Orchestration</a>
+<ul>
+<li class="chapter" data-level="6.10.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-compose"><i class="fa fa-check"></i><b>6.10.1</b> Docker Compose</a></li>
+</ul></li>
+<li class="chapter" data-level="6.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting-1"><i class="fa fa-check"></i><b>6.11</b> Troubleshooting</a></li>
+<li class="chapter" data-level="6.12" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#summary-5"><i class="fa fa-check"></i><b>6.12</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="7" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html"><i class="fa fa-check"></i><b>7</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>7.1</b> Start with the why</a></li>
+<li class="chapter" data-level="7.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#list-your-requirements"><i class="fa fa-check"></i><b>7.2</b> List your requirements</a></li>
+<li class="chapter" data-level="7.3" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#identify-your-constraints"><i class="fa fa-check"></i><b>7.3</b> Identify your constraints</a></li>
+<li class="chapter" data-level="7.4" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#options-at-a-glance"><i class="fa fa-check"></i><b>7.4</b> Options at a glance</a></li>
+<li class="chapter" data-level="7.5" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#hosting-patterns"><i class="fa fa-check"></i><b>7.5</b> Hosting Patterns</a></li>
+<li class="chapter" data-level="7.6" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#the-cloud"><i class="fa fa-check"></i><b>7.6</b> The Cloud</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#servers-2"><i class="fa fa-check"></i><b>7.6.1</b> Servers</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#custom-domain-names"><i class="fa fa-check"></i><b>7.7</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="7.8" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#reverse-proxies"><i class="fa fa-check"></i><b>7.8</b> Reverse Proxies</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#install-caddy"><i class="fa fa-check"></i><b>7.8.1</b> Install Caddy</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#monitoring-processes"><i class="fa fa-check"></i><b>7.9</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="7.10" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#systemctl"><i class="fa fa-check"></i><b>7.10</b> Systemctl</a></li>
+<li class="chapter" data-level="7.11" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>7.11</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="7.12" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#networkingfirewalls"><i class="fa fa-check"></i><b>7.12</b> Networking/Firewalls</a>
+<ul>
+<li class="chapter" data-level="7.12.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#systemd"><i class="fa fa-check"></i><b>7.12.1</b> systemd</a></li>
+</ul></li>
+<li class="chapter" data-level="7.13" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-shiny-apps"><i class="fa fa-check"></i><b>7.13</b> Static Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.13.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-without-containers-r-vs-python"><i class="fa fa-check"></i><b>7.13.1</b> Compiling without containers (R vs Python)</a></li>
+<li class="chapter" data-level="7.13.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-with-containers"><i class="fa fa-check"></i><b>7.13.2</b> Compiling with containers</a></li>
+<li class="chapter" data-level="7.13.3" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-hosting-options"><i class="fa fa-check"></i><b>7.13.3</b> Static Hosting Options</a></li>
+</ul></li>
+<li class="chapter" data-level="7.14" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#dynamic-shiny-apps"><i class="fa fa-check"></i><b>7.14</b> Dynamic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.14.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#hosting-platforms-paas"><i class="fa fa-check"></i><b>7.14.1</b> Hosting platforms (PaaS)</a></li>
+<li class="chapter" data-level="7.14.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#reverse-proxy-required"><i class="fa fa-check"></i><b>7.14.2</b> Reverse Proxy Required</a></li>
+</ul></li>
+<li class="chapter" data-level="7.15" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-static-files-with-shinylive"><i class="fa fa-check"></i><b>7.15</b> Deploying Static Files with Shinylive</a></li>
+<li class="chapter" data-level="7.16" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-shiny-apps-to-shinyapps.io"><i class="fa fa-check"></i><b>7.16</b> Deploying Shiny Apps to Shinyapps.io</a>
+<ul>
+<li class="chapter" data-level="7.16.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#r-2"><i class="fa fa-check"></i><b>7.16.1</b> R</a></li>
+<li class="chapter" data-level="7.16.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#python-1"><i class="fa fa-check"></i><b>7.16.2</b> Python</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html"><i class="fa fa-check"></i><b>8</b> Considerations for Hosting Production Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#security"><i class="fa fa-check"></i><b>8.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#certificates"><i class="fa fa-check"></i><b>8.1.1</b> Certificates</a></li>
+<li class="chapter" data-level="8.1.2" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#storing-secrets"><i class="fa fa-check"></i><b>8.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="8.1.3" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#shiny-app-authentication"><i class="fa fa-check"></i><b>8.1.3</b> Shiny App Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#performance-availability-and-monitoring"><i class="fa fa-check"></i><b>8.2</b> Performance, Availability, and Monitoring</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#scaling"><i class="fa fa-check"></i><b>8.2.1</b> Scaling</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#operations-and-maintenance"><i class="fa fa-check"></i><b>8.3</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#cicd"><i class="fa fa-check"></i><b>8.3.1</b> CI/CD</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#embedding-onto-your-website"><i class="fa fa-check"></i><b>8.4</b> Embedding Onto Your Website</a></li>
+<li class="chapter" data-level="8.5" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html#other-stuff"><i class="fa fa-check"></i><b>8.5</b> OTHER STUFF</a></li>
+</ul></li>
+<li class="part"><span><b>IV What Is Next?</b></span></li>
+<li class="chapter" data-level="9" data-path="9-information-about-hosting.html"><a href="9-information-about-hosting.html"><i class="fa fa-check"></i><b>9</b> Information about hosting</a></li>
+<li class="chapter" data-level="10" data-path="10-conclusions.html"><a href="10-conclusions.html"><i class="fa fa-check"></i><b>10</b> Conclusions</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="appendix-bananas.html"><a href="appendix-bananas.html"><i class="fa fa-check"></i>The Bananas Data Set</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html"><i class="fa fa-check"></i>Shiny App for Testing Load Balancing</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-python-version"><i class="fa fa-check"></i>The Python Version</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-r-version"><i class="fa fa-check"></i>The R Version</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#shinylive-2"><i class="fa fa-check"></i>Shinylive</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#test-load-balancing"><i class="fa fa-check"></i>Test Load Balancing</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html"><i class="fa fa-check"></i>How to Pick the Right Hosting Option</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#start-with-the-why-1"><i class="fa fa-check"></i>Start with the Why</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#list-your-requirements-1"><i class="fa fa-check"></i>List Your Requirements</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#identify-your-constraints-1"><i class="fa fa-check"></i>Identify Your Constraints</a></li>
+<li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html#options-at-a-glance-1"><i class="fa fa-check"></i>Options at a glance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix-setup.html"><a href="appendix-setup.html"><i class="fa fa-check"></i>Setting Up Your Development Environment</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='https://hosting.analythium.io/content/images/size/w600/2021/03/banner-1.png' alt="Hosting Shiny">
+</html>
+<div id="containerizing-shiny-apps" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Containerizing Shiny Apps<a href="6-containerizing-shiny-apps.html#containerizing-shiny-apps" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Containerization is a topic that is of increasing interest to data
+scientists and is a key feature for being able to cover the R and Python
+aspects of Shiny hosting in parallel. Once the container image is built,
+deployment and hosting become independent of the language that the app was
+written in. Tooling around this task has made huge advances over the past two
+years, and thanks to this, the topic is now accessible to a wider audience.</p>
+<p>Containerization enables you to separate your applications from
+your infrastructure so you can deliver software faster.
+Containerization help makes an application platform independent by creating
+virtual environments in a container. To run a specific application, you will
+need to develop an <em>image</em> for that platform which is then published on a
+<em>container registry</em>. The developed Image can be pulled from the registry to
+run a virtualized container environment for the application.</p>
+<p>Docker is one of the most popular tools for creating and managing containers
+for Shiny apps. This chapter will outline the needed concepts for containerizing
+your shiny application.</p>
+<p>Learning Docker seems daunting at first, but it is an incredibly
+powerful piece of technology once you get the hang of it. It is also the
+building block of the modern web.</p>
+<p>Docker is not the only tooling for containerizing applications.
+Docker’s licensing model has recently changed and can require a paid license for
+commercial use. Therefore, there are alternatives of the Docker engine such as
+using <a href="https://podman.io/">Podman</a>.
+However, Podman is much more technical to use than Docker.</p>
+<p>All the general advantages of containerized applications apply to Shiny
+apps. Docker provides isolation to applications. Images are immutable:
+once build they cannot be changed, and if the app is working, it will
+work the same in the future. Another important consideration is scaling.
+Shiny apps are single-threaded, but running multiple instances of the
+same image can serve many users at the same time. Let’s dive into the
+details of how to achieve this.</p>
+<div id="docker-concepts" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Docker Concepts<a href="6-containerizing-shiny-apps.html#docker-concepts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Containers provide portability, consistency, and are used for packaging,
+deploying, and running cloud-native data science applications.
+<a href="https://www.docker.com/">Docker</a> is the most
+popular virtualization environment to deliver software in containers.
+DOcker is also well supported for Python and R.
+Among the many use cases, Docker is most commonly used to deploy
+reproducible workflows and to provide isolation for Shiny apps.</p>
+<p>Containers bundle their own software, libraries and configuration
+files and are isolated from one another. Containers are the
+run-time environments or instances defined by container
+images. Let’s review the most important concepts.
+Figure <a href="6-containerizing-shiny-apps.html#fig:part2-docker-architecture">6.1</a> illustrates
+how all the Docker-related concepts all fit together.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:part2-docker-architecture"></span>
+<img src="images/02/docker-architecture.png" alt="The Shiny app life cycle with websocket connection." width="80%" />
+<p class="caption">
+Figure 6.1: The Shiny app life cycle with websocket connection.
+</p>
+</div>
+<p>You as the user, will use the command line as the <em>client</em> to the Docker Engine
+which exists on a <em>host</em> machine. The Docker Engine interfaces with the
+<em>container registry</em> to pull the necessary <em>images</em> for building a local copy of
+an image on the host for running an instance of a container.</p>
+<div id="docker-engine" class="section level3 hasAnchor" number="6.1.1">
+<h3><span class="header-section-number">6.1.1</span> Docker Engine<a href="6-containerizing-shiny-apps.html#docker-engine" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Docker Engine is a client-server application that includes a
+server (a long-running daemon process called <code>dockerd</code> that listens to API
+requests), an <em>application programming interface</em>
+(REST API) that specifies the interface that programs can use to talk to the
+daemon process, and a <em>command-line interface</em> (CLI) that is the client-side
+of Docker.</p>
+<p>The CLI uses the REST API to control or interact with the Docker daemon.
+The daemon creates and manages Docker objects, such as images,
+containers, volumes, networks, etc.</p>
+</div>
+<div id="container-registries" class="section level3 hasAnchor" number="6.1.2">
+<h3><span class="header-section-number">6.1.2</span> Container Registries<a href="6-containerizing-shiny-apps.html#container-registries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Docker registry stores Docker images. <a href="https://hub.docker.com/">Docker Hub</a>
+is a public registry and Docker is configured to look for images on Docker Hub by
+default. There are many other registries, or users can have their own
+private registries. You will see some examples later.
+Strictly speaking, container registries are for images and not containers.</p>
+</div>
+<div id="images" class="section level3 hasAnchor" number="6.1.3">
+<h3><span class="header-section-number">6.1.3</span> Images<a href="6-containerizing-shiny-apps.html#images" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An image is a read-only template with instructions for creating a
+Docker container. You can view an image as a set of compressed files and
+metadata describing how these files – also called image layers – fit together.</p>
+<p>An image can be based on another image with additional customization on top of
+this so-called <em>base</em> or a <em>parent</em> image. A base images is an images created
+from scratch, whereas a parent image is just another image that serves as the
+foundation for a new image. You might see base image used for both situations
+when reading tutorials. Don’t get confused, the Docker lingo has a few
+inconsistencies that we just have to accept and move on.</p>
+</div>
+<div id="the-dockerfile" class="section level3 hasAnchor" number="6.1.4">
+<h3><span class="header-section-number">6.1.4</span> The Dockerfile<a href="6-containerizing-shiny-apps.html#the-dockerfile" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Docker builds images by reading the instructions from a file called
+<code>Dockerfile</code>. A Dockerfile is a text document that contains all the
+commands to assemble an image using the <code>docker build</code> CLI command. You
+will learn more about the <code>Dockerfile</code> as part of the worked Shiny
+examples later.</p>
+</div>
+<div id="containers" class="section level3 hasAnchor" number="6.1.5">
+<h3><span class="header-section-number">6.1.5</span> Containers<a href="6-containerizing-shiny-apps.html#containers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A container is a runnable instance of an image. Users can create,
+start, stop a container using the Docker API or CLI. It is also possible
+to connect a container to networks or attach storage to it.</p>
+<p>By default, a container is isolated from other containers and the
+host machine. The degree of isolation can be controlled by the user and
+depends on whether it is connected to networks, storage, other
+containers, or the host machine.</p>
+</div>
+<div id="the-docker-command-line" class="section level3 hasAnchor" number="6.1.6">
+<h3><span class="header-section-number">6.1.6</span> The Docker Command Line<a href="6-containerizing-shiny-apps.html#the-docker-command-line" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The most common Docker CLI commands are:</p>
+<ul>
+<li><code>docker login</code>: log into a Docker registry,</li>
+<li><code>docker pull</code>: pull an image from a registry,</li>
+<li><code>docker build</code>: build a Docker image based on a <code>Dockerfile</code>,</li>
+<li><code>docker push</code>: push a locally built image to a Docker registry,</li>
+<li><code>docker run</code>: run a command in a new container based on an image.</li>
+</ul>
+<p>You will learn more about these commands in the subsequent sections.</p>
+</div>
+</div>
+<div id="working-with-existing-images" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Working with Existing Images<a href="6-containerizing-shiny-apps.html#working-with-existing-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s learn how to work with an existing image. Such an image is stored
+in a container registry where we can pull it from if we know its name.</p>
+<div id="image-names-and-tags" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Image Names and Tags<a href="6-containerizing-shiny-apps.html#image-names-and-tags" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Image names follow the pattern <code>&lt;host&gt;/&lt;path&gt;:&lt;tag&gt;</code>.
+The optional <code>&lt;host&gt;</code> name specifies where the image is located.
+If you don’t specify a host name, the commands will use Docker’s public registry
+<code>docker.io</code>, aka the Docker Hub.</p>
+<p>The <code>&lt;path&gt;</code> can be an “official” image, like <code>ubuntu</code>.
+The <code>&lt;tag&gt;</code> is a human-readable identifier that is often a specific version of
+an image. If not specified, the <code>latest</code> tag will be used.
+So <code>ubuntu</code> as an image name will be identical to <code>docker.io/ubuntu:latest</code>.</p>
+<p>It is important to note that the <code>latest</code> tag only means “latest” in the sense
+of the last image that was tagged as <code>latest</code> or was untagged. If you use
+a different tag, like <code>v1</code>, the image with the <code>latest</code> tag will not get
+updated as well. So don’t let this tag fool you. It is strongly recommended
+in production to always explicitly use a tag that is <em>not</em> <code>latest</code> but
+a specific version.</p>
+<p>The path is usually more structured and consists of slash-separated components.
+It often looks like <code>&lt;namespace&gt;/&lt;repository&gt;</code> where the namespace
+specifies the user account or organization to which the image belongs to.
+The base R image maintained by the <a href="https://rocker-project.org/">Rocker</a> project
+is names as <code>rocker/r-base</code> where <code>rocker</code> is the organization namespace,
+<code>r-base</code> is the repository.</p>
+<p>Another example is the R version of the Old Faithful
+example has the image name <code>ghcr.io/h10y/faithful/r-shiny:latest</code> which means:</p>
+<ul>
+<li><code>ghcr.io</code> is the GitHub Container Registry host name,</li>
+<li><code>h10y</code> is the GitHub organization,</li>
+<li><code>faithful</code> is the GitHub repository,</li>
+<li><code>r-shiny</code> is the Shiny app build,</li>
+<li><code>latest</code> is the version tag.</li>
+</ul>
+</div>
+<div id="pulling-an-image" class="section level3 hasAnchor" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Pulling an Image<a href="6-containerizing-shiny-apps.html#pulling-an-image" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You can use the <code>docker pull &lt;image-name&gt;</code> command to pull an image from
+a public registry. For example <code>docker pull ubuntu:24.04</code> will pull the
+24.04 version of the “official” Ubuntu image from the Docker Hub.
+<code>docker pull rocker/r-base:4.4.1</code> will pull the image with R version 4.1.1.
+Pull the R Shiny version of the Old Faithful as:</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb63-1"><a href="6-containerizing-shiny-apps.html#cb63-1" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/h10y/faithful/r-shiny</span>
+<span id="cb63-2"><a href="6-containerizing-shiny-apps.html#cb63-2" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="6-containerizing-shiny-apps.html#cb63-3" tabindex="-1"></a><span class="co"># Using default tag: latest</span></span>
+<span id="cb63-4"><a href="6-containerizing-shiny-apps.html#cb63-4" tabindex="-1"></a><span class="co"># latest: Pulling from h10y/faithful/r-shiny</span></span>
+<span id="cb63-5"><a href="6-containerizing-shiny-apps.html#cb63-5" tabindex="-1"></a><span class="co"># Digest: sha256:12e[...]4ea</span></span></code></pre></div>
+<p>You can see from the messages that the <code>latest</code> tag was applied because
+we did not specify the tag. We can also see the SHA256 digest, that is
+a unique and immutable identifier. The name can change, or multiple names can
+refer to the same image (i.e. a set of layers and their manifest). But the
+image digest will be the same. To “pin” the exact version, you can use the
+<code>&lt;image-name&gt;@sha256:12e[...]4ea</code> pattern:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb64-1"><a href="6-containerizing-shiny-apps.html#cb64-1" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/h10y/faithful/r-shiny@sha256:12e<span class="pp">[</span><span class="ss">...</span><span class="pp">]</span>4ea</span></code></pre></div>
+<p>To pull all images from a repository, you can use the <code>--all-tags</code> flag:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb65-1"><a href="6-containerizing-shiny-apps.html#cb65-1" tabindex="-1"></a><span class="ex">docker</span> image pull <span class="at">--all-tags</span> ghcr.io/h10y/faithful/r-shiny</span></code></pre></div>
+<p>This will pull not only the <code>latest</code>, but also the image tagged as <code>main</code>
+named after the Git branch. Use the <code>docker images</code> command to list the
+images.</p>
+</div>
+<div id="docker-login" class="section level3 hasAnchor" number="6.2.3">
+<h3><span class="header-section-number">6.2.3</span> Docker Login<a href="6-containerizing-shiny-apps.html#docker-login" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You don’t need to authenticate for public images, but in
+case you are trying to pull a private image from a private repository, you
+need to log into the container registry. Suck private repositories are common
+and are available on Docker Hub, the GitHub or GitLab container registries.
+More on the different container registries later.</p>
+<p>To log in to the GitHub container registry, use:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb66-1"><a href="6-containerizing-shiny-apps.html#cb66-1" tabindex="-1"></a><span class="ex">docker</span> login ghcr.io</span></code></pre></div>
+<p>This command will ask for our credentials interactively. If you want,
+you can provide your username and password. But it is usually
+recommended to use a personal access token (PAT) instead of your
+password because PAT can have more restricted scopes, i.e. only used to
+(read) access the container registry which is a lot more secure.
+You can also set expiry dates and can revoke these tokens any time.</p>
+<p>Let’s say that you saved your PAT in a file <code>~/my_password.txt</code> in the
+root of your home folder (<code>~</code>). You can pass the PAT value to the
+<code>docker login</code> command via the standard input as:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb67-1"><a href="6-containerizing-shiny-apps.html#cb67-1" tabindex="-1"></a><span class="fu">cat</span> ~/my_password.txt <span class="kw">|</span> <span class="ex">docker</span> login <span class="dt">\</span></span>
+<span id="cb67-2"><a href="6-containerizing-shiny-apps.html#cb67-2" tabindex="-1"></a>    <span class="at">--username</span> <span class="op">&lt;</span>username<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb67-3"><a href="6-containerizing-shiny-apps.html#cb67-3" tabindex="-1"></a>    <span class="at">--password-stdin</span></span></code></pre></div>
+<p>where <code>&lt;username&gt;</code> is your GitHub username.</p>
+</div>
+<div id="running-a-container" class="section level3 hasAnchor" number="6.2.4">
+<h3><span class="header-section-number">6.2.4</span> Running a Container<a href="6-containerizing-shiny-apps.html#running-a-container" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The next command is <code>docker run</code> which runs a command in a new container.
+It pulls the image if needed before starting the container.</p>
+<p>Try the following command. It will pull the latest image for the Python build
+of the Old Faithful example app, then it will start a new container:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb68-1"><a href="6-containerizing-shiny-apps.html#cb68-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 ghcr.io/h10y/faithful/py-shiny</span></code></pre></div>
+<p>The <code>-p</code> is a shorthand for <code>--publish</code>, that instructs Docker to
+publish a container’s port to the host port. In our example, 3838 is the
+container’s port which is mapped to port 8080 of the host machine. As a
+result, you can visit <code>http://127.0.0.1:8080</code> in your browser to see the
+Python Shiny app. Hit CTRL+C to stop the container. We will learn about
+container ports in a bit, but in essence just a channel that the
+information is sent back and forth.</p>
+</div>
+</div>
+<div id="building-a-new-image" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Building a New Image<a href="6-containerizing-shiny-apps.html#building-a-new-image" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far you saw how to use the basic Docker commands to
+pull and run images. Now you’ll build a Docker image by recreating the
+Old Faithful Shiny app that we worked with before.</p>
+<p>In our examples, we will use the following setup: a file named <code>Dockerfile</code>
+sits next to a folder names <code>app</code>, and the Shiny app files like
+<code>app.R</code> or <code>app.py</code> are in this folder. This setup is convenient
+because we can copy all the files from teh <code>app</code> folder without
+having to worry about copying files that should not be there.</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb69-1"><a href="6-containerizing-shiny-apps.html#cb69-1" tabindex="-1"></a><span class="ex">├──</span> Dockerfile</span>
+<span id="cb69-2"><a href="6-containerizing-shiny-apps.html#cb69-2" tabindex="-1"></a><span class="ex">└──</span> app</span>
+<span id="cb69-3"><a href="6-containerizing-shiny-apps.html#cb69-3" tabindex="-1"></a>    <span class="ex">└──</span> ...</span></code></pre></div>
+<div id="r-for-shiny" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> R for Shiny<a href="6-containerizing-shiny-apps.html#r-for-shiny" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>FIXME: Link here the repo and folder.</p>
+<p>For our R Shiny example this is what is inside the <code>Dockerfile</code>:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb70-1"><a href="6-containerizing-shiny-apps.html#cb70-1" tabindex="-1"></a><span class="kw">FROM</span> rocker/r2u:24.04</span>
+<span id="cb70-2"><a href="6-containerizing-shiny-apps.html#cb70-2" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-q</span> <span class="at">-e</span> <span class="st">&quot;install.packages(&#39;shiny&#39;)&quot;</span></span>
+<span id="cb70-3"><a href="6-containerizing-shiny-apps.html#cb70-3" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">groupadd</span> app <span class="kw">&amp;&amp;</span> <span class="ex">useradd</span> <span class="at">-g</span> app app</span>
+<span id="cb70-4"><a href="6-containerizing-shiny-apps.html#cb70-4" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/app</span>
+<span id="cb70-5"><a href="6-containerizing-shiny-apps.html#cb70-5" tabindex="-1"></a><span class="kw">COPY</span> app .</span>
+<span id="cb70-6"><a href="6-containerizing-shiny-apps.html#cb70-6" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">chown</span> app:app <span class="at">-R</span> /home/app</span>
+<span id="cb70-7"><a href="6-containerizing-shiny-apps.html#cb70-7" tabindex="-1"></a><span class="kw">USER</span> app</span>
+<span id="cb70-8"><a href="6-containerizing-shiny-apps.html#cb70-8" tabindex="-1"></a><span class="kw">EXPOSE</span> 3838</span>
+<span id="cb70-9"><a href="6-containerizing-shiny-apps.html#cb70-9" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;R&quot;</span>, <span class="st">&quot;-e&quot;</span>, <span class="st">&quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;</span>]</span></code></pre></div>
+<p>We will explain the <code>Dockerfile</code> commands in the next section.
+For now, you can use the <code>docker build</code> command to build the image from the
+<code>Dockerfile</code>. You will have to be in the same directory as the <code>Dockerfile</code>,
+this place is what we’ll call as the build context. This is what the <code>.</code> at the
+end of the command stands for:</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb71-1"><a href="6-containerizing-shiny-apps.html#cb71-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> r-shiny:v1 .</span></code></pre></div>
+<p>The context here specifies the current directory (<code>.</code>), but it can be
+any relative or absolute filepath. Files and directories inside the
+context directory are available to the builder, so it can load them when needed.
+You can use a <code>.dockerignore</code> file to list files and directories that should
+be ignored within the build context. It is similar to the <code>.gitignore</code> file.</p>
+<p>The instructions are taken from the <code>Dockerfile</code> at the root of the build
+context. If you want to specify a different file, do so by providing the
+path to the file using the <code>-f</code> (or <code>--file</code>) option as <code>docker build -f Dockerfile2 .</code>.</p>
+<p>The <code>-t</code> argument (same as <code>--tag</code>) is followed by the image name
+(<code>r-shiny-test</code>) and the tag (<code>v1</code>). If you do not specify the image
+name/tag at image build (i.e. <code>docker build .</code>), Docker will not tag the image
+but it will have an image ID that you can use later to tag the image with
+<code>docker tag &lt;image-id&gt; r-shiny-test:v1</code>.</p>
+<p>You can apply multiple tags as:</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb72-1"><a href="6-containerizing-shiny-apps.html#cb72-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> r-shiny:v1 <span class="at">-t</span> r-shiny:latest .</span></code></pre></div>
+</div>
+<div id="buildx-and-buildkit" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Buildx and BuildKit<a href="6-containerizing-shiny-apps.html#buildx-and-buildkit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>While the builder is running, you’ll see lots of messages printed
+as Docker goes through the instructions from the <code>Dockerfile</code>.
+Newer Docker Desktop version use <code>buildx</code>, which brings extended build
+capabilities with BuildKit, such as</p>
+<p>As of Docker Engine 23.0 and Docker Desktop 4.19, Buildx is the default build
+client and user interface. Buildx brings extended build capabilities with
+BuildKit. BuildKit is the server that handles the build execution, e.g.
+it communicates with registries, instructs the Docker Engine and accesses
+the local file system.</p>
+<p>The Buildx output is nicer and it provides you with timings for every step
+of your <code>Dockerfile</code>:</p>
+<p></p>
+<pre><code>[+] Building 32.4s (12/12) FINISHED
+ =&gt; [internal] load build definition from Dockerfile                    0.0s
+ =&gt; =&gt; transferring dockerfile: 282B                                    0.0s
+ =&gt; [internal] load metadata for docker.io/rocker/r2u:24.04             1.2s
+ =&gt; [auth] rocker/r2u:pull token for registry-1.docker.io               0.0s
+ =&gt; [internal] load .dockerignore                                       0.0s
+ =&gt; =&gt; transferring context: 2B                                         0.0s
+ =&gt; [1/6] FROM docker.io/rocker/r2u:24.04@sha256:f327[...]dd73          9.2s
+ =&gt; =&gt; resolve docker.io/rocker/r2u:24.04@sha256:f327[...]dd73          0.0s
+[...]
+ =&gt; [internal] load build context                                       0.0s
+ =&gt; =&gt; transferring context: 845B                                       0.0s
+ =&gt; [2/6] RUN groupadd app &amp;&amp; useradd -g app app                        0.7s
+ =&gt; [3/6] RUN R -q -e &quot;install.packages(&#39;shiny&#39;)&quot;                      20.9s
+ =&gt; [4/6] WORKDIR /home/app                                             0.0s
+ =&gt; [5/6] COPY app .                                                    0.0s
+ =&gt; [6/6] RUN chown app:app -R /home/app                                0.1s
+ =&gt; exporting to image                                                  0.3s
+ =&gt; =&gt; exporting layers                                                 0.3s
+ =&gt; =&gt; writing image sha256:4d10[...]bab7                               0.0s
+ =&gt; =&gt; naming to docker.io/library/r-shiny:v1                           0.0s</code></pre>
+<p></p>
+<p>Sometimes you want to inspect the output and do not only want the collapsed
+output. Add the <code>--progress=plain</code> to the build command to see all the
+output. This comes handy when you want to troubleshoot.</p>
+<p>BuildKit also offers other nice features, for example setting the target
+platform(s) for the build via the <code>--platform</code> option.
+The default value is the platform of the BuildKit daemon where the build runs,
+i.e. your laptop of a server. This can be important for Mac OS X users
+on Apple Silicone (M1 and above), because the default ARM64 build will
+have poor performance or might fail on other platforms on AMD64 machines.
+Use the <code>--platform=linux/arm64</code> to build the image for AMD64 architecture.
+You can also build for multiple architectures at once with
+<code>docker build --platform linux/amd64,linux/arm64 .</code>.</p>
+</div>
+<div id="inspecting-the-image" class="section level3 hasAnchor" number="6.3.3">
+<h3><span class="header-section-number">6.3.3</span> Inspecting the Image<a href="6-containerizing-shiny-apps.html#inspecting-the-image" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The output of the build is an image that has a SHA256 hash that can be used
+as a unique identifier. The image is made up of image layers. These layers are
+created by the instructions from the <code>Dockerfile</code>. If you run the build command
+again you will notice that instead of 32 seconds, it will take almost no time
+to build the image. This is because the layers are cached by default and Docker
+smartly evaluates which instructions and files have changed since the last
+build. Sometimes the cache gets tangled, or you just want to make sure that
+the error is not a caching issue. In this case use the <code>--no-cache</code> flag
+with <code>docker build</code>.</p>
+<p>You can use the <code>docker history r-shiny:v1</code> command to see how the image was
+built and you can see the sizes for every layer. Intermediate layers
+have a size of 0B and these do not contribute to the overall image size.
+The layers created 2 hours ago are the layers we created, the layers
+created 2 weeks ago are the layers from the parent image <code>rocker/r2u:24.04</code>,
+whereas the layers created 2 months ago are the official <code>ubuntu:24.04</code> image
+layers that form the parent image of the <code>rocker/r2u:24.04</code> one:</p>
+<p></p>
+<pre><code>IMAGE          CREATED        CREATED BY                                  SIZE
+4d[...]52   2 hours ago    CMD [&quot;R&quot; &quot;-e&quot; &quot;shiny::runApp(host=&#39;0.0.0.0&#39;,   0B
+&lt;missing&gt;   2 hours ago    EXPOSE map[3838/tcp:{}]                        0B
+&lt;missing&gt;   2 hours ago    USER app                                       0B
+&lt;missing&gt;   2 hours ago    RUN /bin/sh -c chown app:app -R /home/app #    780B
+&lt;missing&gt;   2 hours ago    COPY app . # buildkit                          780B
+&lt;missing&gt;   2 hours ago    WORKDIR /home/app                              0B
+&lt;missing&gt;   2 hours ago    RUN /bin/sh -c R -q -e &quot;install.packages(&#39;sh   109MB
+&lt;missing&gt;   2 hours ago    RUN /bin/sh -c groupadd app &amp;&amp; useradd -g ap   5.14kB
+&lt;missing&gt;   2 weeks ago    RUN /bin/sh -c apt-get update         &amp;&amp; apt   642MB
+&lt;missing&gt;   2 weeks ago    ENV TZ=UTC                                     0B
+&lt;missing&gt;   2 weeks ago    ENV DEBIAN_FRONTEND=noninteractive             0B
+&lt;missing&gt;   2 weeks ago    ENV LANG=en_US.UTF-8                           0B
+&lt;missing&gt;   2 weeks ago    ENV LC_ALL=en_US.UTF-8                         0B
+&lt;missing&gt;   2 weeks ago    RUN /bin/sh -c useradd -s /bin/bash -m docke   81.6MB
+&lt;missing&gt;   2 weeks ago    LABEL org.label-schema.license=GPL-2.0 org.l   0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  CMD [&quot;/bin/bash&quot;]           0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  ADD file:ac9d5a9d5b9b1217   76.2MB
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  LABEL org.opencontainers.   0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  LABEL org.opencontainers.   0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  ARG LAUNCHPAD_BUILD_ARCH    0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  ARG RELEASE                 0B</code></pre>
+<p></p>
+<p>The <code>docker inspect r-shiny:v1</code> returns a long JSON output that is the
+metadata of the image. It also has the SHA256 hash of the image.
+Here is the greatly stripped output:</p>
+<p></p>
+<pre><code>[
+    {
+        &quot;Id&quot;: &quot;sha256:4d10[...]bab7&quot;,
+        &quot;RepoTags&quot;: [&quot;r-shiny:v1&quot;],
+        &quot;Created&quot;: &quot;2024-07-05T04:59:01.123398172Z&quot;,
+        &quot;Config&quot;: {
+            &quot;User&quot;: &quot;app&quot;,
+            &quot;ExposedPorts&quot;: {&quot;3838/tcp&quot;: {}},
+            &quot;Cmd&quot;: [&quot;R&quot;,&quot;-e&quot;,
+                &quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;],
+            &quot;Volumes&quot;: null,
+            &quot;WorkingDir&quot;: &quot;/home/app&quot;,
+            &quot;Entrypoint&quot;: null,
+        },
+        &quot;Architecture&quot;: &quot;amd64&quot;,
+        &quot;Os&quot;: &quot;linux&quot;,
+        &quot;Size&quot;: 909132976,
+        &quot;Metadata&quot;: {
+            &quot;LastTagTime&quot;: &quot;2024-07-05T06:20:22.2764725Z&quot;
+        }
+    }
+]</code></pre>
+<p></p>
+<p>Once the docker image is built, you can run the container to
+make sure the app is working as expected:</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb76-1"><a href="6-containerizing-shiny-apps.html#cb76-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 r-shiny:v1</span></code></pre></div>
+</div>
+<div id="r-for-python" class="section level3 hasAnchor" number="6.3.4">
+<h3><span class="header-section-number">6.3.4</span> R for Python<a href="6-containerizing-shiny-apps.html#r-for-python" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>FIXME: provide link to this example.
+The <code>Dockerfile</code> for the Python version looks like this:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb77-1"><a href="6-containerizing-shiny-apps.html#cb77-1" tabindex="-1"></a><span class="kw">FROM</span> python:3.9</span>
+<span id="cb77-2"><a href="6-containerizing-shiny-apps.html#cb77-2" tabindex="-1"></a><span class="kw">COPY</span> app/requirements.txt .</span>
+<span id="cb77-3"><a href="6-containerizing-shiny-apps.html#cb77-3" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">pip</span> install <span class="at">--no-cache-dir</span> <span class="at">--upgrade</span> <span class="at">-r</span> requirements.txt</span>
+<span id="cb77-4"><a href="6-containerizing-shiny-apps.html#cb77-4" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">groupadd</span> app <span class="kw">&amp;&amp;</span> <span class="ex">useradd</span> <span class="at">-g</span> app app</span>
+<span id="cb77-5"><a href="6-containerizing-shiny-apps.html#cb77-5" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/app</span>
+<span id="cb77-6"><a href="6-containerizing-shiny-apps.html#cb77-6" tabindex="-1"></a><span class="kw">COPY</span> app .</span>
+<span id="cb77-7"><a href="6-containerizing-shiny-apps.html#cb77-7" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">chown</span> app:app <span class="at">-R</span> /home/app</span>
+<span id="cb77-8"><a href="6-containerizing-shiny-apps.html#cb77-8" tabindex="-1"></a><span class="kw">USER</span> app</span>
+<span id="cb77-9"><a href="6-containerizing-shiny-apps.html#cb77-9" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">mkdir</span> .config</span>
+<span id="cb77-10"><a href="6-containerizing-shiny-apps.html#cb77-10" tabindex="-1"></a><span class="kw">ENV</span> MPLCONFIGDIR=/home/app/.config</span>
+<span id="cb77-11"><a href="6-containerizing-shiny-apps.html#cb77-11" tabindex="-1"></a><span class="kw">ENV</span> HOME=/home/app</span>
+<span id="cb77-12"><a href="6-containerizing-shiny-apps.html#cb77-12" tabindex="-1"></a><span class="kw">EXPOSE</span> 3838</span>
+<span id="cb77-13"><a href="6-containerizing-shiny-apps.html#cb77-13" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;uvicorn&quot;</span>, <span class="st">&quot;app:app&quot;</span>, <span class="st">&quot;--host&quot;</span>, <span class="st">&quot;0.0.0.0&quot;</span>, <span class="st">&quot;--port&quot;</span>, <span class="st">&quot;3838&quot;</span>]</span></code></pre></div>
+<p>Again, we’ll explain each line shortly. To build anc check the Docker image,
+use the following commands:</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb78-1"><a href="6-containerizing-shiny-apps.html#cb78-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> py-shiny:v1 .</span>
+<span id="cb78-2"><a href="6-containerizing-shiny-apps.html#cb78-2" tabindex="-1"></a></span>
+<span id="cb78-3"><a href="6-containerizing-shiny-apps.html#cb78-3" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 py-shiny:v1</span></code></pre></div>
+</div>
+</div>
+<div id="managing-images-and-containers" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Managing Images and Containers<a href="6-containerizing-shiny-apps.html#managing-images-and-containers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>To list the Docker images, use the <code>docker images</code> command. It will give you
+a quick summary of the images:</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb79-1"><a href="6-containerizing-shiny-apps.html#cb79-1" tabindex="-1"></a><span class="ex">REPOSITORY</span>   TAG       IMAGE ID       CREATED             SIZE</span>
+<span id="cb79-2"><a href="6-containerizing-shiny-apps.html#cb79-2" tabindex="-1"></a><span class="ex">py-shiny</span>     v1        ed11a2980c07   5 seconds ago       1.24GB</span>
+<span id="cb79-3"><a href="6-containerizing-shiny-apps.html#cb79-3" tabindex="-1"></a><span class="ex">r-shiny</span>      v1        4d10f42d6a52   About an hour ago   909MB</span></code></pre></div>
+<p>Try the <code>docker ps</code> command which lists the containers. If you have a container
+running, you will see it listed with status <code>Up</code>. If you stopped all the containers
+by exiting with CTRL+C, you will not see any running containers listed.
+To see the stopped but not removed containers, use the <code>docker ps -a</code> command:</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb80-1"><a href="6-containerizing-shiny-apps.html#cb80-1" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE        COMMAND                  CREATED        <span class="pp">[</span><span class="ss">...</span><span class="pp">]</span></span>
+<span id="cb80-2"><a href="6-containerizing-shiny-apps.html#cb80-2" tabindex="-1"></a><span class="ex">3d91a5a2a47f</span>   r-shiny:v1   <span class="st">&quot;R -e &#39;shiny::runApp…&quot;</span>   3 minutes ago  <span class="pp">[</span><span class="ss">...</span><span class="pp">]</span></span>
+<span id="cb80-3"><a href="6-containerizing-shiny-apps.html#cb80-3" tabindex="-1"></a><span class="ex">3d91a5a2a47f</span>   r-shiny:v1   <span class="st">&quot;R -e &#39;shiny::runApp…&quot;</span>   53 minutes ago <span class="pp">[</span><span class="ss">...</span><span class="pp">]</span></span></code></pre></div>
+<p>Sometimes you need to be able to manage containers because the kill signal
+is not properly relayed to the container when using CTRL+C. This happens when
+the <code>CMD</code> instruction is provided in shell form
+(i.e. <code>CMD R -e "shiny::runApp()"</code> instead of <code>CMD ["R", "-e", "shiny::runApp()"]</code>).
+The shell form runs as a child process of <code>/bin/sh -c</code> (default <code>ENTRYPOINT</code>),
+and the executable does not receive Unix signals.</p>
+<p>If this happens, you need to find a way to stop the container.
+The following commands help you manage the containers:</p>
+<ul>
+<li><code>docker container stop &lt;container-id&gt;</code>: gracefully stop a running container
+(wait for the process to stop),</li>
+<li><code>docker container start &lt;container-id&gt;</code>: start a stopped container,</li>
+<li><code>docker container restart &lt;container-id&gt;</code>: restart a container,</li>
+<li><code>docker container rm &lt;container-id&gt;</code>; remove a container,</li>
+<li><code>docker container kill &lt;container-id&gt;</code>: kill a container (abruptly terminate
+the entry point process).</li>
+</ul>
+<p><code>docker container rm --force &lt;container-id&gt;</code> will remove running containers too.
+You can make sure the container is removed after CTRL+C if you add the <code>--rm</code>
+option to automatically remove the container when it exits.</p>
+<p>If you build images during development while keeping the image name and tag the
+same you will end up with “dangling” images that are untagged and are not used
+any longer. Dangling images can accumulate over time and fill up the
+available space that Docker Desktop is allocating for images.
+Use <code>docker system prune</code> to clean up these dangling images.
+The command <code>docker system prune -a</code> will remove all unused images and containers.</p>
+<p>Dangling images <code>docker system prune</code> or all image layers with
+<code>docker system prune -a</code> to save up space (sometimes the available space
+for your docker desktop (64GB?) fills up – see the bottom of you desktop UI).</p>
+</div>
+<div id="sharing-images" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Sharing Images<a href="6-containerizing-shiny-apps.html#sharing-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As we saw, Docker images are just compressed files linked by metadata.
+You should be able to copy these files and move them around.
+The <code>docker save</code> command lets you save an image to a compressed tar file:</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb81-1"><a href="6-containerizing-shiny-apps.html#cb81-1" tabindex="-1"></a><span class="ex">docker</span> pull r-shiny:v1</span>
+<span id="cb81-2"><a href="6-containerizing-shiny-apps.html#cb81-2" tabindex="-1"></a></span>
+<span id="cb81-3"><a href="6-containerizing-shiny-apps.html#cb81-3" tabindex="-1"></a><span class="ex">docker</span> save <span class="at">-o</span> r-shiny-v1.tar r-shiny:v1</span></code></pre></div>
+<p>Next, you take this tar file, copy it to another server and load it with:</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb82-1"><a href="6-containerizing-shiny-apps.html#cb82-1" tabindex="-1"></a><span class="ex">docker</span> load <span class="at">--input</span> r-shiny-v1.tar</span></code></pre></div>
+<p>Now imagine that you are managing more than two machines, or you want to share
+the Docker image with others so that they can use it or to serve as a parent image.
+The save/copy/load workflow becomes cumbersome quickly.
+In this case, using a registry might be a much better idea. There are
+many options to choose from, and you can even host your own registry.</p>
+<div id="pushing-images" class="section level3 hasAnchor" number="6.5.1">
+<h3><span class="header-section-number">6.5.1</span> Pushing Images<a href="6-containerizing-shiny-apps.html#pushing-images" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s tag the <code>r-shiny</code> image so that it has a host defined:</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb83-1"><a href="6-containerizing-shiny-apps.html#cb83-1" tabindex="-1"></a><span class="ex">docker</span> tag r-shiny:v1 ghcr.io/h10y/faithful/r-shiny:latest</span></code></pre></div>
+<p>Now we can push the locally built Docker image to a container registry:</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb84-1"><a href="6-containerizing-shiny-apps.html#cb84-1" tabindex="-1"></a><span class="ex">docker</span> push ghcr.io/h10y/faithful/r-shiny:latest</span></code></pre></div>
+<p>Note that this command will not work on your machine because you do not
+have write access to the <code>ghcr.io/h10y/faithful</code> repository.
+You need to create an image tag that would let you push for example
+to your own personal Docker Hub account.</p>
+<p>The image tag should start with the registry name unless you are pushing
+to Docker Hub. When the image tag is not specified, Docker will treat
+the new image as <code>:latest</code> automatically.</p>
+</div>
+<div id="docker-registries" class="section level3 hasAnchor" number="6.5.2">
+<h3><span class="header-section-number">6.5.2</span> Docker Registries<a href="6-containerizing-shiny-apps.html#docker-registries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Docker registry stores Docker images. This is where we push images to and pull
+images from. <a href="https://hub.docker.com/">Docker Hub</a>
+is a public registry and Docker is configured to look for images on Docker Hub by
+default. Docker Hub is a service provided by Docker for finding and sharing
+container images. The canonical host name for Docker Hub is <code>docker.io</code>. This
+is the default registry when you don’t specify a registry host as part of the
+image name.</p>
+<p>There are many other registries out there besides Docker Hub. Here is a
+non-exhaustive list of options.</p>
+<p>The GitHub Container Registry (GHCR) is available as part of GitHub Packages
+for free and paid plans, even for private repositories under the free
+plan. This registry requires no authentication for public images, otherwise
+you have to authenticate using your GitHub token. The visibility of the
+images inherits the repository visibility but can be change by the owner.
+The host name for GHCR is <code>ghcr.io</code>.</p>
+<p>An alternative to GitHub is GitLab (host name <code>registry.gitlab.com</code>),
+that has provided registry support for its free (public and private) repositories
+long before GitHub. The registry is tightly integrated with GitLab’s CICD
+pipelines. This registry also needs login with a token ofr private images.</p>
+<p>Heroku is a platform provider and it also comes with a Docker
+registry (host name is <code>registry.heroku.com</code>) where the Docker-based deployments
+push the images to.</p>
+<p>Of course, every major cloud provider offers a Docker container registry
+that is often integrated with their other offerings. Latency should be
+minimal due to network proximity to the servers:</p>
+<ul>
+<li>Amazon Elastic Container Registry</li>
+<li>Azure Container Registry</li>
+<li>Google Container Registry</li>
+<li>DigitalOcean Container Registry</li>
+</ul>
+<p>Other common alternatives for container registries include the JFrog Container
+Registry, Harbor, and Scaleway.</p>
+<p>Although these services are called “container registry”, but strictly
+speaking they store container images.</p>
+</div>
+<div id="log-in-to-a-registry" class="section level3 hasAnchor" number="6.5.3">
+<h3><span class="header-section-number">6.5.3</span> Log In to a Registry<a href="6-containerizing-shiny-apps.html#log-in-to-a-registry" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When you work with private registries or private images, you need to log
+in with the <code>docker login</code> command. For Docker Hub, just type
+<code>docker login</code>. For all other registries, type in the registry URL as
+well, e.g. <code>docker login ghcr.io</code>.</p>
+<p>The Docker CLI then will prompt you for your username and password (or
+access token).</p>
+<p>You can log in programmatically by providing your username and the
+password through standard input from a file:</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb85-1"><a href="6-containerizing-shiny-apps.html#cb85-1" tabindex="-1"></a><span class="fu">cat</span> ~/my_password.txt <span class="kw">|</span> <span class="ex">docker</span> login <span class="at">-u</span> USER <span class="at">--password-stdin</span></span></code></pre></div>
+<p>You can also use an environment variable to store your token value
+that you can pass to the login command as:</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb86-1"><a href="6-containerizing-shiny-apps.html#cb86-1" tabindex="-1"></a>  <span class="bu">export</span> <span class="va">TOKEN</span><span class="op">=&lt;</span>your-token-value<span class="op">&gt;</span></span>
+<span id="cb86-2"><a href="6-containerizing-shiny-apps.html#cb86-2" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$TOKEN</span> <span class="kw">|</span> <span class="ex">docker</span> login ghcr.io <span class="at">-u</span> USER <span class="at">--password-stdin</span></span></code></pre></div>
+<p>Notice the white space before the <code>export</code> statement, use double spaces so that
+the command after the spaces will not be saved in your shell history.
+The history allows you to recall previous commands by pushing the up arrow
+key. The shell history is really just a text file, so copy pasting secrets
+into the terminal will leave a trace.</p>
+<p>Use one of these approaches to log into any public or private repository
+for which you have credentials. The credentials will be stored
+locally in <code>$HOME/.docker/config.json</code> on Linux and Mac or in
+<code>%USERPROFILE%/.docker/config.json</code> on Windows. After login, there is no
+need to re-authenticate until you log out with <code>docker logout</code>.</p>
+<p>Note that <code>docker login</code> requires users to use <code>sudo</code> or be <code>root</code> in
+most cases.</p>
+<p>It is always a good idea to use a token instead of your password. Tokens
+can have limited scope (i.e. only for pulling images), and can be
+revoked at any time without it impacting other areas of your life.</p>
+</div>
+<div id="local-registry" class="section level3 hasAnchor" number="6.5.4">
+<h3><span class="header-section-number">6.5.4</span> Local Registry<a href="6-containerizing-shiny-apps.html#local-registry" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You might not want the Docker images to leave your computer because you need an
+air gapped environment, or you are setting up a registry within your
+virtual private network (VPN). In these situations, you can host your own
+container registry.</p>
+<p>If you want a registry hosted on your machine, just pull the registry image.
+The next command will pull the registry image, and run the similarly named
+container in the background on port 5000:</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb87-1"><a href="6-containerizing-shiny-apps.html#cb87-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\ </span>     <span class="co"># daemonixed background process</span></span>
+<span id="cb87-2"><a href="6-containerizing-shiny-apps.html#cb87-2" tabindex="-1"></a>  <span class="ex">-p</span> 5000:5000 <span class="dt">\ </span>    <span class="co"># expose port</span></span>
+<span id="cb87-3"><a href="6-containerizing-shiny-apps.html#cb87-3" tabindex="-1"></a>  <span class="ex">--restart=always</span> <span class="dt">\ </span># restart after errors</span>
+<span id="cb87-4"><a href="6-containerizing-shiny-apps.html#cb87-4" tabindex="-1"></a>  <span class="ex">--name</span> registry <span class="dt">\ </span> <span class="co"># give it a name</span></span>
+<span id="cb87-5"><a href="6-containerizing-shiny-apps.html#cb87-5" tabindex="-1"></a>  <span class="ex">registry:2</span>         <span class="co"># image name and version tag</span></span></code></pre></div>
+<p>Tag an image with the host name of your local registry, <code>localhost:5000</code>, and
+push the image:</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb88-1"><a href="6-containerizing-shiny-apps.html#cb88-1" tabindex="-1"></a><span class="ex">docker</span> tag r-shiny:v1 localhost:5000/r-shiny:v1</span>
+<span id="cb88-2"><a href="6-containerizing-shiny-apps.html#cb88-2" tabindex="-1"></a></span>
+<span id="cb88-3"><a href="6-containerizing-shiny-apps.html#cb88-3" tabindex="-1"></a><span class="ex">docker</span> push localhost:5000/r-shiny:v1</span></code></pre></div>
+<p>To test if it worked, remove the images from your local Docker system.
+If you use the <code>-f</code> flag and specify the image ID then the <code>docker rmi</code>
+command untags and removes all images that match that ID (get the image ID
+from <code>docker images</code>):</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb89-1"><a href="6-containerizing-shiny-apps.html#cb89-1" tabindex="-1"></a><span class="ex">docker</span> rmi <span class="at">-f</span> <span class="op">&lt;</span>image_id<span class="op">&gt;</span></span></code></pre></div>
+<p>Now you can pull the image from your local registry:</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb90-1"><a href="6-containerizing-shiny-apps.html#cb90-1" tabindex="-1"></a><span class="ex">docker</span> pull localhost:5000/r-shiny:v1</span></code></pre></div>
+<p>The next command stops and removes the registry container. It is a daemonized
+(background) process, so CTRL+C won’t work. The <code>-v</code> option makes sure to remove
+anonymous volumes associated with the container which is often used to mount a
+volumes from your hard drive into the container where the images are stored:</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb91-1"><a href="6-containerizing-shiny-apps.html#cb91-1" tabindex="-1"></a><span class="ex">docker</span> container stop registry <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb91-2"><a href="6-containerizing-shiny-apps.html#cb91-2" tabindex="-1"></a>  <span class="ex">docker</span> container rm <span class="at">-v</span> registry</span></code></pre></div>
+<p>If you want your registry to be accessed over a public network, then you need to
+think about security and access control. You’ll have to set up transport
+layer security (TLS) for HTTPS and user authentication, which are advanced topics
+and we recommend using a commercial container registry that we listed above
+and use private repositories to control access to your images.</p>
+</div>
+</div>
+<div id="the-dockerfile-1" class="section level2 hasAnchor" number="6.6">
+<h2><span class="header-section-number">6.6</span> The Dockerfile<a href="6-containerizing-shiny-apps.html#the-dockerfile-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s review the Dockerfiles line by line. The full Dockerfile
+reference can be found
+<a href="https://docs.docker.com/engine/reference/builder/">here</a>.</p>
+<p>The <a href="https://docs.docker.com/engine/reference/builder/#from"><code>FROM</code>
+instruction</a>
+initializes a new build stage and sets the <em>base image</em>.<br />
+Take the latest <code>r-base</code> image from the <code>rocker</code> project (see on <a href="https://hub.docker.com/r/rocker/r-base">Docker
+Hub</a>):</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb92-1"><a href="6-containerizing-shiny-apps.html#cb92-1" tabindex="-1"></a><span class="kw">FROM</span> rocker/r-base:latest</span></code></pre></div>
+<p>The <code>LABEL</code> instruction is optional, it adds metadata to an image, e.g.
+who to contact in case of issues or questions:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb93-1"><a href="6-containerizing-shiny-apps.html#cb93-1" tabindex="-1"></a><span class="kw">LABEL</span> maintainer=<span class="st">&quot;USER &lt;user@example.com&gt;&quot;</span></span></code></pre></div>
+<p>The
+<a href="https://docs.docker.com/engine/reference/builder/#run"><code>RUN</code></a>
+<a href="https://docs.docker.com/engine/reference/builder/#run">instruction</a>
+executes the command in a new <em>layer</em> (a
+<a href="https://docs.docker.com/glossary/#layer">layer</a>
+is a modification to the image) on top of the current image. The
+following command updates the base image with a couple of libraries that
+are required by Shiny and related R packages (system dependencies):</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb94-1"><a href="6-containerizing-shiny-apps.html#cb94-1" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt-get</span> update <span class="kw">&amp;&amp;</span> <span class="ex">apt-get</span> install <span class="at">-y</span> <span class="at">--no-install-recommends</span> <span class="dt">\</span></span>
+<span id="cb94-2"><a href="6-containerizing-shiny-apps.html#cb94-2" tabindex="-1"></a>    sudo <span class="dt">\</span></span>
+<span id="cb94-3"><a href="6-containerizing-shiny-apps.html#cb94-3" tabindex="-1"></a>    libcurl4-gnutls-dev <span class="dt">\</span></span>
+<span id="cb94-4"><a href="6-containerizing-shiny-apps.html#cb94-4" tabindex="-1"></a>    libcairo2-dev <span class="dt">\</span></span>
+<span id="cb94-5"><a href="6-containerizing-shiny-apps.html#cb94-5" tabindex="-1"></a>    libxt-dev <span class="dt">\</span></span>
+<span id="cb94-6"><a href="6-containerizing-shiny-apps.html#cb94-6" tabindex="-1"></a>    libssl-dev <span class="dt">\</span></span>
+<span id="cb94-7"><a href="6-containerizing-shiny-apps.html#cb94-7" tabindex="-1"></a>    libssh2-1-dev <span class="dt">\</span></span>
+<span id="cb94-8"><a href="6-containerizing-shiny-apps.html#cb94-8" tabindex="-1"></a>    <span class="kw">&amp;&amp;</span> <span class="fu">rm</span> <span class="at">-rf</span> /var/lib/apt/lists/<span class="pp">*</span></span></code></pre></div>
+<p>The following <code>RUN</code> command uses the
+<a href="https://github.com/eddelbuettel/littler">littler</a>
+command-line interface shipped with the <code>r-base</code> image to install the
+Shiny package and its dependencies:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb95-1"><a href="6-containerizing-shiny-apps.html#cb95-1" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">install.r</span> shiny</span></code></pre></div>
+<p>The next command sets the options in the <code>Rprofile.site</code> file which are
+going to be loaded by the R session. These options specify the Shiny
+host and port that <code>runApp</code> will use.</p>
+<p>Do not run containers as root in production. Running the container with
+root privileges allows unrestricted use which is to be avoided in
+production. Although you can find lots of examples on the Internet where
+the container is run as root, this is generally considered bad practice.</p>
+<blockquote>
+<p>Switching to the root <code>USER</code> opens up certain security risks if an
+attacker gets access to the container. In order to mitigate this,
+switch back to a non privileged user after running the commands you
+need as root. – <a href="https://github.com/hadolint/hadolint#rules">Hadolint rule
+DL3002</a></p>
+</blockquote>
+<p>The following command creates a Linux group and user, both called <code>app</code>.
+This user will have access to the app instead of the default root user:</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb96-1"><a href="6-containerizing-shiny-apps.html#cb96-1" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">addgroup</span> <span class="at">--system</span> app <span class="dt">\</span></span>
+<span id="cb96-2"><a href="6-containerizing-shiny-apps.html#cb96-2" tabindex="-1"></a>    <span class="kw">&amp;&amp;</span> <span class="ex">adduser</span> <span class="at">--system</span> <span class="at">--ingroup</span> app app</span></code></pre></div>
+<p>You can read more about security considerations
+<a href="https://engineering.bitnami.com/articles/why-non-root-containers-are-important-for-security.html">here</a>
+and Dockerfile related code smells
+<a href="https://arxiv.org/abs/2103.12298">here</a>. Read
+about <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">best
+practices</a>
+and <a href="https://github.com/hadolint/hadolint#readme">linting
+rules</a>
+in general that can be helpful in reducing vulnerabilities of your
+containerized application.</p>
+<p>The <a href="https://docs.docker.com/engine/reference/builder/#workdir"><code>WORKDIR</code>
+instruction</a>
+sets the working directory for subsequent instructions. Change this to
+the home folder of the <code>app</code> user which is <code>/home/app</code>:</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb97-1"><a href="6-containerizing-shiny-apps.html#cb97-1" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/app</span></code></pre></div>
+<p>The <a href="https://docs.docker.com/engine/reference/builder/#copy"><code>COPY</code>
+instruction</a>
+copies new files or directories from the source (our <code>app</code> folder
+containing the R script files for our Shiny app) and adds them to the
+file system of the container at the destination path (<code>.</code> refers to the
+current work directory defined at the previous step):</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb98-1"><a href="6-containerizing-shiny-apps.html#cb98-1" tabindex="-1"></a><span class="kw">COPY</span> app .</span></code></pre></div>
+<p>The next command sets permissions for the <code>app</code> user:</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb99-1"><a href="6-containerizing-shiny-apps.html#cb99-1" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">chown</span> app:app <span class="at">-R</span> /home/app</span></code></pre></div>
+<p>In general, use the shell form for RUN, and the exec form for CMD and ENTRYPOINT.
+<a href="https://emmer.dev/blog/docker-shell-vs.-exec-form/" class="uri">https://emmer.dev/blog/docker-shell-vs.-exec-form/</a></p>
+<p>The <a href="https://docs.docker.com/engine/reference/builder/#user"><code>USER</code>
+instruction</a>
+sets the user name (or UID) and optionally the user group (or GID) to
+use when running the image:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb100-1"><a href="6-containerizing-shiny-apps.html#cb100-1" tabindex="-1"></a><span class="kw">USER</span> app</span></code></pre></div>
+<p>The <a href="https://docs.docker.com/engine/reference/builder/#expose"><code>EXPOSE</code>
+instruction</a>
+tells Docker which ports the container listens on at runtime. Set this
+to the Shiny port defined in the <code>Rprofile.site</code> file:</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb101-1"><a href="6-containerizing-shiny-apps.html#cb101-1" tabindex="-1"></a><span class="kw">EXPOSE</span> 3838</span></code></pre></div>
+<p>Finally, the <a href="https://docs.docker.com/engine/reference/builder/#cmd"><code>CMD</code>
+instruction</a>
+closes off our <code>Dockerfile</code>. The <code>CMD</code> instruction provides the defaults
+for an executing container. There can only be one <code>CMD</code> instruction in a
+<code>Dockerfile</code> (only the last <code>CMD</code> will take effect). Our <code>CMD</code> specifies
+the executable (<code>"R"</code>) and parameters for the executable in an array.
+The <code>-e</code> option means you are running an expression that is
+<code>shiny::runApp('/home/app')</code>. The expression will run the Shiny app that
+we copied into the <code>/home/app</code> folder:</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb102-1"><a href="6-containerizing-shiny-apps.html#cb102-1" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;R&quot;</span>, <span class="st">&quot;-e&quot;</span>, <span class="st">&quot;shiny::runApp(&#39;/home/app&#39;)&quot;</span>]</span></code></pre></div>
+<p>In general, use the shell form for RUN, and the exec form for CMD and ENTRYPOINT.
+<a href="https://emmer.dev/blog/docker-shell-vs.-exec-form/" class="uri">https://emmer.dev/blog/docker-shell-vs.-exec-form/</a></p>
+<p>Build the image using <code>docker build</code> by specifying the tag (<code>-t</code>) and
+the context (<code>.</code> indicates the current directory):</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb103-1"><a href="6-containerizing-shiny-apps.html#cb103-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> registry.gitlab.com/analythium/shinyproxy-hello/hello .</span></code></pre></div>
+<p>You can test and push the locally build Docker image to the container as
+before.</p>
+<div id="shiny-host-and-port" class="section level4 hasAnchor" number="6.6.0.1">
+<h4><span class="header-section-number">6.6.0.1</span> Shiny host and port<a href="6-containerizing-shiny-apps.html#shiny-host-and-port" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>When we discussed <a href="https://hosting.analythium.io/run-shiny-apps-locally/">local hosting of Shiny
+apps</a> and
+<code>runApp</code>, we did not review all the possible arguments for this R
+function. Besides the app location (app object, list, file, or
+directory) there are two other important arguments:</p>
+<ul>
+<li><code>host</code>: this defines the IP address (defaults to ‘localhost’:
+127.0.0.1),</li>
+<li><code>port</code>: TCP port that the application should listen on; a random
+port when no value provided.</li>
+</ul>
+<p>When you run the shiny app locally, you see a message
+<code>Listening on http://127.0.0.1:7800</code> or similar, which is the protocol
+(HTTP), the host address, and the port number. The Shiny app is running
+in a web server that listens to client requests and provides a response.</p>
+
+</div>
+</div>
+<div id="shiny-apps-with-dependencies-use-bananas" class="section level2 hasAnchor" number="6.7">
+<h2><span class="header-section-number">6.7</span> Shiny Apps With Dependencies (use bananas)<a href="6-containerizing-shiny-apps.html#shiny-apps-with-dependencies-use-bananas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>What makes programming languages like R and Python great for making data
+applications is the wealth of contributed extension packages that
+supercharge app development. You can turn your code into an interactive
+web app with not much extra code once you have a workflow and an
+interesting question.</p>
+<p>We have reviewed <a href="https://hosting.analythium.io/docker-basics-for-data-apps/">Docker
+basics</a> and
+how to <a href="https://hosting.analythium.io/dockerizing-shiny-applications/">dockerize a very simple Shiny
+app</a>. For
+anything that is a little bit more complex, you will have to manage
+dependencies. Dependency management is one of the most important aspects
+of app development with Docker. In this post, you will learn about
+different options.</p>
+<div id="parent-images" class="section level3 hasAnchor" number="6.7.1">
+<h3><span class="header-section-number">6.7.1</span> Parent Images<a href="6-containerizing-shiny-apps.html#parent-images" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the previous post, we explored <a href="https://hosting.analythium.io/dockerized-shiny-apps-with-dependencies/">dependency management for Shiny
+apps</a>
+using the <code>rocker/r-ubuntu:20.04</code> as the parent image. A parent image is
+an image that you define in the <code>FROM</code> directive of the <code>Dockerfile</code>. A
+<a href="https://docs.docker.com/develop/develop-images/baseimages/">base
+image</a>
+has <code>FROM scratch</code> as the first line. The R base images start with
+parent images. For example, the R Ubuntu image starts with
+<code>FROM ubuntu:focal</code>.</p>
+<p>Here are the four commonly used parent images for R:</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb104-1"><a href="6-containerizing-shiny-apps.html#cb104-1" tabindex="-1"></a><span class="ex">docker</span> pull rhub/r-minimal:4.0.5</span>
+<span id="cb104-2"><a href="6-containerizing-shiny-apps.html#cb104-2" tabindex="-1"></a><span class="ex">docker</span> pull rocker/r-base:4.0.4</span>
+<span id="cb104-3"><a href="6-containerizing-shiny-apps.html#cb104-3" tabindex="-1"></a><span class="ex">docker</span> pull rocker/r-ubuntu:20.04</span>
+<span id="cb104-4"><a href="6-containerizing-shiny-apps.html#cb104-4" tabindex="-1"></a><span class="ex">docker</span> pull rstudio/r-base:4.0.4-focal</span></code></pre></div>
+<p>The image sizes vary quite a bit with the Alpine Linux base
+<code>rhub/r-minimal</code> being smallest and the Ubuntu-based <code>rstudio/r-base</code>
+25x the size of the smallest image:</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb105-1"><a href="6-containerizing-shiny-apps.html#cb105-1" tabindex="-1"></a><span class="ex">$</span> docker images <span class="at">--format</span> <span class="st">&#39;table {{.Repository}}\t{{.Tag}}\t{{.Size}}&#39;</span></span>
+<span id="cb105-2"><a href="6-containerizing-shiny-apps.html#cb105-2" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="6-containerizing-shiny-apps.html#cb105-3" tabindex="-1"></a><span class="ex">REPOSITORY</span>          TAG                 SIZE</span>
+<span id="cb105-4"><a href="6-containerizing-shiny-apps.html#cb105-4" tabindex="-1"></a><span class="ex">rhub/r-minimal</span>      4.0.5               35.3MB</span>
+<span id="cb105-5"><a href="6-containerizing-shiny-apps.html#cb105-5" tabindex="-1"></a><span class="ex">rocker/r-base</span>       4.0.4               761MB</span>
+<span id="cb105-6"><a href="6-containerizing-shiny-apps.html#cb105-6" tabindex="-1"></a><span class="ex">rocker/r-ubuntu</span>     20.04               673MB</span>
+<span id="cb105-7"><a href="6-containerizing-shiny-apps.html#cb105-7" tabindex="-1"></a><span class="ex">rstudio/r-base</span>      4.0.4-focal         894MB</span></code></pre></div>
+<p>The Debian Linux based <code>rocker/r-base</code> Docker image from the
+<a href="https://github.com/rocker-org/rocker/tree/master/r-base">Rocker</a>
+project is considered bleeding edge when it comes to system
+dependencies, i.e. latest development versions are usually available
+sooner than on other Linux distributions.</p>
+<p>The two Ubuntu Linux based images, <code>rocker/r-ubuntu</code> and
+<code>rstudio/r-base</code> from the
+<a href="https://github.com/rocker-org/rocker/tree/master/r-ubuntu">Rocker</a>
+project and from
+<a href="https://github.com/rstudio/r-docker">RStudio</a>
+are for long-term support Ubuntu versions and use the <a
+href="https://packagemanager.rstudio.com/client/"
+rel="nofollow">RSPM</a> CRAN binaries.</p>
+<p>The Alpine Linux based <code>rhub/r-minimal</code> Docker image from the
+<a href="https://github.com/r-hub/r-minimal">r-hub</a>
+project is preferred for its small image sizes.</p>
+<p>FIXME: add FROM Scratch, ubuntu, alpine</p>
+<div id="rocker-r-lib-rstudio-posit" class="section level4 hasAnchor" number="6.7.1.1">
+<h4><span class="header-section-number">6.7.1.1</span> Rocker, r-lib, rstudio (posit???)<a href="6-containerizing-shiny-apps.html#rocker-r-lib-rstudio-posit" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>We built the same Shiny app in three different ways. The sizes of the
+three images differ quite a bit, with the <code>:renv</code> image being 40% bigger
+than the other two images:</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb106-1"><a href="6-containerizing-shiny-apps.html#cb106-1" tabindex="-1"></a><span class="ex">$</span> docker images <span class="at">--format</span> <span class="st">&#39;table {{.Repository}}\t{{.Tag}}\t{{.Size}}&#39;</span></span>
+<span id="cb106-2"><a href="6-containerizing-shiny-apps.html#cb106-2" tabindex="-1"></a></span>
+<span id="cb106-3"><a href="6-containerizing-shiny-apps.html#cb106-3" tabindex="-1"></a><span class="ex">REPOSITORY</span>                  TAG                 SIZE</span>
+<span id="cb106-4"><a href="6-containerizing-shiny-apps.html#cb106-4" tabindex="-1"></a><span class="ex">analythium/covidapp-shiny</span>   renv                1.7GB</span>
+<span id="cb106-5"><a href="6-containerizing-shiny-apps.html#cb106-5" tabindex="-1"></a><span class="ex">analythium/covidapp-shiny</span>   deps                1.18GB</span>
+<span id="cb106-6"><a href="6-containerizing-shiny-apps.html#cb106-6" tabindex="-1"></a><span class="ex">analythium/covidapp-shiny</span>   basic               1.24GB</span></code></pre></div>
+<p>The <code>:basic</code> image has 105 packages installed (try
+<code>docker run analythium/covidapp-shiny:basic R -q -e 'nrow(installed.packages())'</code>).
+The  <code>:deps</code> image has remotes added on top of these, the <code>:renv</code> image
+has remotes, renv and BH as extras. BH seems to be responsible for the
+size difference, this package provides <a href="https://cran.r-project.org/package=BH">Boost C++ header
+files</a>.
+The COVID-19 app works perfectly fine without BH. In this particular
+case, this is a price to pay for the convenience of automatic dependency
+discovery provided by renv.</p>
+<p>The renv package has a few different <a href="https://rstudio.github.io/renv/reference/snapshot.html#snapshot-type">snapshot
+modes</a>.
+The default is called “implicit”. This mode adds the intersection of all
+your installed packages and those used in your project as inferred by
+<code>renv::dependencies()</code> to the lockfile. Another mode, called “explicit”,
+only captures packages that are listed in the project <code>DESCRIPTION</code>
+file. For the COVID-19 app, both these resulted in identical lockfiles.
+You can use <code>renv::remove("BH")</code> to remove BH from the project or use
+the “custom” model and list all the packages to be added to the
+lockfile.</p>
+<p>If you go with the other two approaches, explicitly stating dependencies
+in the <code>Dockerfile</code> or in the <code>DESCRIPTION</code> file, you might end up
+missing some packages at first. These approaches might need a few
+iterations before getting the package list just right.</p>
+<p>Another important difference between these approaches is that renv pins
+the exact package versions in the lockfile. If you want to install
+versioned packages, use the <code>remotes::install_version()</code> function in the
+<code>Dockerfile</code>. The <a href="https://hub.docker.com/r/rocker/r-ver">version-tagged Rocker
+images</a>
+will by default use the <a href="https://mran.microsoft.com/documents/rro/reproducibility">MRAN snapshot
+mirror</a>
+associated with the most recent date for which that image was current.</p>
+<p>FIXME: add Shiny Server inside a container as a way to host multiple apps</p>
+<p>FIXME: layers &amp; caching vs size, why using alpine is not always needed</p>
+</div>
+</div>
+<div id="system-libraries" class="section level3 hasAnchor" number="6.7.2">
+<h3><span class="header-section-number">6.7.2</span> system libraries<a href="6-containerizing-shiny-apps.html#system-libraries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>First of all, each package lists its system requirements. These are
+usually run-time dependencies that the package needs to properly
+function. So check that first.</p>
+<p>There are at least two databases listing package requirements: one
+maintained by
+<a href="https://github.com/rstudio/r-system-requirements">RStudio</a>
+(this supports RSPM, you can browse the database
+<a href="https://packagemanager.rstudio.com/client/#/repos/2/packages">here</a>),
+another one by
+<a href="https://github.com/r-hub/sysreqsdb">R-hub</a>.
+Both of these list system packages for various Linux distributions,
+macOS, and Windows. But even with these databases, the build- vs.
+run-time dependencies can be sometimes hard to distinguish. Build-time
+system libraries are always named with a <code>-dev</code> or <code>-devel</code> postfix.
+Read <a href="https://cran.r-project.org/web/packages/maketools/vignettes/sysdeps.html">the vignette of the
+maketools</a>
+R package by Jeroen Ooms for a nice explanation and a suggested workflow
+for determining run-time dependencies of packages.</p>
+<div id="rspm-bspm-r2u-python" class="section level4 hasAnchor" number="6.7.2.1">
+<h4><span class="header-section-number">6.7.2.1</span> RSPM, BSPM, r2u, python?<a href="6-containerizing-shiny-apps.html#rspm-bspm-r2u-python" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+</div>
+</div>
+<div id="r-dependencies" class="section level3 hasAnchor" number="6.7.3">
+<h3><span class="header-section-number">6.7.3</span> R dependencies<a href="6-containerizing-shiny-apps.html#r-dependencies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The wealth of contributed R packages can supercharge Shiny app
+development. This also means that you have to manage these dependencies.
+Learn about dependency management when working with R and Docker.</p>
+<p>When building Docker images for your R-based applications, the biggest
+hurdle is knowing exactly which packages and system libraries your
+package depends on. Luckily, the tools have evolved quite a bit over the
+past few years. In this post, I show you where the deps package fits in
+and how this can be a great choice for dependency management for
+Docker-based workflows.</p>
+<p>Tools like <a href="https://cran.r-project.org/package=packrat">packrat</a>,
+<a href="https://cran.r-project.org/package=renv">renv</a>, and <a href="https://github.com/MilesMcBain/capsule">capsule</a>
+let you go to great lengths to make your R projects perfectly
+reproducible. This requires knowing the exact package versions and the
+source where it was installed from (CRAN, remotes, local files). This
+information is registered in a lock file, which serves as the manifest
+for recreating the exact replica of the environment.</p>
+<p>Full reproducibility is often required for reports, markdown-based
+documents, and scripts. A loosely defined project that is combined with
+strict versioning requirements, often erring on the side of “more
+dependencies are safer”.</p>
+<p>On the other end of the spectrum, we have package-based development.
+This is the main use case for dependency management-oriented packages,
+such as <a href="https://cran.r-project.org/package=remotes">remotes</a> and
+<a href="https://cran.r-project.org/package=pak">pak</a>. Note that pak is
+to replace remotes at some point in the future.</p>
+<p>In this case, exact versions are managed only to the extent of avoiding
+breaking changes (given that testing can surface these). So what we have
+is a package-based workflow combined with a “no breaking changes”
+philosophy to version requirements. This approach often leads to leaner
+installation.</p>
+<div id="explicit-dependencies" class="section level4 hasAnchor" number="6.7.3.1">
+<h4><span class="header-section-number">6.7.3.1</span> explicit dependencies<a href="6-containerizing-shiny-apps.html#explicit-dependencies" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The first approach is to use <code>RUN</code> statements in the <code>Dockerfile</code> to
+install the required packages. Check the <code>Dockerfile</code> in the
+<code>03-docker-basic</code> folder. The structure of the <code>Dockerfile</code> follows the
+general pattern outlined in
+<a href="https://hosting.analythium.io/dockerizing-shiny-applications/">this</a>
+post. We use the <code>rocker/r-ubuntu:20.04</code> parent image and specify the
+<a href="https://packagemanager.rstudio.com/">RStudio Package
+Manager</a>
+(RSPM) CRAN repository in <code>Rprofile.site</code> so that we can install binary
+packages for speedy Docker builds. Here are the relevant lines:</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb107-1"><a href="6-containerizing-shiny-apps.html#cb107-1" tabindex="-1"></a><span class="kw">FROM</span> rocker/r-ubuntu:20.04</span>
+<span id="cb107-2"><a href="6-containerizing-shiny-apps.html#cb107-2" tabindex="-1"></a>...</span>
+<span id="cb107-3"><a href="6-containerizing-shiny-apps.html#cb107-3" tabindex="-1"></a><span class="kw">COPY</span> Rprofile.site /etc/R</span>
+<span id="cb107-4"><a href="6-containerizing-shiny-apps.html#cb107-4" tabindex="-1"></a>...</span>
+<span id="cb107-5"><a href="6-containerizing-shiny-apps.html#cb107-5" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">install.r</span> shiny forecast jsonlite ggplot2 htmltools</span>
+<span id="cb107-6"><a href="6-containerizing-shiny-apps.html#cb107-6" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">&quot;install.packages(&#39;plotly&#39;)&quot;</span></span>
+<span id="cb107-7"><a href="6-containerizing-shiny-apps.html#cb107-7" tabindex="-1"></a>...</span></code></pre></div>
+<p>Required packages are installed with the <a href="https://cran.r-project.org/web/packages/littler/vignettes/littler-examples.html#install.r-direct-cran-installation">littler
+utility</a>
+<code>install.r</code> (littler is installed on all Rocker images). You can also
+use <code>Rscript</code> to call <code>install.packages()</code>. There are other options too,
+like <code>install2.r</code> from littler, or using <code>R -q -e install.packages()</code> –
+<code>-q</code> suppresses the startup message, <code>-e</code> executes an expression then
+quits.</p>
+<p>Build and test the image locally, use any image name you like (in
+<code>export IMAGE=""</code>), then visit <code>http://localhost:8080</code> to see the app:</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb108-1"><a href="6-containerizing-shiny-apps.html#cb108-1" tabindex="-1"></a><span class="co"># name of the image</span></span>
+<span id="cb108-2"><a href="6-containerizing-shiny-apps.html#cb108-2" tabindex="-1"></a><span class="bu">export</span> <span class="va">IMAGE</span><span class="op">=</span><span class="st">&quot;analythium/covidapp-shiny:basic&quot;</span></span>
+<span id="cb108-3"><a href="6-containerizing-shiny-apps.html#cb108-3" tabindex="-1"></a></span>
+<span id="cb108-4"><a href="6-containerizing-shiny-apps.html#cb108-4" tabindex="-1"></a><span class="co"># build image</span></span>
+<span id="cb108-5"><a href="6-containerizing-shiny-apps.html#cb108-5" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> <span class="va">$IMAGE</span> .</span>
+<span id="cb108-6"><a href="6-containerizing-shiny-apps.html#cb108-6" tabindex="-1"></a></span>
+<span id="cb108-7"><a href="6-containerizing-shiny-apps.html#cb108-7" tabindex="-1"></a><span class="co"># run and test locally</span></span>
+<span id="cb108-8"><a href="6-containerizing-shiny-apps.html#cb108-8" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 <span class="va">$IMAGE</span></span></code></pre></div>
+</div>
+<div id="description-file-remotes-pak" class="section level4 hasAnchor" number="6.7.3.2">
+<h4><span class="header-section-number">6.7.3.2</span> DESCRIPTION file, remotes &amp; pak<a href="6-containerizing-shiny-apps.html#description-file-remotes-pak" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The second approach is to record the dependencies in the <code>DESCRIPTION</code>
+file. You can find the example in the <code>04-docker-deps</code> folder. The
+<a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file"><code>DESCRIPTION</code></a>
+<a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file">file</a>
+contains basic information about an R package. The file states package
+dependencies and is used when installing the packages and their
+dependencies. The <code>install_deps()</code> function from the
+<a href="https://cran.r-project.org/package=remotes">remotes</a>
+package can install dependencies stated in a <code>DESCRIPTION</code> file. The
+<code>DESCRIPTION</code> file used here is quite rudimentary but it states the
+dependencies to be installed nonetheless:</p>
+<pre class="text"><code>Imports:
+  shiny,
+  forecast,
+  jsonlite,
+  ggplot2,
+  htmltools,
+  plotly</code></pre>
+<p>Use the same Ubuntu-based R image and the RSPM CRAN repository. Install
+the remotes package, copy the <code>DESCRIPTION</code> file into the image. Call
+<code>remotes::install_deps()</code> which will find the <code>DESCRIPTION</code> file in the
+current directory. Here are the relevant lines from the <code>Dockerfile</code>:</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb110-1"><a href="6-containerizing-shiny-apps.html#cb110-1" tabindex="-1"></a><span class="kw">FROM</span> rocker/r-ubuntu:20.04</span>
+<span id="cb110-2"><a href="6-containerizing-shiny-apps.html#cb110-2" tabindex="-1"></a>...</span>
+<span id="cb110-3"><a href="6-containerizing-shiny-apps.html#cb110-3" tabindex="-1"></a><span class="kw">COPY</span> Rprofile.site /etc/R</span>
+<span id="cb110-4"><a href="6-containerizing-shiny-apps.html#cb110-4" tabindex="-1"></a>...</span>
+<span id="cb110-5"><a href="6-containerizing-shiny-apps.html#cb110-5" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">install.r</span> remotes</span>
+<span id="cb110-6"><a href="6-containerizing-shiny-apps.html#cb110-6" tabindex="-1"></a><span class="kw">COPY</span> DESCRIPTION .</span>
+<span id="cb110-7"><a href="6-containerizing-shiny-apps.html#cb110-7" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">&quot;remotes::install_deps()&quot;</span></span>
+<span id="cb110-8"><a href="6-containerizing-shiny-apps.html#cb110-8" tabindex="-1"></a>...</span></code></pre></div>
+<p>Build and test the image as before, but use a different tag:</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb111-1"><a href="6-containerizing-shiny-apps.html#cb111-1" tabindex="-1"></a><span class="co"># name of the image</span></span>
+<span id="cb111-2"><a href="6-containerizing-shiny-apps.html#cb111-2" tabindex="-1"></a><span class="bu">export</span> <span class="va">IMAGE</span><span class="op">=</span><span class="st">&quot;analythium/covidapp-shiny:deps&quot;</span></span>
+<span id="cb111-3"><a href="6-containerizing-shiny-apps.html#cb111-3" tabindex="-1"></a></span>
+<span id="cb111-4"><a href="6-containerizing-shiny-apps.html#cb111-4" tabindex="-1"></a><span class="co"># build image</span></span>
+<span id="cb111-5"><a href="6-containerizing-shiny-apps.html#cb111-5" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> <span class="va">$IMAGE</span> .</span>
+<span id="cb111-6"><a href="6-containerizing-shiny-apps.html#cb111-6" tabindex="-1"></a></span>
+<span id="cb111-7"><a href="6-containerizing-shiny-apps.html#cb111-7" tabindex="-1"></a><span class="co"># run and test locally</span></span>
+<span id="cb111-8"><a href="6-containerizing-shiny-apps.html#cb111-8" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 <span class="va">$IMAGE</span></span></code></pre></div>
+</div>
+<div id="renv" class="section level4 hasAnchor" number="6.7.3.3">
+<h4><span class="header-section-number">6.7.3.3</span> renv<a href="6-containerizing-shiny-apps.html#renv" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The <a href="https://cran.r-project.org/package=renv">renv</a>
+package is a versatile dependency management toolkit for R. You can
+discover dependencies with <code>renv::init()</code> and occasionally save the
+state of these libraries to a lockfile with <code>renv::snapshot()</code>. The nice
+thing about this approach is that the exact version of each package is
+recorded that makes Docker builds reproducible.</p>
+<p>Switch to the <code>05-docker-renv</code> directory and inspect the <code>Dockerfile</code>.
+Here are the most important lines (Focal Fossa is the code name for
+Ubuntu Linux version 20.04 LTS that matches our parent image):</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb112-1"><a href="6-containerizing-shiny-apps.html#cb112-1" tabindex="-1"></a><span class="kw">FROM</span> rocker/r-ubuntu:20.04</span>
+<span id="cb112-2"><a href="6-containerizing-shiny-apps.html#cb112-2" tabindex="-1"></a>...</span>
+<span id="cb112-3"><a href="6-containerizing-shiny-apps.html#cb112-3" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">install.r</span> remotes renv</span>
+<span id="cb112-4"><a href="6-containerizing-shiny-apps.html#cb112-4" tabindex="-1"></a>...</span>
+<span id="cb112-5"><a href="6-containerizing-shiny-apps.html#cb112-5" tabindex="-1"></a><span class="kw">COPY</span> ./renv.lock .</span>
+<span id="cb112-6"><a href="6-containerizing-shiny-apps.html#cb112-6" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">&quot;options(renv.consent = TRUE); </span><span class="dt">\</span></span>
+<span id="cb112-7"><a href="6-containerizing-shiny-apps.html#cb112-7" tabindex="-1"></a><span class="st">    renv::restore(lockfile = &#39;/home/app/renv.lock&#39;, repos = </span><span class="dt">\</span></span>
+<span id="cb112-8"><a href="6-containerizing-shiny-apps.html#cb112-8" tabindex="-1"></a><span class="st">    c(CRAN=&#39;https://packagemanager.rstudio.com/all/__linux__/focal/latest&#39;))&quot;</span></span>
+<span id="cb112-9"><a href="6-containerizing-shiny-apps.html#cb112-9" tabindex="-1"></a>...</span></code></pre></div>
+<p>We need the remotes and renv packages. Then copy the <code>renv.lock</code> file,
+call <code>renv::restore()</code> by specifying the lockfile and the RSPM CRAN
+repository. The <code>renv.consent = TRUE</code> option is needed because this is a
+fresh setup (i.e. not copying the whole renv project).</p>
+<p>Tag the Docker image with <code>:renv</code> and build:</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb113-1"><a href="6-containerizing-shiny-apps.html#cb113-1" tabindex="-1"></a><span class="co"># name of the image</span></span>
+<span id="cb113-2"><a href="6-containerizing-shiny-apps.html#cb113-2" tabindex="-1"></a><span class="bu">export</span> <span class="va">IMAGE</span><span class="op">=</span><span class="st">&quot;analythium/covidapp-shiny:renv&quot;</span></span>
+<span id="cb113-3"><a href="6-containerizing-shiny-apps.html#cb113-3" tabindex="-1"></a></span>
+<span id="cb113-4"><a href="6-containerizing-shiny-apps.html#cb113-4" tabindex="-1"></a><span class="co"># build image</span></span>
+<span id="cb113-5"><a href="6-containerizing-shiny-apps.html#cb113-5" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> <span class="va">$IMAGE</span> .</span>
+<span id="cb113-6"><a href="6-containerizing-shiny-apps.html#cb113-6" tabindex="-1"></a></span>
+<span id="cb113-7"><a href="6-containerizing-shiny-apps.html#cb113-7" tabindex="-1"></a><span class="co"># run and test locally</span></span>
+<span id="cb113-8"><a href="6-containerizing-shiny-apps.html#cb113-8" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 <span class="va">$IMAGE</span></span></code></pre></div>
+</div>
+<div id="deps" class="section level4 hasAnchor" number="6.7.3.4">
+<h4><span class="header-section-number">6.7.3.4</span> deps<a href="6-containerizing-shiny-apps.html#deps" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>What if we are not writing an R package and wanted to combine the best
+of both approaches? – A loosely defined project with just strict-enough
+versioning requirements. All this without having to write a
+<code>DESCRIPTION</code> file by hand. Because why would you need a <code>DESCRIPTION</code>
+file when you have no package? Also, a <code>DESCRIPTION</code> file won’t let you
+pin an exact package version or specify alternative CRAN-like
+repositories.</p>
+<p>What if you could manage dependencies by decorating your existing R code
+with special, roxygen-style comments? Just like this:</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="6-containerizing-shiny-apps.html#cb114-1" tabindex="-1"></a><span class="co">#&#39; @remote analythium/rconfig@CRAN-v0.1.3</span></span>
+<span id="cb114-2"><a href="6-containerizing-shiny-apps.html#cb114-2" tabindex="-1"></a>rconfig<span class="sc">::</span><span class="fu">config</span>()</span>
+<span id="cb114-3"><a href="6-containerizing-shiny-apps.html#cb114-3" tabindex="-1"></a></span>
+<span id="cb114-4"><a href="6-containerizing-shiny-apps.html#cb114-4" tabindex="-1"></a><span class="co">#&#39; @repo sf https://r-spatial.r-universe.dev</span></span>
+<span id="cb114-5"><a href="6-containerizing-shiny-apps.html#cb114-5" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb114-6"><a href="6-containerizing-shiny-apps.html#cb114-6" tabindex="-1"></a></span>
+<span id="cb114-7"><a href="6-containerizing-shiny-apps.html#cb114-7" tabindex="-1"></a><span class="co">#&#39; @ver rgl 0.108.3</span></span>
+<span id="cb114-8"><a href="6-containerizing-shiny-apps.html#cb114-8" tabindex="-1"></a><span class="fu">library</span>(rgl)</span></code></pre></div>
+<p>This is exactly what deps does:</p>
+<ul>
+<li>helps to find all dependencies from our files,</li>
+<li>writes these into a <code>dependencies.json</code> file,</li>
+<li>performs package installs according to the decorators.</li>
+</ul>
+<p>The decorators make our intent explicit, just like if we were writing an
+R package. But we do not need to manually write these into a file and
+keep it up-to-date. We can just rerun <code>create</code> to update the JSON
+manifest file.</p>
+<p>There are many different tags that you can use as part of your
+roxygen-style comments.</p>
+<p>These tags are listed and explained in the package’s GitHub repository.</p>
+<p>The deps package has 2 main functions:</p>
+<ul>
+<li><code>create()</code> crawls the project directory for package dependencies. It
+will amend the dependency list and package sources based on the
+comments and query system requirements for the packages where those
+requirements are known for a particular platform; the summary is
+written into the <code>dependencies.json</code> file.</li>
+<li><code>install()</code> looks for the <code>dependencies.json</code> file in the root of
+the project directory (or runs <code>create()</code> when the JSON file is not
+found) and performs dependency installation according to the
+instructions in the JSON file.</li>
+</ul>
+<p>In the simplest case, one might have a project folder with some R code
+inside. Running <code>deps::install()</code> will perform the package installation
+in one go. Additional arguments can be passed to <code>install()</code> so that
+local libraries etc. can be specified.</p>
+<p>These arguments are passed to <code>install.packages()</code>. This is a really
+important consideration when it comes to utilizing RSPM or BSPM
+repositories on Linux systems.
+<a href="https://cran.r-project.org/package=rspm?ref=hosting.analythium.io">RSPM</a>
+(RStudio Package Manager) provides rebuild binaries,
+<a href="https://cran.r-project.org/package=bspm?ref=hosting.analythium.io">BSPM</a>
+(Bridge to System Package Manager) provides full system dependency
+resolution and integration with <code>apt</code> on top of binary packages.</p>
+<p>The deps package helps users be more intentional about the R package
+source and version requirements using text decorators in comments. This
+is similar to a package-based workflow without actually writing a
+package. But deps also lends itself to Dockerized development. It
+identifies system requirements for the R packages, which is a welcome
+addition to making the Docker experience for R as user-friendly and
+hands-off as possible.</p>
+</div>
+<div id="using-the-deps-cli" class="section level4 hasAnchor" number="6.7.3.5">
+<h4><span class="header-section-number">6.7.3.5</span> Using the deps CLI<a href="6-containerizing-shiny-apps.html#using-the-deps-cli" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>FIXME: explain the deps CLI, note that it also works with pak, etc.</p>
+</div>
+</div>
+<div id="python-requirements" class="section level3 hasAnchor" number="6.7.4">
+<h3><span class="header-section-number">6.7.4</span> Python requirements<a href="6-containerizing-shiny-apps.html#python-requirements" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>FIXME: KALVIN to add here</p>
+<div id="pip" class="section level4 hasAnchor" number="6.7.4.1">
+<h4><span class="header-section-number">6.7.4.1</span> pip<a href="6-containerizing-shiny-apps.html#pip" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>FIXME: KALVIN to add here</p>
+</div>
+<div id="other-options-for-python" class="section level4 hasAnchor" number="6.7.4.2">
+<h4><span class="header-section-number">6.7.4.2</span> Other options for python<a href="6-containerizing-shiny-apps.html#other-options-for-python" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>??? Conda, venv???</p>
+<p>FIXME: KALVIN to add here</p>
+</div>
+</div>
+</div>
+<div id="best-practices" class="section level2 hasAnchor" number="6.8">
+<h2><span class="header-section-number">6.8</span> Best Practices<a href="6-containerizing-shiny-apps.html#best-practices" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The use of Docker with R has been <a href="https://journal.r-project.org/archive/2020/RJ-2020-007/RJ-2020-007.pdf">transformative in many
+ways</a>
+over the past 5 years. What is common in this diversity of use cases is
+that the Docker images almost always start with a parent image. What
+parent image you use? How do you add new layers to it? These questions
+will determine how quickly you can iterate while in development, and the
+size of the final image you send to production. In this post, I will
+compare using different parent images and outline best practices. I
+focus on Shiny apps but most of these ideas apply generally to any
+dockerized R application, like images for compute jobs or interfaces.</p>
+<p>Based on these results and the list of <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#dont-install-unnecessary-packages">Dockerfile best
+practices</a>,
+here are a few suggestions to improve the developer experience and the
+quality of the final Docker images.</p>
+<div id="minimize-dependencies" class="section level3 hasAnchor" number="6.8.1">
+<h3><span class="header-section-number">6.8.1</span> Minimize dependencies<a href="6-containerizing-shiny-apps.html#minimize-dependencies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="minimize-dependencies-1" class="section level4 hasAnchor" number="6.8.1.1">
+<h4><span class="header-section-number">6.8.1.1</span> Minimize dependencies<a href="6-containerizing-shiny-apps.html#minimize-dependencies-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Avoid installing “nice to have” packages and do not start from
+general-purpose parent images aimed at interactive use. Images for Shiny
+apps and other web services benefit from keeping the images as lean as
+possible by adding those R packages and system requirements that are
+absolutely necessary. <a href="https://docs.docker.com/develop/develop-images/multistage-build/">Multi-stage
+builds</a>
+can be helpful to only include artifacts that are needed.</p>
+</div>
+</div>
+<div id="use-caching" class="section level3 hasAnchor" number="6.8.2">
+<h3><span class="header-section-number">6.8.2</span> Use caching<a href="6-containerizing-shiny-apps.html#use-caching" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When building an image, Docker executes each instruction in the order
+specified in the <code>Dockerfile</code>. Docker looks for an existing image in its
+cache that it can reuse, rather than creating a new (duplicate) image.
+Only the instructions <code>RUN</code>, <code>COPY</code>, <code>ADD</code> create layers:</p>
+<ul>
+<li>for the <code>RUN</code> instructions, just the command string from the
+<code>Dockerfile</code> is used to find a match from an existing image;</li>
+<li>for the <code>ADD</code> and <code>COPY</code> instructions, the contents of the file(s)
+in the image are examined and a checksum is calculated for each
+file;</li>
+<li>the last-modified and last-accessed times of the file(s) are not
+considered in these checksums for the <code>ADD</code> and <code>COPY</code> instructions.</li>
+</ul>
+</div>
+<div id="order-layers" class="section level3 hasAnchor" number="6.8.3">
+<h3><span class="header-section-number">6.8.3</span> Order layers<a href="6-containerizing-shiny-apps.html#order-layers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Caching can be useful is when installing R package dependencies. In a
+previous post, we looked at <a href="https://hosting.analythium.io/dockerized-shiny-apps-with-dependencies/#use-the-renv-r-package">how to use the renv
+package</a>
+to install dependencies. Here is a simplified snippet from
+<a href="https://github.com/analythium/covidapp-shiny/blob/main/05-docker-renv/Dockerfile">that</a>
+<code>Dockerfile</code>:</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb115-1"><a href="6-containerizing-shiny-apps.html#cb115-1" tabindex="-1"></a><span class="co">## install dependencies</span></span>
+<span id="cb115-2"><a href="6-containerizing-shiny-apps.html#cb115-2" tabindex="-1"></a><span class="kw">COPY</span> ./renv.lock .</span>
+<span id="cb115-3"><a href="6-containerizing-shiny-apps.html#cb115-3" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">&quot;renv::restore()&quot;</span></span>
+<span id="cb115-4"><a href="6-containerizing-shiny-apps.html#cb115-4" tabindex="-1"></a></span>
+<span id="cb115-5"><a href="6-containerizing-shiny-apps.html#cb115-5" tabindex="-1"></a><span class="co">## copy the app</span></span>
+<span id="cb115-6"><a href="6-containerizing-shiny-apps.html#cb115-6" tabindex="-1"></a><span class="kw">COPY</span> app .</span></code></pre></div>
+<p>What would happen if we switched the two blocks?</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb116-1"><a href="6-containerizing-shiny-apps.html#cb116-1" tabindex="-1"></a><span class="co">## copy the app</span></span>
+<span id="cb116-2"><a href="6-containerizing-shiny-apps.html#cb116-2" tabindex="-1"></a><span class="kw">COPY</span> app .</span>
+<span id="cb116-3"><a href="6-containerizing-shiny-apps.html#cb116-3" tabindex="-1"></a></span>
+<span id="cb116-4"><a href="6-containerizing-shiny-apps.html#cb116-4" tabindex="-1"></a><span class="co">## install dependencies</span></span>
+<span id="cb116-5"><a href="6-containerizing-shiny-apps.html#cb116-5" tabindex="-1"></a><span class="kw">COPY</span> ./renv.lock .</span>
+<span id="cb116-6"><a href="6-containerizing-shiny-apps.html#cb116-6" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">&quot;renv::restore()&quot;</span></span></code></pre></div>
+<p>You would have to wait for the build to reinstall all the R packages
+whenever the app files have changed. This is because once the cache is
+invalidated all subsequent <code>Dockerfile</code> commands generate new images
+instead of using the cache.</p>
+<p>It is best to order the instructions in your <code>Dockerfile</code> from the less
+frequently changed to the more frequently changed. This ensures that the
+build cache is reusable.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:part2-docker-layers"></span>
+<img src="images/02/docker-layers.png" alt="Docker layers for single (left) and multi-stage builds (right). Dashed lines are temporary layers." width="80%" />
+<p class="caption">
+Figure 6.2: Docker layers for single (left) and multi-stage builds (right). Dashed lines are temporary layers.
+</p>
+</div>
+</div>
+<div id="switch-user" class="section level3 hasAnchor" number="6.8.4">
+<h3><span class="header-section-number">6.8.4</span> Switch user<a href="6-containerizing-shiny-apps.html#switch-user" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Running the container with root privileges allows unrestricted use which
+is to be avoided in production. Although you can find lots of examples
+on the Internet where the container is run as root, this is generally
+considered bad practice. Use something like this:</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb117-1"><a href="6-containerizing-shiny-apps.html#cb117-1" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">addgroup</span> <span class="at">--system</span> app <span class="dt">\</span></span>
+<span id="cb117-2"><a href="6-containerizing-shiny-apps.html#cb117-2" tabindex="-1"></a>    <span class="kw">&amp;&amp;</span> <span class="ex">adduser</span> <span class="at">--system</span> <span class="at">--ingroup</span> app app</span>
+<span id="cb117-3"><a href="6-containerizing-shiny-apps.html#cb117-3" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/app</span>
+<span id="cb117-4"><a href="6-containerizing-shiny-apps.html#cb117-4" tabindex="-1"></a><span class="kw">COPY</span> app .</span>
+<span id="cb117-5"><a href="6-containerizing-shiny-apps.html#cb117-5" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">chown</span> app:app <span class="at">-R</span> /home/app</span>
+<span id="cb117-6"><a href="6-containerizing-shiny-apps.html#cb117-6" tabindex="-1"></a><span class="kw">USER</span> app</span></code></pre></div>
+</div>
+<div id="multi-stage-builds" class="section level3 hasAnchor" number="6.8.5">
+<h3><span class="header-section-number">6.8.5</span> Multi-stage Builds<a href="6-containerizing-shiny-apps.html#multi-stage-builds" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="other-considerations" class="section level3 hasAnchor" number="6.8.6">
+<h3><span class="header-section-number">6.8.6</span> Other considerations<a href="6-containerizing-shiny-apps.html#other-considerations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="use-a-linter" class="section level4 hasAnchor" number="6.8.6.1">
+<h4><span class="header-section-number">6.8.6.1</span> Use a linter<a href="6-containerizing-shiny-apps.html#use-a-linter" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Best practices for writing Dockerfiles are being followed more and more
+often according to <a href="https://arxiv.org/pdf/2103.12298.pdf">this
+paper</a>
+after mining more than 10 million Dockerfiles on Docker Hub and GitHub.
+However, there is still room for improvement. This is where
+<a href="https://en.wikipedia.org/wiki/Lint_(software)">linters</a>
+come in as useful tools for static code analysis.
+<a href="https://github.com/hadolint/hadolint#rules">Hadolint</a>
+lists lots of rules for Dockerfiles and is available as a <a href="https://marketplace.visualstudio.com/items?itemName=exiasr.hadolint">VS Code
+extension</a>.</p>
+<ul>
+<li><a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#leverage-build-cache">Dockerfile best
+practices</a></li>
+<li><a href="https://github.com/hadolint/hadolint#rules">Hadolint
+rules</a></li>
+<li><a href="https://vsupalov.com/5-tips-to-speed-up-docker-build/">Tips to Speed up Your Docker Image
+Build</a>–&gt;</li>
+</ul>
+</div>
+<div id="use-labels" class="section level4 hasAnchor" number="6.8.6.2">
+<h4><span class="header-section-number">6.8.6.2</span> Use labels<a href="6-containerizing-shiny-apps.html#use-labels" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+</div>
+<div id="docker-security-scanning" class="section level4 hasAnchor" number="6.8.6.3">
+<h4><span class="header-section-number">6.8.6.3</span> Docker Security Scanning<a href="6-containerizing-shiny-apps.html#docker-security-scanning" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>This brings up an important consideration when it comes to production
+code and environments. Knowing the exact versions of your packages is
+not only good for reproducibility but is also the foundation for
+vulnerability scanning.</p>
+<p>R users are familiar with the renv package and how it registers the
+exact version of the R packages being used. However, it does not
+register anything about the underlying system libraries, the version of
+curl or openssl or GDAL libraries being used. This is what a Software
+Bill Of Materials (SBOM) is used for. For this reason, Docker Desktop
+4.7.0 introduced the experimental
+<a href="https://docs.docker.com/engine/sbom/"><code>docker sbom</code></a> CLI command that
+is based on a collaboration with the
+<a href="https://github.com/anchore/syft">Syft</a> project.</p>
+<p>Reproducibility is concerned with keeping the versions immutable. It is
+like a vintage car that is used once a year to derive to the car show.
+As opposed to this, in production, we are more concerned with acting on
+the information and upgrade packages when necessary while also making
+sure that our app is running flawlessly. It is like how people drive
+their kids to dance and soccer practice 7 days a week in a minivan. The
+car is maintained continuously because there is no room for error.</p>
+<p>The <a href="https://docs.docker.com/engine/scan/"><code>docker scan</code></a> CLI command
+was introduced to quickly detect and learn how to remediate
+vulnerabilities in your images.</p>
+<blockquote>
+<p>Vulnerability scanning for Docker local images allows developers and
+development teams to review the security state of the container images
+and take actions to fix issues identified during the scan, resulting
+in more secure deployments. Docker Scan runs on Snyk engine, providing
+users with visibility into the security posture of their local
+Dockerfiles and local images.</p>
+<p>Users trigger vulnerability scans through the CLI, and use the CLI to
+view the scan results. The scan results contain a list of Common
+Vulnerabilities and Exposures (CVEs), the sources, such as OS packages
+and libraries, versions in which they were introduced, and a
+recommended fixed version (if available) to remediate the CVEs
+discovered.</p>
+</blockquote>
+<p>Another popular vulnerability scanner for container images and
+filesystems is called <a href="https://github.com/anchore/grype">Grype</a>.
+You will find links to some tutorials below walking through the use of
+Syft and Grype.</p>
+<p>SBOM was announced in 2022.
+Here is the original announcement about SBOM from Docker in April 2022:</p>
+<blockquote>
+<p>making what is inside your container images more visible so that you
+can better secure your software supply chain</p>
+</blockquote>
+<p>Announcing Docker SBOM: Increased Docker Image Visibility <a href="https://www.docker.com/blog/announcing-docker-sbom-a-step-towards-more-visibility-into-docker-images/" class="uri">https://www.docker.com/blog/announcing-docker-sbom-a-step-towards-more-visibility-into-docker-images/</a></p>
+<p>Image visibility and transparency are key to securing your software
+supply chain. Learn how our Docker SBOM feature highlights core image
+components.</p>
+<p>Here is a short intro to how <code>docker sbom</code> command and the Syft project
+are related (Syft supports the OCI, Docker, and Singularity image
+formats):
+<a href="https://thenewstack.io/how-to-improve-docker-security-with-docker-sbom-and-syft/">How to Improve Docker Security with <code>docker sbom</code> and Syft</a></p>
+<p>Grype can use the SBOM output or scan the Docker image or local file
+system directly. Then it performs a vulnerability scan by comparing the
+package versions to information found in vulnerability databases. This
+tutorial outlines the whole process:
+<a href="https://medium.com/rahasak/container-vulnerability-scan-with-syft-and-grype-f4ec9cd4d7f1">Container vulnerability scan with Syft and Grype</a></p>
+<p><a href="https://actuated.dev/blog/sbom-in-github-actions">How to add a Software Bill of Materials (SBOM) to your containers with GitHub Actions</a>:</p>
+<p>You might use GitHub actions to build a new image every time you merge
+changes to your production branch. It can be important to make sure
+there are no vulnerabilities. This post outlines how to do that:</p>
+</div>
+</div>
+</div>
+<div id="what-else" class="section level2 hasAnchor" number="6.9">
+<h2><span class="header-section-number">6.9</span> WHAT ELSE<a href="6-containerizing-shiny-apps.html#what-else" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="layers-and-caching" class="section level3 hasAnchor" number="6.9.1">
+<h3><span class="header-section-number">6.9.1</span> Layers and Caching<a href="6-containerizing-shiny-apps.html#layers-and-caching" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="hardware-architectures" class="section level3 hasAnchor" number="6.9.2">
+<h3><span class="header-section-number">6.9.2</span> Hardware Architectures<a href="6-containerizing-shiny-apps.html#hardware-architectures" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="multi-stage-builds-1" class="section level3 hasAnchor" number="6.9.3">
+<h3><span class="header-section-number">6.9.3</span> Multi-stage builds<a href="6-containerizing-shiny-apps.html#multi-stage-builds-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="mounting-volumes" class="section level3 hasAnchor" number="6.9.4">
+<h3><span class="header-section-number">6.9.4</span> Mounting volumes<a href="6-containerizing-shiny-apps.html#mounting-volumes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="ports" class="section level3 hasAnchor" number="6.9.5">
+<h3><span class="header-section-number">6.9.5</span> Ports<a href="6-containerizing-shiny-apps.html#ports" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="uid" class="section level3 hasAnchor" number="6.9.6">
+<h3><span class="header-section-number">6.9.6</span> UID<a href="6-containerizing-shiny-apps.html#uid" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="troubleshooting" class="section level3 hasAnchor" number="6.9.7">
+<h3><span class="header-section-number">6.9.7</span> Troubleshooting<a href="6-containerizing-shiny-apps.html#troubleshooting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>FIXME: Accessing the logs:
+FIXME: how to enter a running container to find runtime info</p>
+</div>
+<div id="shinylive-1" class="section level3 hasAnchor" number="6.9.8">
+<h3><span class="header-section-number">6.9.8</span> Shinylive<a href="6-containerizing-shiny-apps.html#shinylive-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Shinylive: R &amp; Python using Nginx and of-watchdog</p>
+</div>
+<div id="rmd" class="section level3 hasAnchor" number="6.9.9">
+<h3><span class="header-section-number">6.9.9</span> Rmd<a href="6-containerizing-shiny-apps.html#rmd" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Rmd: this is for R</p>
+</div>
+<div id="quarto-1" class="section level3 hasAnchor" number="6.9.10">
+<h3><span class="header-section-number">6.9.10</span> Quarto<a href="6-containerizing-shiny-apps.html#quarto-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Quarto: R &amp; Python</p>
+</div>
+<div id="using-buildkit" class="section level3 hasAnchor" number="6.9.11">
+<h3><span class="header-section-number">6.9.11</span> Using BuildKit<a href="6-containerizing-shiny-apps.html#using-buildkit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Docker versions 18.09 or higher come with a new opt-in builder backend
+called
+<a href="https://github.com/moby/buildkit"
+rel="noreferrer noopener">BuildKit</a>. BuildKit prints out a nice
+summary of each layer including timing for the layers and the overall
+build. This is the general build command that I used to compare the four
+parent images:</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb118-1"><a href="6-containerizing-shiny-apps.html#cb118-1" tabindex="-1"></a><span class="va">DOCKER_BUILDKIT</span><span class="op">=</span>1 <span class="ex">docker</span> build <span class="at">--no-cache</span> <span class="at">-f</span> <span class="va">$FILE</span> <span class="at">-t</span> <span class="va">$IMAGE</span> .</span></code></pre></div>
+<p>BuildKit backend is enabled by turning on the <code>DOCKER_BUILDKIT=1</code>
+environment variable. I use the <code>--no-cache</code> option to avoid using
+cached layers, thus having a fair assessment of build times (you usually
+only build 1 and not 4). The <code>-f $FILE</code> flag allows building from
+different files kept in the same folder.</p>
+<p>All the code used here can be found in our Covid-19 Shiny app <a href="https://github.com/analythium/covidapp-shiny">GitHub repository</a>, look in
+the folder <code>99-images</code>.</p>
+<div id="image-build-times" class="section level4 hasAnchor" number="6.9.11.1">
+<h4><span class="header-section-number">6.9.11.1</span> Image build times<a href="6-containerizing-shiny-apps.html#image-build-times" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>This is the script I used to build the four images with BuildKit:</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb119-1"><a href="6-containerizing-shiny-apps.html#cb119-1" tabindex="-1"></a><span class="co"># rhub/r-minimal</span></span>
+<span id="cb119-2"><a href="6-containerizing-shiny-apps.html#cb119-2" tabindex="-1"></a><span class="bu">export</span> <span class="va">IMAGE</span><span class="op">=</span><span class="st">&quot;analythium/covidapp-shiny:minimal&quot;</span></span>
+<span id="cb119-3"><a href="6-containerizing-shiny-apps.html#cb119-3" tabindex="-1"></a><span class="bu">export</span> <span class="va">FILE</span><span class="op">=</span><span class="st">&quot;Dockerfile.minimal&quot;</span></span>
+<span id="cb119-4"><a href="6-containerizing-shiny-apps.html#cb119-4" tabindex="-1"></a><span class="va">DOCKER_BUILDKIT</span><span class="op">=</span>1 <span class="ex">docker</span> build <span class="at">--no-cache</span> <span class="at">-f</span> <span class="va">$FILE</span> <span class="at">-t</span> <span class="va">$IMAGE</span> .</span>
+<span id="cb119-5"><a href="6-containerizing-shiny-apps.html#cb119-5" tabindex="-1"></a></span>
+<span id="cb119-6"><a href="6-containerizing-shiny-apps.html#cb119-6" tabindex="-1"></a><span class="co"># rocker/r-base</span></span>
+<span id="cb119-7"><a href="6-containerizing-shiny-apps.html#cb119-7" tabindex="-1"></a><span class="bu">export</span> <span class="va">IMAGE</span><span class="op">=</span><span class="st">&quot;analythium/covidapp-shiny:base&quot;</span></span>
+<span id="cb119-8"><a href="6-containerizing-shiny-apps.html#cb119-8" tabindex="-1"></a><span class="bu">export</span> <span class="va">FILE</span><span class="op">=</span><span class="st">&quot;Dockerfile.base&quot;</span></span>
+<span id="cb119-9"><a href="6-containerizing-shiny-apps.html#cb119-9" tabindex="-1"></a><span class="va">DOCKER_BUILDKIT</span><span class="op">=</span>1 <span class="ex">docker</span> build <span class="at">--no-cache</span> <span class="at">-f</span> <span class="va">$FILE</span> <span class="at">-t</span> <span class="va">$IMAGE</span> .</span>
+<span id="cb119-10"><a href="6-containerizing-shiny-apps.html#cb119-10" tabindex="-1"></a></span>
+<span id="cb119-11"><a href="6-containerizing-shiny-apps.html#cb119-11" tabindex="-1"></a><span class="co"># rocker/r-ubuntu</span></span>
+<span id="cb119-12"><a href="6-containerizing-shiny-apps.html#cb119-12" tabindex="-1"></a><span class="bu">export</span> <span class="va">IMAGE</span><span class="op">=</span><span class="st">&quot;analythium/covidapp-shiny:ubuntu&quot;</span></span>
+<span id="cb119-13"><a href="6-containerizing-shiny-apps.html#cb119-13" tabindex="-1"></a><span class="bu">export</span> <span class="va">FILE</span><span class="op">=</span><span class="st">&quot;Dockerfile.ubuntu&quot;</span></span>
+<span id="cb119-14"><a href="6-containerizing-shiny-apps.html#cb119-14" tabindex="-1"></a><span class="va">DOCKER_BUILDKIT</span><span class="op">=</span>1 <span class="ex">docker</span> build <span class="at">--no-cache</span> <span class="at">-f</span> <span class="va">$FILE</span> <span class="at">-t</span> <span class="va">$IMAGE</span> .</span>
+<span id="cb119-15"><a href="6-containerizing-shiny-apps.html#cb119-15" tabindex="-1"></a></span>
+<span id="cb119-16"><a href="6-containerizing-shiny-apps.html#cb119-16" tabindex="-1"></a><span class="co"># rstudio/r-base</span></span>
+<span id="cb119-17"><a href="6-containerizing-shiny-apps.html#cb119-17" tabindex="-1"></a><span class="bu">export</span> <span class="va">IMAGE</span><span class="op">=</span><span class="st">&quot;analythium/covidapp-shiny:focal&quot;</span></span>
+<span id="cb119-18"><a href="6-containerizing-shiny-apps.html#cb119-18" tabindex="-1"></a><span class="bu">export</span> <span class="va">FILE</span><span class="op">=</span><span class="st">&quot;Dockerfile.focal&quot;</span></span>
+<span id="cb119-19"><a href="6-containerizing-shiny-apps.html#cb119-19" tabindex="-1"></a><span class="va">DOCKER_BUILDKIT</span><span class="op">=</span>1 <span class="ex">docker</span> build <span class="at">--no-cache</span> <span class="at">-f</span> <span class="va">$FILE</span> <span class="at">-t</span> <span class="va">$IMAGE</span> .</span></code></pre></div>
+<p>I changed the CRAN repository for the Debian and Ubuntu Rocker images to
+see timing differences between installing packages as binary or from
+source. Total build times (on a 6-year old MacBook Pro) were the
+following:</p>
+<ul>
+<li><code>rhub/r-minimal</code>: 27 minutes with building packages from source</li>
+<li><code>rocker/r-base</code>: 12 minutes when building from source, 2.9 minutes
+when installing binary packages</li>
+<li><code>rocker/r-ubuntu</code>: 12 minutes when building from source, 3.2 minutes
+when installing binary packages</li>
+<li><code>rstudio/r-base</code>: 3.1 minutes with installing binary packages</li>
+</ul>
+<p>The difference between the binary vs. source package installs is
+expected. What is interesting is the 12 vs. 27 minutes between the
+Debian/Ubuntu images and the minimal Alpine image. Is it worth waiting
+for?</p>
+</div>
+<div id="image-sizes" class="section level4 hasAnchor" number="6.9.11.2">
+<h4><span class="header-section-number">6.9.11.2</span> Image sizes<a href="6-containerizing-shiny-apps.html#image-sizes" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>I got the image sizes from <code>docker images</code> and made a small data frame
+in R to calculate the size difference between the final and parent
+images:</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="6-containerizing-shiny-apps.html#cb120-1" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">TAG=</span><span class="fu">c</span>(<span class="st">&quot;minimal&quot;</span>, <span class="st">&quot;base&quot;</span>, <span class="st">&quot;ubuntu&quot;</span>, <span class="st">&quot;focal&quot;</span>),</span>
+<span id="cb120-2"><a href="6-containerizing-shiny-apps.html#cb120-2" tabindex="-1"></a>  <span class="at">PARENT_SIZE=</span><span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">761</span>, <span class="dv">673</span>, <span class="dv">894</span>) <span class="sc">/</span> <span class="dv">1000</span>, <span class="co"># base image</span></span>
+<span id="cb120-3"><a href="6-containerizing-shiny-apps.html#cb120-3" tabindex="-1"></a>  <span class="at">FINAL_SIZE=</span><span class="fu">c</span>(<span class="dv">222</span> <span class="sc">/</span> <span class="dv">1000</span>, <span class="fl">1.05</span>, <span class="fl">1.22</span>, <span class="fl">1.38</span>)) <span class="co"># final image</span></span>
+<span id="cb120-4"><a href="6-containerizing-shiny-apps.html#cb120-4" tabindex="-1"></a></span>
+<span id="cb120-5"><a href="6-containerizing-shiny-apps.html#cb120-5" tabindex="-1"></a>x<span class="sc">$</span>DIFF <span class="ot">=</span> x<span class="sc">$</span>FINAL_SIZE <span class="sc">-</span> x<span class="sc">$</span>PARENT_SIZE</span>
+<span id="cb120-6"><a href="6-containerizing-shiny-apps.html#cb120-6" tabindex="-1"></a></span>
+<span id="cb120-7"><a href="6-containerizing-shiny-apps.html#cb120-7" tabindex="-1"></a><span class="co">#       TAG PARENT_SIZE FINAL_SIZE  DIFF</span></span>
+<span id="cb120-8"><a href="6-containerizing-shiny-apps.html#cb120-8" tabindex="-1"></a><span class="co"># 1 minimal       0.035      0.222 0.187</span></span>
+<span id="cb120-9"><a href="6-containerizing-shiny-apps.html#cb120-9" tabindex="-1"></a><span class="co"># 2    base       0.761      1.050 0.289</span></span>
+<span id="cb120-10"><a href="6-containerizing-shiny-apps.html#cb120-10" tabindex="-1"></a><span class="co"># 3  ubuntu       0.673      1.220 0.547</span></span>
+<span id="cb120-11"><a href="6-containerizing-shiny-apps.html#cb120-11" tabindex="-1"></a><span class="co"># 4   focal       0.894      1.380 0.486</span></span></code></pre></div>
+<p>The image sizes themselves differed quite a bit, the RStudio Ubuntu
+image was 6.2x larger than the minimal R image. Size differences were
+similarly different.</p>
+<p>Image sizes can be deceiving. It might not matter much if images are
+large if for example, we have multiple images <a href="https://semaphoreci.com/blog/2018/03/14/docker-image-size.html">sharing some of the
+layers</a>
+(i.e. ones from the parent image). The CPU and RAM footprint of the
+containers might also be unrelated to the image sizes. But it might
+impact “cold start” performance when images are pulled to an empty
+server.</p>
+</div>
+<div id="alpine-linux-based-image" class="section level4 hasAnchor" number="6.9.11.3">
+<h4><span class="header-section-number">6.9.11.3</span> Alpine Linux based image<a href="6-containerizing-shiny-apps.html#alpine-linux-based-image" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The Dockerfiles and the build experience for the Ubuntu and Debian
+images were very similar. Build times and image sizes were also
+comparable. The Alpine Linux-based minimal image took the longest time
+to build but resulted in the smallest image size. The Dockerfile for
+this setup also looks quite different from the Debian/Ubuntu setup:</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb121-1"><a href="6-containerizing-shiny-apps.html#cb121-1" tabindex="-1"></a><span class="kw">FROM</span> rhub/r-minimal:4.0.5</span>
+<span id="cb121-2"><a href="6-containerizing-shiny-apps.html#cb121-2" tabindex="-1"></a></span>
+<span id="cb121-3"><a href="6-containerizing-shiny-apps.html#cb121-3" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apk</span> update</span>
+<span id="cb121-4"><a href="6-containerizing-shiny-apps.html#cb121-4" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apk</span> add <span class="at">--no-cache</span> <span class="at">--update-cache</span> <span class="dt">\</span></span>
+<span id="cb121-5"><a href="6-containerizing-shiny-apps.html#cb121-5" tabindex="-1"></a>    <span class="at">--repository</span> http://nl.alpinelinux.org/alpine/v3.11/main <span class="dt">\</span></span>
+<span id="cb121-6"><a href="6-containerizing-shiny-apps.html#cb121-6" tabindex="-1"></a>    autoconf=2.69-r2 <span class="dt">\</span></span>
+<span id="cb121-7"><a href="6-containerizing-shiny-apps.html#cb121-7" tabindex="-1"></a>    automake=1.16.1-r0 <span class="dt">\</span></span>
+<span id="cb121-8"><a href="6-containerizing-shiny-apps.html#cb121-8" tabindex="-1"></a>    bash tzdata</span>
+<span id="cb121-9"><a href="6-containerizing-shiny-apps.html#cb121-9" tabindex="-1"></a><span class="kw">RUN</span> <span class="bu">echo</span> <span class="st">&quot;America/Edmonton&quot;</span> <span class="op">&gt;</span> /etc/timezone</span>
+<span id="cb121-10"><a href="6-containerizing-shiny-apps.html#cb121-10" tabindex="-1"></a></span>
+<span id="cb121-11"><a href="6-containerizing-shiny-apps.html#cb121-11" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">installr</span> <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb121-12"><a href="6-containerizing-shiny-apps.html#cb121-12" tabindex="-1"></a>    <span class="at">-t</span> <span class="st">&quot;R-dev file linux-headers libxml2-dev gnutls-dev openssl-dev libx11-dev cairo-dev libxt-dev&quot;</span> <span class="dt">\</span></span>
+<span id="cb121-13"><a href="6-containerizing-shiny-apps.html#cb121-13" tabindex="-1"></a>    <span class="at">-a</span> <span class="st">&quot;libxml2 cairo libx11 font-xfree86-type1&quot;</span> <span class="dt">\</span></span>
+<span id="cb121-14"><a href="6-containerizing-shiny-apps.html#cb121-14" tabindex="-1"></a>    remotes shiny forecast jsonlite ggplot2 htmltools plotly Cairo</span>
+<span id="cb121-15"><a href="6-containerizing-shiny-apps.html#cb121-15" tabindex="-1"></a></span>
+<span id="cb121-16"><a href="6-containerizing-shiny-apps.html#cb121-16" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">rm</span> <span class="at">-rf</span> /var/cache/apk/<span class="pp">*</span></span>
+<span id="cb121-17"><a href="6-containerizing-shiny-apps.html#cb121-17" tabindex="-1"></a></span>
+<span id="cb121-18"><a href="6-containerizing-shiny-apps.html#cb121-18" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">addgroup</span> <span class="at">--system</span> app <span class="kw">&amp;&amp;</span> <span class="ex">adduser</span> <span class="at">--system</span> <span class="at">--ingroup</span> app app</span>
+<span id="cb121-19"><a href="6-containerizing-shiny-apps.html#cb121-19" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/app</span>
+<span id="cb121-20"><a href="6-containerizing-shiny-apps.html#cb121-20" tabindex="-1"></a><span class="kw">COPY</span> app .</span>
+<span id="cb121-21"><a href="6-containerizing-shiny-apps.html#cb121-21" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">chown</span> app:app <span class="at">-R</span> /home/app</span>
+<span id="cb121-22"><a href="6-containerizing-shiny-apps.html#cb121-22" tabindex="-1"></a><span class="kw">USER</span> app</span>
+<span id="cb121-23"><a href="6-containerizing-shiny-apps.html#cb121-23" tabindex="-1"></a></span>
+<span id="cb121-24"><a href="6-containerizing-shiny-apps.html#cb121-24" tabindex="-1"></a><span class="kw">EXPOSE</span> 3838</span>
+<span id="cb121-25"><a href="6-containerizing-shiny-apps.html#cb121-25" tabindex="-1"></a></span>
+<span id="cb121-26"><a href="6-containerizing-shiny-apps.html#cb121-26" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;R&quot;</span>, <span class="st">&quot;-e&quot;</span>, <span class="st">&quot;options(tz=&#39;America/Edmonton&#39;);shiny::runApp(&#39;/home/app&#39;, port = 3838, host = &#39;0.0.0.0&#39;)&quot;</span>]</span></code></pre></div>
+<p>The base image is so bare-bones that it needs to install time zones,
+fonts and the Cairo device for ggplot2 to work (read the limitations
+<a href="https://github.com/r-hub/r-minimal#limitations">here</a>).
+Instead of <code>apt</code> you have <code>apk</code> and might have to work a bit harder to
+find all the Alpine-specific dependencies.</p>
+<p>One interesting aspect of this image is that instead of the littler
+utilities familiar from the Rocker images, we have the very similar
+<code>installr</code> script that installs R packages and system requirements:</p>
+<ul>
+<li>the <code>-d</code> flag installs then removes compilers ( <code>gcc</code>, <code>musl-dev</code>,
+<code>g++</code>), as these are typically not needed on the final image;</li>
+<li>system packages listed after the <code>-t</code> flag are removed after the R
+packages have been installed;</li>
+<li>system packages listed after the <code>-a</code> flag are run-time dependencies
+that are needed for the packages to function properly and are not
+removed from the image.</li>
+</ul>
+<p>The installation of the system packages – that are all available on the
+other parent images – contributes to the longer build times. The
+BuildKit output gives you a clue about where exactly the time was spent.</p>
+<p>The rest of the <code>Dockerfile</code> is very similar to the other distributions:
+add Linux user, copy files, expose port, define the entrypoint command.
+But how do you figure out what system packages you need?</p>
+
+</div>
+</div>
+</div>
+<div id="container-orchestration" class="section level2 hasAnchor" number="6.10">
+<h2><span class="header-section-number">6.10</span> Container Orchestration<a href="6-containerizing-shiny-apps.html#container-orchestration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="docker-compose" class="section level3 hasAnchor" number="6.10.1">
+<h3><span class="header-section-number">6.10.1</span> Docker Compose<a href="6-containerizing-shiny-apps.html#docker-compose" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+</div>
+<div id="troubleshooting-1" class="section level2 hasAnchor" number="6.11">
+<h2><span class="header-section-number">6.11</span> Troubleshooting<a href="6-containerizing-shiny-apps.html#troubleshooting-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>FIXME: Enter the containers etc. to see variables etc.</p>
+</div>
+<div id="summary-5" class="section level2 hasAnchor" number="6.12">
+<h2><span class="header-section-number">6.12</span> Summary<a href="6-containerizing-shiny-apps.html#summary-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>With the newfound ability to wrap any Shiny app in a Docker container,
+you’ll be able to deploy these images to many different hosting
+platforms. Of course, there is a lot more to learn, e.g. about handling
+dependencies, persisting data across sessions and containers, and so on.
+We’ll cover these use cases in due time. Until then, celebrate this
+milestone, check out further readings, and try to containerize some of
+your own Shiny apps.</p>
+<p>You can also share Docker images with others. This, however, will require the
+recipient of your app to have Docker installed and be able to run it locally.</p>
+<p>In the next Part, we’ll cover options for hosting your app, so that others
+will only need a browser to be able to access it. No R, Python, or Docker
+runtime environment is needed on the user’s part. Hosting the app for your
+users will also be the preferred option in case you do not want to share
+the source code or the Docker image with the users.</p>
+<p>Further reading:</p>
+<ul>
+<li><a href="https://docs.docker.com/get-started/">Get started with
+Docker</a></li>
+<li><a href="https://www.freecodecamp.org/news/docker-simplified-96639a35ff36/">Docker
+simplified</a></li>
+<li><a href="https://docker-curriculum.com/">Docker for
+beginners</a></li>
+<li><a href="https://docs.docker.com/glossary/">Docker
+glossary</a></li>
+<li><a href="https://docker.farhan.info/">The Docker
+Handbook</a></li>
+<li><a href="https://jsta.github.io/r-docker-tutorial/">R Docker
+tutorial</a></li>
+<li><a href="https://colinfay.me/docker-r-reproducibility/">Docker for R
+users</a></li>
+<li><a href="https://journal.r-project.org/archive/2017/RJ-2017-065/RJ-2017-065.pdf">An Introduction to
+Rocker</a></li>
+<li><a href="https://journal.r-project.org/archive/2020/RJ-2020-007/RJ-2020-007.pdf">The
+Rockerverse</a></li>
+</ul>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="5-developing-shiny-apps.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7-a-review-of-shiny-hosting-options.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/analythium/hosting-shiny-book/edit/main/02-02-a-containerizing-shiny.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>
