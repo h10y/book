@@ -6,6 +6,9 @@ on:
 
 name: Render HTML version and deploy
 
+permissions:
+  actions: write
+
 jobs:
   bookdown:
     runs-on: ubuntu-latest
