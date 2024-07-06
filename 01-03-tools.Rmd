@@ -1,0 +1,461 @@
+# Local Setup
+
+To make your Shiny applications accessible for a wider audience, you must 
+have some tools available locally on your laptop or desktop --- sorry, a 
+tablet or a phone are not recommended devices for this.
+You will become familiar with several tools used to manage your code
+locally or communicate with remote machines.
+
+By the end of this chapter, you should have obtained the knowledge and the 
+local setup of tools to connect to a remote server and run a Shiny app from 
+the command line.
+
+## Installing Your Developer Tools
+
+### R
+
+R is a programming language designed mainly for statistical computation, but it 
+has been extended with packages to support tasks like developing web apps with 
+Shiny.
+
+To begin, you must install the appropriate binary for your operating system 
+available at <https://cran.r-project.org/> under the "Download and Install R" 
+section.
+
+Next, you should install an integrated development environment or IDE of your choice.
+One of the most popular ways to develop in R is to use the [RStudio Desktop]()
+developed by Posit (formerly RStudio). You can download the binary from
+<https://posit.co/download/rstudio-desktop/>.
+
+Another increasingly popular IDE option for R is Microsoft's VisualStudio Code, 
+or VS Code for short. You can download the installer from 
+<https://code.visualstudio.com/download>.
+It is recommended to use the R extension for VS Code that relies on the
+`languageserver` R package [@R-languageserver].
+You can find setup instructions in the 
+[REditorSupport/vscode-R](https://github.com/REditorSupport/vscode-R) 
+GitHub repository.
+Another useful extension is the Shiny VS Code extension from the
+VS Code Marketplace or the Open VSX Registry.
+
+To install Shiny, you can run the command `install.packages("shiny")` in the 
+R console. You will need a few other packages too:
+
+```R
+install.packages(c("bslib", "shinylive", "htmltools", "rmarkdown"))
+```
+FIXME: list other R packages.
+
+### Install Python
+
+As a scripting language, Python is versatile and can be developed in different 
+environments including text editors and IDEs. The recommended IDE for developing
+in Shiny with Python is VS Code.
+
+To use the IDE for Python, you must ensure that Python can run on your operating 
+system. Operating systems like MacOS and Linux should already have come bundled 
+with a version of Python, but it may be an older version. Therefore, we recommend 
+installing the latest Python version for MacOS and Windows from 
+<https://www.python.org/downloads/>. For Linux/Unix based operating systems, 
+we recommend installing Python using the command line with the following 
+commands: 
+
+Install Shiny with `pip install shiny`. Some of the examples will use Shinylive,
+you can install it with `pip install shinylive`.
+FIXME: CHECK this, how to install Python and `pip` etc.
+
+
+The Shiny VS Code extension from the
+VS Code Marketplace or the Open VSX Registry works with R and Python as well.
+Python itself also has VS Code extensions that can be used.
+
+A rathe new IDE option that R and Python users should keep an eye on is
+[Positron](https://github.com/posit-dev/positron) by Posit as it promises to be 
+an extensible, polyglot tool for writing code and exploring data.
+
+### Web Browser
+
+You likely already have a web browser on your local machine. Most people use
+Chrome, Saferi, Edge, Firefox.
+
+### Quarto
+
+Quarto is a open-source scientific and technical publishing system by Posit that
+can include Shiny apps. You can find install instructions at <https://quarto.org/docs/get-started/>.
+
+### Docker Desktop
+
+To download and install Docker for your platform of choice, visit the
+[Docker download page](https://docs.docker.com/get-docker/) and
+follow the instructions.
+
+If you are a Mac OS X user on Apple Silicone (M1 chip and above), you might want 
+to enable virtualization to be able to run and build images for AMD64 architecture.
+Otherwise the images might have poor performance or fail on other platforms.
+Go to the Settings in Docker Desktop, and under the General tab check 
+the "Use Virtualization framework" and 
+"Use Rosetta for x86_64/amd64 emulation on Apple Silicon" boxes.
+
+## The Command Line
+
+The command line is a text-based user interface to control a computer. Instead of
+using a mouse, you use your keyboard to type commands to control the computer. This is
+different than the graphical user interfaces (GUIs) used in modern day operating systems
+like Windows, Mac OSX, and Ubuntu Desktop Linux. The command line is important for
+managing your Shiny app deployment on a remote server where there might not be a GUI
+for you to control the remote server.
+
+Depending on your operating system, there are different options for the command line.
+
+On Windows, we recommend installing [Windows Subsytem Linux](https://learn.microsoft.com/en-us/windows/wsl/install) 
+in order to use a Linux based command line. This is because some commands that 
+we describe in this book may be incompatible with Windows based command lines 
+like PowerShell (comes preinstalled on Windows) or [Git Bash](https://git-scm.com/downloads).
+
+For Mac OS X, we recommend using the built-in terminal application. You will be 
+able to run the commands that we describe in the book.
+
+For Linux-based systems like Ubuntu , you can also use the built-in terminal application.
+
+Our book will cover commands using a "*nix based command line". This means the 
+Windows Subsytem Linux terminal or the built-in terminals with Mac OS X or Ubuntu.
+
+The terminal is also available from inside your IDE (RStudio or VS Code),
+which means that you won't have to change windows to access it.
+
+Now let's review some of the most common shell commands that we'll need in the
+absence of a graphical user interface (GUI).
+
+### Navigation
+
+Navigating through the command line might seem daunting at first. 
+However, it is quite simple once you memorize 3 key commands involving directories.
+
+#### Current Working Directory
+
+To know which directory you are in, you can type the `pwd` command. This will give
+you the path of the "working directory" that you are in.
+
+#### Listing Directory
+
+The `ls` command is used to list all files in a directory.
+This is important to know when you are trying to find a file on the command line.
+
+#### Change Directory
+
+The `cd` command is used to change directories and traverse a computer. For 
+example, you may want to change your working directory to a nested folder of your 
+current working directory. In order to do so, you would type `cd` in the command 
+line and typing a space after, and then press `tab` to see the available 
+directories to traverse to. With the correct directory in mind, you can type 
+the directory name after and press enter to change directories.
+
+To verify that you are in the new directory, your command line should indicate 
+the current directory that you are in. If you are still unsure, you can use the 
+`pwd` command to get the path of your current working directory.
+
+By running `cd ..` you can go up one directory. To go up 2 directories, you can 
+run: `cd ../..`.
+
+### Editing Files
+
+Once you can navigate through the computer with command line. The next important 
+task to know about is editing files with a text editor. There are many
+popular text editors that usually come bundled with your *nix based command line
+including: `nano`, `vim`, and `emacs`. Vim and Emacs are much more complex 
+and require more technical knowledge to edit and save files. Therefore, 
+if your are just staring out, we recommend using Nano.
+
+Nano is a user-friendly text editor that allows you to edit files from the 
+command line. To begin, you can type `nano` followed by a space and the name of 
+the file you want to edit, e.g. `nano app.R`. If the name of the file does not 
+exist, nano will create the file for you when you save it.
+
+To navigate through a file with Nano, you can use your arrow keys to move the 
+cursor. You can add text to the file by typing on your keyboard.
+
+The instructions for nano are at the bottom of the editor. The `^` stands for 
+the CTRL key and the letter beside it stands for the key you press to run the 
+command. Press the CTRL key together with the letter on the keyboard to execute 
+a command.
+
+To save the file, you would press `CTRL + O` and confirm the prompts with enter.
+To exit nano, you would press `CTRL + X`.
+
+### File and Directory Operations
+
+It is also important to know about how to move, copy, and delete files and 
+directories. Furthermore it is also important to know how to create directories.
+
+#### Making Directories
+
+To make a directory you would type `mkdir` followed by a space and the directory name.
+To confirm that the directory is created, you can run the `ls` command and see that
+the folder has been created. You can even try to navigate to it with the `cd` command.
+
+#### Moving Files and Directories
+
+To move a file or directory, you would simply type 
+`mv <path to file you want to move> <destination path>`.
+You can verify that a file or directory has moved with `ls <destination path>` 
+and you should see that in its new location.
+
+#### Copying Files and Directories
+
+Copying files is similar to moving files. To copy a file, you would run 
+`cp <path to file you want to copy> <destination path and filename>`.
+
+To copy a directory, you will need to add the `-r` flag so that the whole 
+directory is copied "recursively". The command you would run would be: 
+`cp -r <path to directory you want to copy> <destination path and directory name>`.
+
+You can verify that a file or directory has been copied with 
+`ls <destination path>` and you should see that in its new location.
+
+#### Deleting Files and Directories
+
+To delete files run: `rm <path to file you want to delete>`.
+
+For deleting directories, you will need to add the `-r` flag so that the whole 
+directory is deleted "recursively". The command to delete directories is: 
+`rm -r <path to directory you want to delete>`.
+
+You can verify that a file or directory has been removed with 
+`ls <path to old file or directory>`. There should be an error saying that the 
+file and directory do not exist.
+
+### Super User Access
+
+At times you may find that you do not have the correct permissions to edit a 
+file or even view a directory. Therefore, you must use super user access to gain 
+the correct permissions for your current user.
+
+If you are looking for super user permissions for a single command you can run: 
+`sudo <command>`. Command in this case can be any command line command including 
+the ones we have described earlier in the chapter like `rm`.
+For example, you could run `sudo rm test.txt` where we are using super user access 
+to delete the test file.
+
+You may also find that you need super user permissions for multiple commands.
+In this case you can start a command line as a super user by running `sudo -i` 
+and following the prompts. To exit out of the super user command line you can 
+press `CTRL + D` or run the command `logout` or `exit`.
+
+## Source Code Management with Git
+
+Source code management is important to keep centralized versions of your Shiny 
+application source code. By centralizing your source code, you can have one 
+source truth of your application code that can be duplicated anywhere. Source 
+code management also helps to save different versions of a file without creating 
+multiple copies of a file.
+
+Git is one of the most popular version control systems for software. In this 
+section, we will be describing how to get started with Git.
+
+Git comes installed by default on most Mac OS X and Linux machines.
+On Windows you can install Git from <https://git-scm.com/download/>.
+Try `git version` in the terminal to test if Git is installed properly.
+
+### Git Services
+
+Git services help host your source code remotely. Two of the most popular Git 
+services are GitHub and GitLab. Both are good choices and the instructions in 
+this section apply to both services. However, we recommend using GitHub as later 
+in the book we describe continuous deployment and continuous integration (CICD) 
+that relies on GitHub Actions.
+
+### Git Commands
+
+To follow along with the commands, you will first need to sign up for your Git 
+service. Following sign up, you should create an empty repository which will 
+host your source code.
+
+In this book, we will outline how to use Git from the command line. There are 
+also graphical user interfaces (GUIs) for git. However, when connecting remotely 
+to a server, a GUI to use the server is unavailable.
+
+We recommend that you set your default Git text editor to nano with this command: 
+`git config --global core.editor "nano"`. Often the default editor is set to 
+Vim or emacs which is harder to use.
+
+#### Cloning Repositories
+
+Once you have created a repository, you can clone it to your computer. 
+To do so, you would run `git clone <repository url>` and enter the appropriate 
+credentials. For example, you can clone the GitHub repository with
+one of our Shiny app examples, the Old Faithful example as:
+
+```bash
+git clone https://github.com/h10y/faithful.git
+```
+
+If you are cloning a _private_ GitHub repository, you must setup an access token 
+to be used as a password for the `git clone` command.
+For private GitLab repositories, you would use the same password to be used as 
+you would sign in on the website, but you can also create an access token.
+
+#### Creating a Commit
+
+When you have cloned the repository, you can begin adding file changes via a 
+commit. To begin, you would add or modify files in the repository directory. 
+After you have made changes, you can create a commit using three commands.
+
+First, you would run `git add .` from the root directory of your repository. 
+This command stages your changes for the commit. The `.` signifies the current 
+directory and all its files and directories in it.
+
+Next, you would run `git commit -m "<message for your commit>"` to create a 
+commit with a message. The `-m` flag indicates that you will have a message for 
+your commit. You must enclose your message within quotation marks. A commit must 
+always have a message.
+
+Finally, once you have created your commit, you can push your changes with 
+`git push`.
+
+#### Pulling Changes
+
+You might have multiple copies of your repository on different computers. 
+In such cases, to keep the changes of files and directories in sync, you can 
+run the `git pull` command.
+
+It should be noted that if you make changes in your repository without 
+committing them, you must commit your changes before performing a pull.
+
+If you have committed changes and the repository has been updated elsewhere, 
+merge conflicts may arise. To detect which files have conflicts, you can run 
+the `git diff --check` command which shows the files and line numbers that 
+have conflicts. The conflicts in the files will appear as `<<<<<<< HEAD` at the 
+top with the current changes you have under it. This is separated with `=======` 
+and the changes that are conflicting under it. The conflicting changes are 
+concluded with `>>>>>>> <branch name>`.
+
+You must delete the `<<<<<<< HEAD` and enclosing `>>>>>>> <branch name>`, 
+keeping only the change that you want and running `git commit` to resolve any 
+conflicts for your repository.
+
+#### Status of Repository
+
+To determine what files you changed and are not tracking, you can run the 
+`git status` command. This command will give you the files you have modified and 
+files that are not yet tracked by git. This command will also tell you how many 
+changes you have locally that haven't been pushed to the git service yet.
+
+### .gitignore
+
+Often there are extraneous files that are artifacts of running your Shiny 
+application or contain sensitive information, like passwords or access tokens,
+and do not need to be committed. To ignore these files, you can create a 
+`.gitignore` file in the root of your repository.
+
+To generate a `.gitignore` file, you can visit [gitignore.io](https://gitignore.io) 
+which will generate a file with the files and directories to ignore for an 
+operating system, programming language, or tool. We recommend selecting: 
+linux, macOS, windows, R, and Python as a base `.gitignore`.
+
+### Branching
+
+Branching is a more advanced concept in Git that is useful when you have 
+multiple people working on the same files. In this subsection, we will briefly 
+touch on the basics of git branching.
+
+A branch is a copy of a repository that you can work on and make changes for a 
+specific feature. Once that feature has been completed you can merge it back to 
+your `main` branch. This allows multiple people to work on the same codebase.
+
+To see the branches that exist in your repository, run the `git branch` command.
+
+To create a branch in your repository, run the `git checkout -b <branch name>` 
+command. It should be noted that when you first try to push your new branch 
+with `git push`, you will be unsuccessful since the remote repository has no 
+idea of the branch. Therefore you must run 
+`git push --set-upstream origin <branch name>`. Do not worry if you cannot 
+remember this command! Git will give you a reminder of the command to run to 
+push a new branch.
+
+To switch branches, run the `git checkout <branch name> command`.
+To merge the changes of one branch to your current branch, run the 
+`git merge <branch name>` command.
+
+There is an option to review merges on GitHub and GitLab. On GitHub, you would 
+open a pull request. On GitLab, you would open a merge request. Both of these 
+options are not part of Git itself, but offered by Git services so that code 
+development can be more collaborative. A pull request or merge request, allows 
+you to preview the merged changes, comment on specific lines of the changes, 
+and fix any conflicts before merging.
+
+Often, you can use Git-based workflows to make changes to your Shiny application 
+codebase. The GitHub workflow is a lightweight workflow that leverages pull 
+requests for collaborative development. Developers create feature branches from 
+the main branch, make changes, and then open pull requests to propose these 
+changes for review. Once reviewed and approved, the changes are merged into the 
+main branch.
+
+## Servers
+
+Your Shiny App deployment is likely going to live on a remote computer that is 
+always running, aptly named a "server". In this section, we will be explaining 
+how to connect remotely to servers via SSH from the command line.
+
+Servers running remotely often do not contain a graphical user interface, and 
+therefore it is recommended to become familiar with the command line.
+Once connected, you can run the command line commands explained in the previous 
+sections of this chapter.
+
+The commands in the following subsections require the setup of a server. 
+We outline how to do so in Part IV. However, you can also just read along to 
+familiarize yourself with the basic concepts of using a remote server.
+
+### Secure Shell (SSH)
+
+The secure shell protocol (SSH) is used to securely connect with a remote computer.
+The connection works via public key cryptography. This means that a public key 
+lives on the server and you have a private key on your local machine. 
+The private key on your local machine matches with the public key on the remote 
+machine to verify your identity.
+
+There are two common ways to authenticate with SSH: using a password, or using a 
+private/public key pair. It is recommended to use the private/public key pair 
+method as it is much harder to guess a private key compared to a password. 
+
+#### Password Authentication
+
+To authenticate with a password, you can run this command:
+`ssh <user name>@<server ip address>`.
+
+When you authenticate with a password, a private/public key pair is automatically 
+generated for you. However, this method is less secure because a password is 
+easier to guess compared to a randomly generated key file. 
+
+#### Key-based Authentication
+
+To authenticate with a key file, you can run this command:
+`ssh -i <location of key file> <user name>@<server ip address>`.
+
+By running this command, the remote computer can verify that the user logging 
+in with the public key that is stored on the remote computer.
+
+We outline how to generate a key in Part IV.
+
+## Readability on the Command Line
+
+Sometimes commands are too long or it would help reading them if we could
+put the parts on multiple lines without "hitting Enter" (executing) too early.
+This is where the backslash (`\`) comes in. We can use the `\` to write
+multi-line commands. For example these two dummy examples are identical:
+
+```bash
+ssh -i ~/.ssh/id_rsa root@123.456.78.90
+
+ssh -i ~/.ssh/id_rsa \
+    root@123.456.78.90
+```
+
+## Summary
+
+You have all the knowledge and tools installed on your local computer to
+effectively develop your Shiny app and to interact with remote servers and
+online services.
+
+Before we review the different ways of developing and hosting your Shiny app,
+we quickly introduce a few example apps. We will use these apps to demonstrate 
+the steps for the hosting options.

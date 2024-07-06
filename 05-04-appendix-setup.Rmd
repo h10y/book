@@ -1,0 +1,27 @@
+# Setting Up Your Development Environment {-#appendix-setup}
+
+Install R & Python.
+
+Install Shiny.
+Install Shiny in R with `install.packages("shiny")`, in Python with `pip install shiny`.
+
+RStudio
+
+VS Code
+
+- <https://shiny.posit.co/py/docs/install-create-run.html>
+- <https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/>
+
+R language support for VS Code, Python Shiny extension.
+
+Install Docker & compose
+
+Get a shell
+
+- VS Code
+- RStudio terminal
+- WSL
+- term2
+
+Other stuff we need?
+

@@ -1,0 +1,56 @@
+# Considerations for Hosting Production Shiny Apps {#considerations-hosting}
+
+## Security
+
+###   Certificates
+###   Storing Secrets
+
+*   Environment variables
+*   Secrets service
+
+### Shiny App Authentication
+
+*   [ShinyApps.io](http://ShinyApps.io)
+*   PositConnect
+*   ShinyProxy
+*   HTTP Basic Auth Reverse Proxy
+*   Built-in App
+
+## Performance, Availability, and Monitoring
+
+###   Scaling
+
+####   Benchmarking
+####   What to Monitor
+
+*   CPU
+*   Memory
+*   Disk I/O
+*   Network traffic
+*   Uptime
+
+## Operations and Maintenance
+
+###   CI/CD
+
+*   Alerts
+*   Updating Apps
+
+## Embedding Onto Your Website
+
+You may find yourself wanting to embed your app onto your existing website.
+Your existing website may be hosted elsewhere or run code that is independent of your Shiny app.
+In such cases, you may find using iframes useful.
+
+Iframe is an HTML tag that allows the embedding of websites within a website.
+
+Beware that iframes can be restricted by configuring your reverse proxy to send a header that
+most clients respect.
+```
+X-Frame-Options: DENY
+```
+
+## OTHER STUFF
+
+- <https://shiny.posit.co/r/articles/improve/scaling-and-tuning/>
+- <https://shiny.posit.co/r/articles/improve/scaling-and-tuning-ssp-rsc/>
