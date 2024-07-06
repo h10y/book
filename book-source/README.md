@@ -1,0 +1,285 @@
+# Bookdown folder
+> Hosting Shiny Book
+
+Setup (you need to have R and LaTeX/pdflatex installed), see <https://bookdown.org/yihui/bookdown/get-started.html>
+
+```bash
+cd bookdown
+R -e "install.packages('deps');deps::install(ask=FALSE)"
+```
+
+How to build the book:
+
+```bash
+# HTML output into the ./docs folder (uses settings in _output.yml)
+R -q -e "bookdown::clean_book(TRUE); bookdown::render_book('index.Rmd')"
+# open the HTML output
+R -q -e "browseURL('docs/index.html')"
+
+# create PDF of the book and all TeX files for CRC Press
+Rscript pdf_build_from_tex.R
+```
+
+See <https://github.com/ThinkR-open/engineering-shiny-book/blob/master/makefile>
+
+Using Docker:
+
+```bash
+docker run -it --rm --platform linux/amd64 \
+  -v $PWD/bookdown:/home/root/bookdown \
+  -w /home/root ghcr.io/analythium/hosting-shiny-book-dev:v1 \
+  /bin/bash /home/root/bookdown/_build.sh
+```
+
+## Overview of Parts & Chapters
+
+- Part I: Getting Started
+  - Background (DEvOps, Shiny hosting cycle)
+  - Hosting Concepts
+  - The Tools of the Trade (local setup: why?)
+- Part II: Shiny Apps
+  - Developing Shiny Apps
+    - ...
+  - Containerizing Shiny Apps
+    - Docker Concepts
+      - ...
+      - Alternatives to Docker
+    - Working with Existing Images
+      - Docker Login
+      - Docker Images
+      - Pulling Images
+      - Running Images
+    - Building a New Image
+      - The Dockerfile
+      - Base and Parent Images
+        - Rocker, r-lib, rstudio (posit???)
+        - layers & caching vs size
+        - image is zip layers + metadata with hashes
+      - Architecture (AMD/ARM), buildkit
+    - Sharing Images
+      - Pushing Images
+      - Docker Registries
+    - Shiny Apps With Dependencies (use bananas)
+      - system libraries
+        - RSPM, BSPM, r2u, python?
+      - R dependencies
+        - explicit dependencies
+        - DESCRIPTION file, remotes & pak
+        - renv
+        - deps
+      - Python requirements
+        - pip
+        - pipreqs
+        - poetry
+        - Conda?
+        - ??? for python
+    - Best Practices
+      - Minimize dependencies
+      - Use caching
+      - Order layers
+      - Switch user
+      - Other considerations
+        - Use a linter
+        - Use labels
+        - Docker Security Scanning https://github.com/analythium/hosting-shiny-book-dev/tree/main/blog-posts/2023-02-04_insiders-digest-53
+    - Summary
+- Part III: Hosting Shiny Apps
+  - A Review of Shiny Hosting Options
+    - Cost & complexity
+    - 2x2 setup options
+    - Deployment considerations
+  - PaaS
+    - Shinyapps (not container based)
+    - DOAP
+      - Static content
+      - Containerized apps
+    - Heroku
+    - Fly.io (& other firecracker based ones)
+    - Fargate-like offerings
+    - Multiple apps using containerized Shiny Server
+    - ...???
+  - Virtual Private Servers (https://cloud.google.com/learn/what-is-a-virtual-private-server)
+    - Setup
+      - DO droplet & ssh login
+      - Navigation & commands
+      - Reverse proxy / Caddy (mention Apache & Nginx)
+      - Custom domain & TLS
+      - Firewall
+    - Static hosting on file server
+    - Reverse proxy setup with Caddy
+      - systemd
+      - Posit Connect
+      - Shiny Server
+        - multiple apps / linux users
+    - Containerized setups
+      - ShinyProxy
+        - Setup
+      - Docker compose
+        - Basic setup
+        - File server & dynamic apps example
+        - Containerized ShinyProxy
+  - Hybrid setups
+    - Embedding onto your website (Iframes)
+    - iframe + Shinyapps ...
+  - Considerations for Production
+    - Security
+      - security groups
+      - secret management
+    - Snapshots & backups
+    - Reserved IP
+    - Configuration
+    - Access control
+      - In-app auth
+      - Password protected server (basic auth with Caddy per route)
+      - OIDC OAuth
+    - CICD: 
+      - Docker GitHub actions (steps, auto tagging)
+      - cron job polling
+      - webhooks
+    - Scaling
+      - Shinyapps & Connect
+      - Heroku
+      - Load balancing with Docker compose
+- Part IV: What is next?
+  - Reevaluating your hosting needs
+    - Licensing considerations
+  - Advanced topics
+    - Kubernetes
+      - Shiny apps vanilla
+      - ShinyProxy operator
+    - OIDC/SSO
+    - IaC: terraform, packer
+- Part V: Appendices
+
+Notes on system package management and R base images:
+
+- https://hub.docker.com/_/r-base
+- https://github.com/r-lib/rig
+- focus on pak instead of remotes? https://pak.r-lib.org/reference/features.html
+- https://github.com/r-hub/r-minimal
+- https://solutions.posit.co/envs-pkgs/environments/docker/
+- https://hub.docker.com/r/rstudio/r-base
+- https://github.com/rstudio/r-docker
+- https://rocker-project.org/images/
+- https://github.com/rocker-org/rocker
+- https://eddelbuettel.github.io/r2u/
+
+Python:
+
+- https://jfrog.com/devops-tools/article/how-to-choose-a-docker-base-image-for-python/
+- https://pythonspeed.com/articles/base-image-python-docker-images/
+- https://hub.docker.com/_/python
+- https://snyk.io/blog/best-practices-containerizing-python-docker/
+
+Useful for both:
+
+- https://docs.docker.com/build/building/best-practices/
+- https://stackoverflow.com/questions/21553353/what-is-the-difference-between-cmd-and-entrypoint-in-a-dockerfile
+- https://docs.docker.com/glossary/
+- valid image tags https://docs.docker.com/reference/cli/docker/image/tag/
+- https://github.com/opencontainers/distribution-spec
+- CLI reference: https://docs.docker.com/reference/cli/docker/
+
+Need to talk about 
+
+- the `:latest` tag and catches
+- image name vs tag (tagging an image, applies `name:tag`)
+- base vs parent image
+- `docker manifest inspect --verbose golang:1.17.1` etc
+- name vs hash https://hackernoon.com/docker-images-name-vs-tag-vs-digest
+- https://medium.com/@mccode/the-misunderstood-docker-tag-latest-af3babfd6375
+
+
+This repository is used in shinyapps.io to install those dependencies:
+- https://github.com/rstudio/shinyapps-package-dependencies
+
+A curated list of awesome R and Python packages:
+- https://github.com/nanxstats/awesome-shiny-extensions
+
+Code formatting: https://github.com/r-lib/styler
+
+```R
+library(styler)
+# styler::style_dir("book-files/01-shiny-apps")
+styler::style_dir("book-files/01-shiny-apps/bananas")
+```
+
+## Links
+
+For links, we can abbreviate them and set up `s3y.ca` as URL shortener. When we get there:
+
+- set up gh pages
+- scan draft for links
+- include csv with original and shortened url's
+- write script to replace the urls (if not already the short domain)
+- write script that adds the redirect pages to the shortener repo
+
+## References
+
+Shiny in general
+
+- https://unleash-shiny.rinterface.com/
+- https://book.javascript-for-r.com/
+- https://mastering-shiny.org/
+
+Deployment (not really hosting)
+
+- https://mastering-shiny.org/
+- https://engineering-shiny.org/
+
+Devops, docker, etc.
+
+- https://do4ds.com/
+- https://raps-with-r.dev/
+
+## For each chapter
+
+- start with an overview of what the chapter is about and how it is structured at a high level
+- end with a Summary section and list a few key references where readers can go to learn more
+
+## Using knitr for floating environments
+
+Reference it in text like:
+
+Now consider Fig. \@ref(fig:part1-hosting-cycle), which shows the cycle.
+
+Use the R code chunk like this:
+
+        ```{r part1-hosting-cycle, eval=TRUE, echo=FALSE, fig.cap="Shiny hosting cycle."}
+        include_graphics("images/part-01/hosting-cycle.png")
+        ```
+
+Important: do not use _ in ref names because it is spacial in latex. See <https://bookdown.org/yihui/bookdown/figures.html>.
+
+When adding code chunks, use tripletick and the language name, otherwise there will be no code chunk background in the PDF.
+
+## Index
+
+<https://bookdown.org/yihui/bookdown/latex-index.html>
+
+This \index{Preface}Preface is indexed.
+
+## Cross references
+
+<https://bookdown.org/yihui/bookdown/cross-references.html>
+
+You can also reference sections using the same syntax `\@ref(label)` where label is the sligified title used as the anchor, where label is the section ID or use `[Section header text]`.
+
+Need to test this in HTML & PDF.
+
+## Calling for help
+
+Use PETER and KALVIN as a placeholder if you want something to be filled in by the other co-author.
+
+FIXME: use it to flag parts that we have to revisit (update a link etc.)
+
+## Line breaks
+
+Use 70 char width in latex code (we can fit 80 chars but then inline code bacomes too small height)
+
+## Figure placements
+
+<https://bookdown.org/yihui/rmarkdown-cookbook/figure-placement.html>
+
+It is set to `H` which right where it is mentioned.
+We can probably use `fig.pos = "btp"` to override this as needed.

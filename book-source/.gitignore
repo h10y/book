@@ -1,0 +1,38 @@
+# R files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+.Rbuildignore
+
+# bookdown output files
+*_bookdown_files
+HostingShiny.Rmd
+HostingShiny.pdf
+HostingShiny.tex
+HostingShiny.auc
+HostingShiny.aux
+HostingShiny.idx
+HostingShiny.log
+HostingShiny.out
+HostingShiny.toc
+HostingShiny.aux
+HostingShiny.ind
+HostingShiny.ilg
+purl.Rout
+
+# Other files
+.httr-oauth
+*rsconnect/
+
+# Comment out (and thus do not ignore these files) only when version bumping
+# the release branch
+docs/*
+# bib/packages.bib
+
+# generated figures
+figures/*
+
+spelling.csv
+urlcheck.txt

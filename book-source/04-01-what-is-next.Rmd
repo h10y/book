@@ -1,0 +1,68 @@
+# (PART) What Is Next? {-} 
+
+# Information about hosting
+
+In most data-intensive situations, the capabilities of the backend system 
+will determine your costs and the user experience. That is why it is important 
+to make informed choices.
+
+data apps is scattered around the Internet and often incomplete.
+Recommendations are usually narrowly focused and never really ask the
+important questions. Such as: *Why* do you want this app deployed?
+*Who* is it for? *What* is your budget? The goal of this book is to help you learn
+about your hosting options. Depending on how you answer the questions
+you will be able to pick the option that suits your needs best.
+
+We have worked with clients from a variety of sectors, large and small, and
+advised about hosting data applications. Over the years, we have seen
+some patterns emerge, and we decided that it is time to share our
+experiences in the form of this website.
+
+Data applications are becoming more common. We have seen a shift from
+proof-of-concept and demo applications to business-critical dashboards
+and real-world decision support tools. Along with this trend, we also
+saw the diversification of client and user needs that requires the
+authors and developers of these data apps to constantly evaluate their
+*hosting strategy*.
+
+We have also noticed that clients want more control over their
+technology stack (branding, security, data regions) and costs. They are
+ready to invest in skill development to address their unique needs
+and to reduce the dependency on proprietary software/platform
+solutions.
+
+We will keep the Dev side of the cycle to a minimum on this website.
+There are truly great resources dedicated to general programming, data
+science, or app development, that we are not intending to repeat.
+Instead, we will provide relevant pointers for you to quickly find
+reliable information on these topics.
+
+This website focuses on the Ops side. We publish *reviews* to help in
+your decision-making process when it comes to hosting data apps. We also
+share step-by-step *tutorials* describing the various options from
+1-click deployments to self-hosted clusters.
+
+
+This website is about hosting data apps. But what is a data app and why
+do you need hosting for it? 
+
+
+# Conclusions
+
+Conclusions & next steps
+
+This is what you've learnt, and this is what you haven't. Go here to find out more.
+
+<!-- Start of Appendixes -->
+
+\cleardoublepage
+
+```{r eval=TRUE,echo=FALSE, results='asis'}
+# this marks the beginning of the Appendix, no content here
+if(!is_latex_output()){
+  cat("# (APPENDIX) Appendices {-}")
+} else {
+  # cat("\\appendix")
+  cat("# (PART) Appendices {-}")
+}
+```
