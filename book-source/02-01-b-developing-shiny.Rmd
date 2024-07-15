@@ -410,7 +410,7 @@ First, export the app inside the `py-shiny` folder with the single-file app
 and put the Shinylive version in the `py-shinylive` folder:
 
 ```bash
-shinylive export python py-shinylive
+shinylive export py-shiny py-shinylive
 ```
 
 The Shiny live version will consist of _static_ files, which means that we can 
@@ -462,7 +462,7 @@ following the [`posit-dev/r-shinylive`](https://github.com/posit-dev/r-shinylive
 GitHub repository using the interactive R console:
 
 ```R
-shinylive::export("r", "r-shinylive")
+shinylive::export("r-shiny", "r-shinylive")
 httpuv::runStaticServer("r-shinylive")
 ```
 

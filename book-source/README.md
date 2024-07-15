@@ -189,6 +189,11 @@ Need to talk about
 - name vs hash https://hackernoon.com/docker-images-name-vs-tag-vs-digest
 - https://medium.com/@mccode/the-misunderstood-docker-tag-latest-af3babfd6375
 
+Posit:
+
+- https://solutions.posit.co/architecting/docker/
+- https://solutions.posit.co/envs-pkgs/environments/docker/
+
 
 This repository is used in shinyapps.io to install those dependencies:
 - https://github.com/rstudio/shinyapps-package-dependencies
@@ -197,6 +202,8 @@ A curated list of awesome R and Python packages:
 - https://github.com/nanxstats/awesome-shiny-extensions
 
 Code formatting: https://github.com/r-lib/styler
+
+https://mickael.canouil.fr/posts/2023-05-07-quarto-docker/
 
 ```R
 library(styler)

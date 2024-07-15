@@ -1,12 +1,350 @@
+## Best Practices
+
+The use of Docker with R has been transformative
+over the past decade [@rocker; @Rockerverse]. You can find examples for
+almost anything ranging from interactive data science to anychronous
+Plumber [@R-plumber] APIs in Kubernetes.
+No matter the use case, Docker images start with a parent image. What
+parent image you use? How do you add new layers to it? These decisions
+will determine how quickly you can iterate while in development, and the
+size of the final image you send to production. But it is not only about your
+experience, but about possible issues that may arise and security implications
+that might matter even more.
+Let's review best practices that apply not only to containerized Shiny app 
+development but to any dockerized R application and workflow.
+These will all improve the developer experience and the
+quality of the final Docker images.
+
+### Parent Images
+
+Decide which is the right parent image for the `FROM` instruction of your image.
+The type of the application might dictate this, e.g. R or Python. If you have
+fewer dependencies, try using a lean image variant. If you need build time
+tools see if a more general and usually larger image is the best starting point.
+You might still be able to strip away some fat by leveraging multi-stage builds.
+
+You should also pin the version of your base image. Otherise, using the
+`latest` image tag might surprise you if you try to rebuild your image
+a few years apart. Although Linux systems are generally considered very robust,
+best practices and the security landscape is eveolving constantly. As an
+example, if you used `adduser` to create a new non-privileged user in your image
+using Ubuntu 22.04 or earlier, it would fail on 24.04 because it has instead
+`useradd` as the recommended function to use. Not a big hurdle, but the
+image nevertheless would not build as is because now the `latest` tag refer to
+the latest version.
+
+### Minimize Dependencies
+
+Minimizing dependencies is advantagous for many reasons. It results in a smaller
+final image size, but more importantly, it presents smaller attac surface
+for malicious actors. Smaller is usually safer. This is especially true
+when the image is being used as part of client-facing applications on the
+Internet. Internal tools and dev containers are less of a concern because
+these cannot be accessed by the public.
+
+Avoid installing "nice to have" packages and do not start from
+general-purpose parent images aimed at interactive use. Images for Shiny
+apps and other web services benefit from keeping the images as lean as
+possible by adding those R packages and system requirements that are
+absolutely necessary. You should also uninstall unnecessary build time libraries.
+Multi-stage builds can be helpful to only include artifacts that are needed.
+
+### Cache and Order Layers
+
+When building an image, Docker executes each instruction in the order
+specified in the `Dockerfile`. Docker looks for an existing image in its
+cache that it can reuse, rather than creating a new (duplicate) image layer.
+Only the instructions `RUN`, `COPY`, `ADD` create layers.
+
+For the `RUN` instructions the command string from the `Dockerfile` is used to 
+find a match from an existing image. For the `ADD` and `COPY` instructions, 
+the contents of the file(s) in the image are examined and a checksum is 
+calculated for each file, however he last-modified and last-accessed times of 
+the file(s) are not considered in these checksums.
+
+You can chain `RUN` instructions to create a single layer. This is especially
+important when using `apt-get update && apt-get install` so that the package
+lists will be used to find the most up-to-date candidates to install.
+When troubleshooting, use `docker run --no-cache <image-name>` to disregard the cache.
+
+Caching can be useful is when installing dependencies. Here is a simplified 
+snippet of a `Dockerfile` to illustrate cache invalidation:
+
+```dockerfile
+## Install dependencies
+COPY <dependencies> .
+RUN <dependency-install-command>
+
+## Copy the app
+COPY app .
+```
+
+What would happen if we switched the two blocks?
+
+```dockerfile
+## Copy the app and <dependencies>
+COPY app .
+
+## Install dependencies
+RUN <dependency-install-command>
+```
+
+You would have to wait for the build to reinstall all the packages
+whenever the app files have changed. This is because once the cache is
+invalidated all subsequent `Dockerfile` commands generate new images
+instead of using the cache.
+
+In general, start with the instructions that change less frequently.
+Putting your dependencies before the application source code sounds trivial.
+But you might have to use parts of your code that define the dependencies
+through a lock file, etc. In this case you have to copy the lock file
+separately, install dependencies, then copy the rest of the source code
+in another `COPY` instruction.
+
+### Switch to Non-root User
+
+By default, Docker containers run as the root user. Root privileges allows 
+unrestricted use which is to be avoided in production. Although you can find 
+lots of examples on the Internet where the container is run as root [@Eng_2021], 
+this is generally considered bad practice or a "code smell".
+
+Some parent images come with a non-root user already defined. For example 
+some of the Rocker images have a non-privileged `docker` user that you can use. 
+Otherwise, create a new group and user with something like this:
+
+```dockerfile
+[...]
+RUN groupadd <group> && useradd -g <group> <user>
+WORKDIR /home/<user>
+COPY app .
+RUN chown <user>:<group> -R /home/<user>
+USER <user>
+[...]
+```
+
+### Do Not Store Sensitive Info
+
+Avoid hard coding sensitive intormation into the Docker image. Do not set
+environment variables with `ENV` that store passwords or tokens. Set these
+at run time. Also do not store such sensitive information in files that
+you copy. Add such files to `.gitignore` and `.dockerignore`. Mount the
+files containing secrets at run time or use the `docker secret` command.
+FIXME: We will see some examples later.
+
+### Security Scanning 
+
+Reproducibility is concerned with keeping the versions immutable. It is
+like a vintage car that is used once a year to derive to the car show.
+As opposed to this, in production, we are more concerned with acting on
+the information and upgrade packages when necessary while also making
+sure that our app is running flawlessly. It is like how people drive
+their kids to dance and soccer practice 7 days a week in a minivan. The
+car is maintained continuously because there is no room for error.
+
+Knowing the exact versions of your packages is
+not only good for reproducibility but is also the foundation for
+vulnerability scanning.
+The Software Bill Of Materials (SBOM) is a complete inventory of a codebase, 
+the license and version information.
+The `docker scout` command can scan images and create an SBOM. It then compares 
+this to a list of known vulnerabilities.
+
+Image analysis uses image SBOMs to understand what packages and versions an image contains.
+
+```bash
+docker scout sbom rocker/r2u:24.04 > sbom-r2u.json
+
+docker scout sbom --format list rocker/r2u:24.04
+#               Name                           Version               Type  
+# ───────────────────────────────────────────────────────────────────────────
+#   KernSmooth                    2.23-24                            cran  
+#   MASS                          7.3-61                             cran  
+#   Matrix                        1.7-0                              cran  
+#   acl                           2.3.2-1build1                      deb   
+# [...]
+#   zlib                          1:1.3.dfsg-3.1ubuntu2              deb   
+#   zlib1g                        1:1.3.dfsg-3.1ubuntu2              deb   
+#   zlib1g-dev                    1:1.3.dfsg-3.1ubuntu2              deb  
+```
+
+```bash
+docker scout quickview rocker/r2u:24.04
+#     ✓ Pulled
+#     ✓ Image stored for indexing
+#     ✓ Indexed 435 packages
+#
+#     i Base image was auto-detected. To get more accurate results,
+#       build images with max-mode provenance attestations.
+#       Review docs.docker.com ↗ for more information.
+#
+#   Target               │  rocker/r2u:24.04  │    0C     2H   206M    44L   
+#     digest             │  f3272f6d118c      │                              
+#   Base image           │  ubuntu:24.04      │    0C     0H     6M     6L   
+#   Refreshed base image │  ubuntu:24.04      │    0C     0H     2M     6L   
+#                        │                    │                  -4          
+#   Updated base image   │  ubuntu:24.10      │    0C     0H     0M     0L   
+#                        │                    │                  -6     -6   
+```
+
+```bash
+docker scout cves rocker/r2u:24.04
+# you see a bunch listed ...
+```
+
+```bash
+docker scout cves --format only-packages --only-vuln-packages \
+  --only-severity critical,high rocker/r2u:24.04
+#           ✓ SBOM of image already cached, 435 packages indexed
+#     ✗ Detected 1 vulnerable package with 2 vulnerabilities
+#
+#   Name     Version    Type        Vulnerabilities        
+# ────────────────────────────────────────────────────────────
+#   linux  6.8.0-35.35  deb      0C     2H     0M     0L   
+```
+
+```bash
+docker scout cves --format only-packages --only-vuln-packages \
+  --only-severity critical rocker/r2u:24.04
+#           ✓ SBOM of image already cached, 435 packages indexed
+#     ✓ No vulnerable package detected
+#
+#   Name  Version  Type  Vulnerabilities
+```
+
+<https://docs.docker.com/scout/explore/analysis/>
+
+The [`docker scan`](https://docs.docker.com/engine/scan/) CLI command
+was introduced to quickly detect and learn how to remediate
+vulnerabilities in your images.
+
+> Vulnerability scanning for Docker local images allows developers and
+> development teams to review the security state of the container images
+> and take actions to fix issues identified during the scan, resulting
+> in more secure deployments. Docker Scan runs on Snyk engine, providing
+> users with visibility into the security posture of their local
+> Dockerfiles and local images.  
+>   
+> Users trigger vulnerability scans through the CLI, and use the CLI to
+> view the scan results. The scan results contain a list of Common
+> Vulnerabilities and Exposures (CVEs), the sources, such as OS packages
+> and libraries, versions in which they were introduced, and a
+> recommended fixed version (if available) to remediate the CVEs
+> discovered.
+
+Another popular vulnerability scanner for container images and
+filesystems is called [Grype](https://github.com/anchore/grype).
+You will find links to some tutorials below walking through the use of
+Syft and Grype.
+
+SBOM was announced in 2022.
+Here is the original announcement about SBOM from Docker in April 2022:
+
+> making what is inside your container images more visible so that you
+> can better secure your software supply chain
+
+Announcing Docker SBOM: Increased Docker Image Visibility <https://www.docker.com/blog/announcing-docker-sbom-a-step-towards-more-visibility-into-docker-images/>
+
+Image visibility and transparency are key to securing your software
+supply chain. Learn how our Docker SBOM feature highlights core image
+components.
+
+Here is a short intro to how `docker sbom` command and the Syft project
+are related (Syft supports the OCI, Docker, and Singularity image
+formats):
+[How to Improve Docker Security with `docker sbom` and Syft](https://thenewstack.io/how-to-improve-docker-security-with-docker-sbom-and-syft/)
+
+Grype can use the SBOM output or scan the Docker image or local file
+system directly. Then it performs a vulnerability scan by comparing the
+package versions to information found in vulnerability databases. This
+tutorial outlines the whole process:
+[Container vulnerability scan with Syft and Grype](https://medium.com/rahasak/container-vulnerability-scan-with-syft-and-grype-f4ec9cd4d7f1)
+
+[How to add a Software Bill of Materials (SBOM) to your containers with GitHub Actions](https://actuated.dev/blog/sbom-in-github-actions):
+
+You might use GitHub actions to build a new image every time you merge
+changes to your production branch. It can be important to make sure
+there are no vulnerabilities. This post outlines how to do that:
+
+### Readability
+
+- Chain commands (RUN shell format) and sort multiline arguments
+- Use exec format for CMD
+- Use linter
+- Use metadata
+
+#### Use a linter
+
+Best practices for writing Dockerfiles are being followed more and more
+often according to [this
+paper](https://arxiv.org/pdf/2103.12298.pdf)
+after mining more than 10 million Dockerfiles on Docker Hub and GitHub.
+However, there is still room for improvement. This is where
+[linters](https://en.wikipedia.org/wiki/Lint_(software))
+come in as useful tools for static code analysis.
+[Hadolint](https://github.com/hadolint/hadolint#rules)
+lists lots of rules for Dockerfiles and is available as a [VS Code
+extension](https://marketplace.visualstudio.com/items?itemName=exiasr.hadolint).
+
+-   [Dockerfile best
+    practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#leverage-build-cache)
+-   [Hadolint
+    rules](https://github.com/hadolint/hadolint#rules)
+-   [Tips to Speed up Your Docker Image
+    Build](https://vsupalov.com/5-tips-to-speed-up-docker-build/)-->
+
+### Automation (maybe leave this for later)
+
+- Automate building and testing
+
+### Other things to mention
+
+Image building strategy:
+
+- keep adding stuff until it succeeds (e.g. with minimal)
+- vs shoot above OR have dependency resolution
+- remember that `*-dev` are build time and can be removed
+
+When building the Dockerfile
+have things on nre lies to leverage caching (i.e. not rebuilding shiny etc)
+but at the end when it works, combine these into single layer
+
 ## Container Orchestration
+
+Introduction and motivation
+
+Talk about possible confusion between `docker-compose` and `docker compose`
+
+<https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose/66526176#66526176>
+
+> The docker compose (with a space) is a newer project to migrate compose to Go with the rest of the docker project. This is the v2 branch of the docker/compose repo. It's been first introduced to Docker Desktop users, so docker users on Linux didn't see the command. In addition to migrating to Go, it uses the compose-spec, and part of the rewrite may result in behavior differences.
+
+> The original python project, called docker-compose, aka v1 of docker/compose repo, has now been deprecated and development has moved over to v2. To install the v2 docker compose as a CLI plugin on Linux, supported distribution can now install the docker-compose-plugin package. E.g. on debian, I run apt-get install docker-compose-plugin.
+
+> Update: since this question was asked, Linux installs have been updated by Docker to include compose v2 and docker-compose v1 is unlikely to receive any more updates.
 
 ### Docker Compose
 
+`docker run` vs YAML
+
+Use example of 3 apps in a single compose file on 3 ports.
+
+The use of `-d` detached model for `docker run` and compose.
+
+Compose up/down & other useful commands (start/stop/restart/kill/rm)
+
 ## Troubleshooting
 
-
+FIXME: Accessing the logs: 
+FIXME: how to enter a running container to find runtime info
 FIXME: Enter the containers etc. to see variables etc.
 
+`docker logs`, `docker compose logs`
+
+`docker compose top`
+
+`docker exec` and `docker compose exec`
+
+`--no-cache` and `--progress=plain`
 
 ## Summary
 
@@ -47,3 +385,17 @@ Further reading:
     Rocker](https://journal.r-project.org/archive/2017/RJ-2017-065/RJ-2017-065.pdf)
 -   [The
     Rockerverse](https://journal.r-project.org/archive/2020/RJ-2020-007/RJ-2020-007.pdf)
+
+Topics to check is were mentioned:
+
+- Layers and Caching
+- Hardware Architectures
+- Multi-stage builds
+- Mounting volumes ???
+- Shinylive: R & Python using Nginx and of-watchdog
+- Rmd: this is for R
+- Quarto: R & Python
+- add Shiny Server inside a container as a way to host multiple apps
+- layers & caching vs size, why using alpine is not always needed
+- RSPM, BSPM, r2u, python/npm/etc?
+- p3m https://p3m.dev/ Posit Public Package Manager

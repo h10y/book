@@ -120,7 +120,6 @@ app_ui = ui.page_fixed(
 )
 
 def server(input, output, session):
-    @output
     @render.plot(alt="Histogram of waiting times")
     def histogram():
         plt.hist(
@@ -316,17 +315,16 @@ reference these reactive dependencies
 and cause the relevant render functions (`renderPlot()` here) to re-execute.
 
 We can see some differences in the Python version.
-Shiny for Python uses decorators (e.g. `@output`) instead of 
+Shiny for Python uses decorators (e.g. `@render`) instead of 
 render functions and inputs are invoked as `input.n()`.
 (See the [Framework Comparisons](https://shiny.posit.co/py/docs/comp-r-shiny.html) 
 section of the Shiny for Python documentation for a detailed overview of 
 R vs. Python similarities and differences.)
 
-FIXME: KALVIN please explain here the `@output` part etc.
+FIXME: KALVIN please explain here the decorators etc. as needed.
 
 ```python
 def server(input, output, session):
-    @output
     @render.plot(alt="Histogram of waiting times")
     def histogram():
         plt.hist(
@@ -591,7 +589,7 @@ Shiny module is used for the `ui` and `server`:
 ```R
 box::use(
   shiny[fixedPage, moduleServer, NS, plotOutput, sliderInput, 
-    renderPlot],
+    renderPlot, h2],
   graphics[hist, box],
   datasets[faithful],
 )

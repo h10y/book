@@ -1,347 +1,631 @@
-## Shiny Apps With Dependencies (use bananas)
+## Parent Images
 
-What makes programming languages like R and Python great for making data
-applications is the wealth of contributed extension packages that
-supercharge app development. You can turn your code into an interactive
-web app with not much extra code once you have a workflow and an
-interesting question.
-
-We have reviewed [Docker
-basics](https://hosting.analythium.io/docker-basics-for-data-apps/) and
-how to [dockerize a very simple Shiny
-app](https://hosting.analythium.io/dockerizing-shiny-applications/). For
-anything that is a little bit more complex, you will have to manage
+We have reviewed Docker basics and how to dockerize a very simple Shiny app.
+For anything that is a little bit more complex, you will have to manage
 dependencies. Dependency management is one of the most important aspects
-of app development with Docker. In this post, you will learn about
-different options.
+of app development with Docker. And it begins with finding the right parent
+image as the basis of the rest of your Dockerfile.
 
-### Parent Images
+The ground zero for Docker images is the reserved and explicitly empty 
+image called `scratch`. `FROM scratch` is used for hosting super minimal images 
+containing a single binary executable or as the foundation of common base images 
+such as `debian`, `ubuntu` or `alpine`. 
 
-In the previous post, we explored [dependency management for Shiny
-apps](https://hosting.analythium.io/dockerized-shiny-apps-with-dependencies/)
-using the `rocker/r-ubuntu:20.04` as the parent image. A parent image is
-an image that you define in the `FROM` directive of the `Dockerfile`. A
-[base
-image](https://docs.docker.com/develop/develop-images/baseimages/)
-has `FROM scratch` as the first line. The R base images start with
-parent images. For example, the R Ubuntu image starts with
-`FROM ubuntu:focal`.
+Debian is a Linux distribution that's composed entirely of free and open-source 
+software and is a community project. Ubuntu is derived from Debian and is 
+commercially backed by Canonical. Ubuntu uses the same APT packaging system as 
+Debian and many packages and libraries from Debian repositories.
+Both of these Linux distributions are loved for their versatility and 
+reliability.
 
-Here are the four commonly used parent images for R:
+Alpine Linux is a minimal distribution independent of Debian and other
+distributions. It was designed with a focus on simplicity, security, and 
+efficiency. This distribution has a very compact size, and therefore is
+a popular choice for embedded systems and IoT devices. This distribution
+is also community maintained.
 
-```bash
-docker pull rhub/r-minimal:4.0.5
-docker pull rocker/r-base:4.0.4
-docker pull rocker/r-ubuntu:20.04
-docker pull rstudio/r-base:4.0.4-focal
-```
-
-The image sizes vary quite a bit with the Alpine Linux base
-`rhub/r-minimal` being smallest and the Ubuntu-based `rstudio/r-base`
-25x the size of the smallest image:
+Here are the sizes for these three images. Debian is the largest, Ubuntu in
+the middle, and the Alpine being more than 10 times smaller:
 
 ```bash
-$ docker images --format 'table {{.Repository}}\t{{.Tag}}\t{{.Size}}'
-
-REPOSITORY          TAG                 SIZE
-rhub/r-minimal      4.0.5               35.3MB
-rocker/r-base       4.0.4               761MB
-rocker/r-ubuntu     20.04               673MB
-rstudio/r-base      4.0.4-focal         894MB
+REPOSITORY    TAG       IMAGE ID       CREATED       SIZE
+debian        12.6      7b34f2fc561c   7 days ago    117MB
+ubuntu        24.04     35a88802559d   4 weeks ago   78.1MB
+alpine        3.20      a606584aa9aa   2 weeks ago   7.8MB
 ```
 
-The Debian Linux based `rocker/r-base` Docker image from the
-[Rocker](https://github.com/rocker-org/rocker/tree/master/r-base)
-project is considered bleeding edge when it comes to system
-dependencies, i.e. latest development versions are usually available
-sooner than on other Linux distributions.
+Many of the commonly used R and Python parent images use Debian/Ubuntu or Alpine
+as the starting point. The general trade-off between these two lineages
+comes down to minimalism vs. convenience. Ubuntu and its derivatives tend to be
+much larger in size, but build times can be considerable faster due to very
+mature package management system and the availability of pre-built binaries.
 
-The two Ubuntu Linux based images, `rocker/r-ubuntu` and
-`rstudio/r-base` from the
-[Rocker](https://github.com/rocker-org/rocker/tree/master/r-ubuntu)
-project and from
-[RStudio](https://github.com/rstudio/r-docker)
-are for long-term support Ubuntu versions and use the <a
-href="https://packagemanager.rstudio.com/client/"
-rel="nofollow">RSPM</a> CRAN binaries.
+Alpine-based images, however, tend to be much smaller, almost bare bones.
+Alpine uses different compilers that Ubuntu so you'll often have to build and 
+compile your packages from source. This can be tedious and 
+time consuming. However, its small size reduces the surface area for 
+potential attackers and as a result the images tend to be less vulnerable.
 
-The Alpine Linux based `rhub/r-minimal` Docker image from the
-[r-hub](https://github.com/r-hub/r-minimal)
-project is preferred for its small image sizes.
+The final image size is important to consider, but images based on the same
+parent image tend to share lost of their layers anyways, so the images can pack 
+much tighter on your hard drive then you might think based on their size without 
+subtracting overlapping layers. Also,the size advantage of the Alpine 
+distribution evaporates quickly as you start adding R and Python libraries. 
+Some packages will take up more space than the parent image itself.
 
-FIXME: add FROM Scratch, ubuntu, alpine
+### Popular Parent Images for R
 
-#### Rocker, r-lib, rstudio (posit???)
-
-We built the same Shiny app in three different ways. The sizes of the
-three images differ quite a bit, with the `:renv` image being 40% bigger
-than the other two images:
+Let's see some of the most popular base R images based on `docker images`:
 
 ```bash
-$ docker images --format 'table {{.Repository}}\t{{.Tag}}\t{{.Size}}'
-
-REPOSITORY                  TAG                 SIZE
-analythium/covidapp-shiny   renv                1.7GB
-analythium/covidapp-shiny   deps                1.18GB
-analythium/covidapp-shiny   basic               1.24GB
+REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
+r-base           4.4.1     16511f39cdb4   3 weeks ago     833MB
+rocker/r-base    4.4.1     22b431698084   3 weeks ago     878MB
+rocker/r-ver     4.4.1     9bb36eff1caa   3 weeks ago     843MB
+rocker/shiny     4.4.1     a90ccd5c09b9   3 weeks ago     1.58GB
+rocker/r2u       24.04     1441545ed6df   2 weeks ago     800MB
+rhub/r-minimal   4.4.1     1e280d0205b7   3 weeks ago     44.9MB
 ```
 
-The `:basic` image has 105 packages installed (try
-`docker run analythium/covidapp-shiny:basic R -q -e 'nrow(installed.packages())'`).
-The  `:deps` image has remotes added on top of these, the `:renv` image
-has remotes, renv and BH as extras. BH seems to be responsible for the
-size difference, this package provides [Boost C++ header
-files](https://cran.r-project.org/package=BH).
-The COVID-19 app works perfectly fine without BH. In this particular
-case, this is a price to pay for the convenience of automatic dependency
-discovery provided by renv.
+The official `r-base` image is an R installation built on top of Debian. It is
+maintained by the Rocker community (<https://rocker-project.org/>, @rocker).
+This `r-base` image is like the `rocker/r-base`, these two images are built 
+from the same Dockerfile, but with different build tools.
+The Debian Linux distribution is more cutting edge than Ubuntu.
+This means it has unstable repos added and it receives updates faster.
+It is for those who like to live on the cutting edge of development.
 
-The renv package has a few different [snapshot
-modes](https://rstudio.github.io/renv/reference/snapshot.html#snapshot-type).
-The default is called "implicit". This mode adds the intersection of all
-your installed packages and those used in your project as inferred by
-`renv::dependencies()` to the lockfile. Another mode, called "explicit",
-only captures packages that are listed in the project `DESCRIPTION`
-file. For the COVID-19 app, both these resulted in identical lockfiles.
-You can use `renv::remove("BH")` to remove BH from the project or use
-the "custom" model and list all the packages to be added to the
-lockfile.
+For those who value stability more, the Ubuntu based images could be better
+suited. Such as the Rocker versioned stack, `rocker/r-ver`, which emphasizes
+reproducibility. This stack has both AMD64 and experimental ARM64 support
+for R version 4.1.0 and later. For the AMD64 platform, it serves compiled 
+binaries of R packages that makes package installs speedy.
 
-If you go with the other two approaches, explicitly stating dependencies
-in the `Dockerfile` or in the `DESCRIPTION` file, you might end up
-missing some packages at first. These approaches might need a few
-iterations before getting the package list just right.
+The default CRAN mirror for `rocker/r-ver` is set to the Posit Public Package Manager 
+(P3M, <https://p3m.dev/>, previously called RStudio Package Manager or RSPM).
+To ensure reproducibility, the non-latest R version images 
+install R packages from a fixed snapshot of the CRAN mirror at a given date. 
+So you'll end up with the same package versions no matter when you build your image.
 
-Another important difference between these approaches is that renv pins
-the exact package versions in the lockfile. If you want to install
-versioned packages, use the `remotes::install_version()` function in the
-`Dockerfile`. The [version-tagged Rocker
-images](https://hub.docker.com/r/rocker/r-ver)
-will by default use the [MRAN snapshot
-mirror](https://mran.microsoft.com/documents/rro/reproducibility)
-associated with the most recent date for which that image was current.
+The `rocker/shiny` image is based on the `rocker/r-ver` stack and comes with
+Shiny related packages and Shiny Server Open Source installed. This makes it the 
+beefiest of all the images presented. It has 68 packages available instead of 
+the 31 within the `r-base` and `r-ver` stacks (14 base and 15 recommended packages). 
+The images so far have been tagged by the R version that is inside the image, 
+e.g. `4.4.1`.
 
-FIXME: add Shiny Server inside a container as a way to host multiple apps
+The `rocker/r2u` is based Ubuntu as well, and it brings Ubuntu binaries for
+CRAN packages fully integrated with the system package manager (`apt`).
+When you use `install.packages()` it will call `apt` in the background.
+This has the advantage that system dependencies are fully resolved, i.e. no need
+to guess and manually install them. Installations are also reversible.
+It uses the CRAN mirror at <https://r2u.stat.illinois.edu>.
+Keep in mind that packages and R itself are generally the highest available version.
+Therefore, the image tag is not based on the R version but based on the 
+Ubuntu LTS (Long Term Support) version, like `24.04`.
 
-FIXME: layers & caching vs size, why using alpine is not always needed
+All the Rocker images pack utilities that help with command line tasks,
+such as installing packages via `install.r` and `installGithub.r`,
+all part of the `littler` project [@R-littler]. There is even a command line
+tool for Shiny, so instead of 
+`CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]`
+you can use `CMD ["shiny.r", "-o", "0.0.0.0", "-p", "3838"]` in your Dockerfile.
 
+Finally, the `rhub/r-minimal` image is based on Alpine and is the tiniest 
+available image for R. This feat is achieved by not having recommended R packages
+installed (it has a total of 14 required packages), it does not have any 
+documentation or translations, no X11 window support.
+It does not even have C, C++ or Fortran compilers. So if an R package relies on
+compiled code, first you have to install a compiler, then later uninstall it
+to keep the image size minimal. The `installr` script provided as part of the
+image helps with the installation and clean-up of build time dependencies,
+see `installr -h` for the available options.
 
-### system libraries
+If you are looking for Linux distributions other than what we listed so far
+(Debian, Ubuntu, Alpine), take a look at the 
+[`rstudio/r-base`](https://github.com/rstudio/r-docker) images
+that brings versioned base R to many Linux distributions, e.g. CentOS,
+Rocky Linux, and OpenSUSE.
 
-First of all, each package lists its system requirements. These are
-usually run-time dependencies that the package needs to properly
-function. So check that first.
+### Popular Parent Images for Python
 
-There are at least two databases listing package requirements: one
-maintained by
-[RStudio](https://github.com/rstudio/r-system-requirements)
-(this supports RSPM, you can browse the database
-[here](https://packagemanager.rstudio.com/client/#/repos/2/packages)),
-another one by
-[R-hub](https://github.com/r-hub/sysreqsdb).
-Both of these list system packages for various Linux distributions,
-macOS, and Windows. But even with these databases, the build- vs.
-run-time dependencies can be sometimes hard to distinguish. Build-time
-system libraries are always named with a `-dev` or `-devel` postfix.
-Read [the vignette of the
-maketools](https://cran.r-project.org/web/packages/maketools/vignettes/sysdeps.html)
-R package by Jeroen Ooms for a nice explanation and a suggested workflow
-for determining run-time dependencies of packages.
+The official Python images are maintained by the Python community.
+and are either based on Debian or Alpine Linux. Here are the most commonly used
+variants:
 
-#### RSPM, BSPM, r2u, python?
+```bash
+REPOSITORY   TAG          IMAGE ID       CREATED       SIZE
+python       3.9          8912c37cec43   12 days ago   996MB
+python       3.9-slim     b4045d7da52e   12 days ago   125MB
+python       3.9-alpine   893ee28ab004   12 days ago   53.4MB
+```
 
-### R dependencies
+The `python:<version>` image is the largest and is the most general supporting
+all kinds of use cases and is recommended as a parent image. It contains the 
+common Debian packages and compilers.
+
+The `python:<version>-slim` version contains only the minimal Debian packages 
+needed to run Python itself. It does not contain the compilers for modules 
+written in other languages. This is the reason for the image's reduced size.
+
+The `python:<version>-alpine` is based on Alpine and therefore is the smallest.
+It is similarly bare bones as the minimal R image.
+
+## Installing System Libraries
+
+System libraries are required for different purposes. Some libraries are needed
+during build time. While others are needed at run time.
+Say your R or Python package requires compilation or needs
+to dynamically link to other system libraries. In these cases you have to
+build your package using compilers (C, C++, Fortran, Rust) and other build
+time dependencies. System libraries used at build time includes header files and 
+tend to have extra dependencies. These build time system libraries are 
+named with a `*-dev` or `*-devel` postfix.
+
+Once your R or Python package has been compiled, you don't need the build time
+libraries any more. However, you need the run time libraries. For example
+if your package needs to be built with `libcurl4-openssl-dev`, the run time
+dependency becomes `libcurl4`. The run time dependency tends to be much smaller
+and it has fewer dependencies. It will have no conflict with other run time
+libraries because of the lack of headers included.
+
+### Manually Installation
+
+FIXME: Kalvin to review the Python specific parts
+
+The [Python Wheels](https://pythonwheels.com/)
+project offers binary Python packages. R binaries can be found on 
+CRAN for Windows and Mac OS X. But CRAN does not offer binaries for various
+Linux distributions bor the obvious complexity involved in that.
+The [Posit Public Package Manager](P3M, <https://p3m.dev/>) provides pre-built binary 
+packages for R and Python. It supports various Linux distributions, including
+Debian and Ubuntu. The [R Universe](https://r-universe.dev/search/)
+project provide binaries for CRAN and GitHub packages for Windows, Mac OS X,
+and in most cases for WebAssembly that is suitable for Shinylive applications.
+The R Universe project only provide binaries for R packages on Ubuntu 
+using the latest R version. 
+
+R and Python packages, once compiled into a binary file, provide metadata about 
+the run time dependencies. You can find the required system libraries on the 
+website of a given repository or package manager. Alternatively, you can try
+installing the package without its requirements and follow the string of
+error messages to see what is it that you need to install as a prerequisite.
+
+This GitHub repository 
+lists system requirements for R packages: 
+[rstudio/r-system-requirements](https://github.com/rstudio/r-system-requirements).
+The primary purpose of this database is to support the Posit Public Package Manager.
+To get programmatic access to the database, you can call the 
+Posit Public Package Manager's API to request the system requirements.
+For example, for the `curl` R package [@R-curl], you can query the API as
+`https://p3m.dev/__api__/repos/1/packages/curl/sysreqs?distribution=ubuntu`.
+Replace the `curl` and `ubuntu` parts to get results for other R packages and
+Linux distributions. The `GET` request will result in a JSON response listing 
+the libraries with the install script needed on Ubuntu (try pasting the
+link into the browser address line):
+
+```json
+{
+  "name": "curl",
+  "install_scripts": [
+    "apt-get install -y libcurl4-openssl-dev",
+    "apt-get install -y libssl-dev"
+  ]
+}
+```
+
+You can also utilize the `pak` R package [@R-pak] to query system requirements:
+
+```R
+pak::pkg_sysreqs("curl", sysreqs_platform="ubuntu")
+# ── Install scripts ─────────────────────────────────────── Ubuntu NA ──
+# apt-get -y update
+# apt-get -y install libcurl4-openssl-dev libssl-dev
+#
+# ── Packages and their system dependencies ─────────────────────────────
+# curl - libcurl4-openssl-dev, libssl-dev
+```
+
+Include these libraries in your Dockerfile as:
+
+```dockerfile
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libcurl4-openssl-dev \
+        libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+When using `apt-get` (the older and stable version of `apt`) the first command is
+always `apt-get update` which look for updates in the the package lists of
+the package repositories. This way the system will know if an update is necessary
+and where to find the individual packages. Next `apt-get install <package-name>` 
+is called with a few flags: `-y` means that we answer yes to all the prompts, 
+whereas `--no-install-recommends` will  prevent unnecessary recommended packages 
+from being installed. The last bit cleans up the package lists downloaded by
+`apt-get update` which are stored in the `/var/lib/apt/lists` folder.
+All these three commands are chained together with `&&` and we used `\` for
+breaking up single line commands to multiple lines for better readability
+(the backslash escapes a newline character). This arrangement helps organize 
+the packages and you can also comment them out as needed. 
+
+You could put all of these chained commands in a separate `RUN`
+line, but that is not recommended. Having a single `RUN` instruction will
+lead to a single image layer. But what is most important is that the update and
+install steps should not be separated. Imagine that you update the package lists
+and now the resulting layer is added to the Docker cache.
+The next time you add another package to install and rebuild your image.
+The update command is cached and will not be rerun by default. As a result,
+you might end up with an outdated version of the packages.
+
+### Automated Dependency Resolution with r2u
+
+If you are using R on Ubuntu, the [r2u](https://eddelbuettel.github.io/r2u/)
+project greatly facilitate dependency management.
+It uses the Debian package format for R packages for latest R version on
+various Ubuntu LTS platforms. This resolves all the system dependencies through 
+using the `.deb` binary package format that combines together the pre-built binary 
+package with the metadata about the dependencies. Then the Debian/Ubuntu package 
+manager (`apt`) can do the rest.
+
+For the binary packages are base on P3M where available or built natively. 
+Selected BioConductor packages are also built natively on the project servers. 
+The server hosting the `.deb` files is set up as a proper `spt` repository
+with a signed Release file containing metadata that can be used to 
+cryptographically validate every package in the repository. This file guarantees 
+that the packages you receive are the one you expected and there has been no 
+tampering with it during download.
+
+Because the R packages now live as first class
+citizens on Ubuntu, uninstalling packages would not unnecessarily remove the 
+shared dependencies that other packages depend on. With the r2u setup and
+using the `rocker/r2u` images, you can simply call `install.packages("curl")`
+and `apt` will sort out the dependencies for you in the background.
+
+### Dependencies on Alpine Linux
+
+The Alpine Linux has a package manager called `apk` that is different from
+Debian's and Ubuntu's `apt`. This likely means that you might have to work 
+harder to find all the Alpine-specific dependencies. You can still use the
+tools previously mentioned, but will have to find the library for Alpine.
+You can also follow the breadcrumbs of the error messages of missing dependencies.
+However, the general idea is similar when it comes to working with the Dockerfile:
+
+```dockerfile
+FROM rhub/r-minimal:4.4.1
+
+RUN apk add --no-cache --update-cache \
+     --repository http://nl.alpinelinux.org/alpine/v3.11/main \
+    autoconf=2.69-r2 \
+    automake=1.16.1-r0 && \
+    installr -d \
+    -t "libsodium-dev curl-dev linux-headers gfortran autoconf automake" \
+    -a libsodium \
+    shiny plotly e1071
+[...]
+```
+
+First we declare the minimal parent image, then use a `RUN` instruction to add
+libraries from the Alpine repository. `autoconf` and `automake` is required for
+building the R packages (`shiny`, `plotly`, and `e1071`). This example is
+taken from the minimal Dockerfile for the [Bananas example app](https://github.com/h10y/bananas).
+
+The next pieces uses the `istallr` utility that comes with the `rhub/r-minimal`
+image and it's usage is explained on the GitHub site: <https://github.com/r-hub/r-minimal>.
+The `-d` flag will install C and C++ compilers (`gcc`, `musl-dev`,`g++`) 
+temporarily, i.e. those will be removed after the successful 
+compilation and installation of the R packages.
+
+The `-t` option lists Alpine packages to be installed temporarily (a.k.a. 
+build time dependencies), and the `-a` option lists Alpine packages to keep
+(a.k.a. run time dependencies). The built in cleanup feature keeps the image
+sizes small in line with the goal of the parent image's purpose.
+
+You can also list not only CRAN packages but different "remotes", like 
+`tidyverse/ggplot2` for development version of `ggplot2` from GitHub, 
+or `local::.` to install from a local directory.
+
+The rest of the Dockerfile follow the same patterns as what we saw before. Adding 
+a non-root user, defining the work directory, copying the Shiny app files
+from the build context to the image's file system, setting owners for the files,
+switching to the non-root user, exposing port 3838 and defining the default
+command to run that calls `shiny::runApp()`:
+
+```dockerfile
+[...]
+RUN addgroup --system app && \
+    adduser --system --ingroup app app
+WORKDIR /home/app
+COPY app .
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]
+```
+
+The Dockerfile for the Faithful Shiny app (<https://github.com/h10y/faithful>)
+is somewhat simpler:
+
+```dockerfile
+FROM rhub/r-minimal:4.4.1
+RUN installr -d \
+    -t "zlib-dev cairo-dev" \
+    -a "cairo font-liberation" \
+    Cairo \
+    shiny
+RUN addgroup --system app && \
+    adduser --system --ingroup app app
+WORKDIR /home/app
+COPY app .
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]
+```
+
+The reason why we need the `Cairo` package [@R-Cairo] besides `shiny` is because the minimal
+image has no X11 grahic device support that is used to display base R plots, like histograms.
+Instead of X11, we can use the Cairo Graphics Library. You can see how we list
+the build time `cairo-dev` library and the run time `cairo` for the R package.
+
+The installation of the system packages and the general lack of available 
+binary packages contributes to the longer build times. The Faithful example
+took 5 minutes to build with `rhub/r-minimal` compared to 16 seconds with
+`rocker/r2u` and the final image size was 230 MB compared to 975 MB. 
+The Bananas app took 10.4 minutes vs. 28 seconds and resulted in an image of
+size 113 MB as opposed to 909 MB.
+
+As you can see, the image build time is significantly longer, while the minimal
+image size is multiplying relative to the parent image's 45 MB size. The absolute
+increase in the Ubuntu based image's size is similar, but it less noticeable
+in relative terms.
+
+Your Shiny apps are likely to have more dependencies that the examples we are 
+using in this book. You will have to decide if the benefits that a minimal 
+image provides will overweight the increased complexity and development time
+required to maintain minimalist Shiny images.
+
+## Installing R Packages
 
 The wealth of contributed R packages can supercharge Shiny app
 development. This also means that you have to manage these dependencies.
-Learn about dependency management when working with R and Docker.
+In the previous sections, we have already hinted at installing these packages.
+We will now see the different ways of installing R packages.
 
-When building Docker images for your R-based applications, the biggest
-hurdle is knowing exactly which packages and system libraries your
-package depends on. Luckily, the tools have evolved quite a bit over the
-past few years. In this post, I show you where the deps package fits in
-and how this can be a great choice for dependency management for
-Docker-based workflows.
+### Explicitly Stating Dependencies
 
-Tools like [packrat](https://cran.r-project.org/package=packrat),
-[renv](https://cran.r-project.org/package=renv), and [capsule](https://github.com/MilesMcBain/capsule)
-let you go to great lengths to make your R projects perfectly
+The first approach is to use `RUN` instructions in the Dockerfile to
+install the required packages. You can use the `R -q -e "<expression>"`
+pattern to use any R expression you would normally use in your R sessions
+to install packages. The `-q` flag stands for quiet and means to not print out 
+the startup message. The `-e` option means to execute the R expression that 
+follows it and then exit. The `Rscript -e "<expression>"` is another way to
+evaluate the expressions without echoing the expression itself. 
+Most often we use the built in `install.packages()`
+function and the different options from the `remotes` package [@R-remotes].
+
+```dockerfile
+RUN R -q -e "install.packages(c('shiny', 'remotes'))"
+RUN R -q -e "remotes::install_github('tidyverse/ggplot2')"
+RUN R -q -e "remotes::install_local('.')"
+```
+
+The Rocker images have the `littler` command line utility installed.
+The previous code piece can be written as:
+
+```dockerfile
+RUN install2.r --error --skipinstalled shiny remotes
+RUN installGithub tidyverse/ggplot2
+RUN install2.r "."
+```
+
+The `--error` flag will throw an error when installation is unsuccessful
+instead of a warning, `--skipinstalled` will skip installing already installed 
+packages.
+
+If installing from a private GitHub repository, `remotes` is going to use 
+the `GITHUB_PAT` environment variable to authenticate with GitHub to be able to
+download and install the package. You have to add the following line to your 
+`Dockerfile` before the `RUN` instructions that define the install from GitHub:
+
+```dockerfile
+ARG GITHUB_PAT
+```
+
+To pass the `GITHUB_PAT` at image build, use the following commands:
+
+```bash
+  export GITHUB_PAT=ghp_xxxxxxxxxx
+docker build -t <image-name> --build-arg="GITHUB_PAT=${GITHUB_PAT}" .
+```
+
+The `pak` R package [@R-pak] is planned to replace `remotes` in the future.
+It provides very similar functionality and improvements, like parallel downloads,
+caching, safe dependency solver for packages and system dependencies using
+the P3M database by creating an installation plan before downloading any packages.
+Not relevant for Linux containers, but `pak` even can handle locked package DLLs 
+on Windows. Let's see how these common install statements would look using `pak`
+(you don't need `remotes` because of using `pak`):
+
+```dockerfile
+RUN R -q -e "pak::pkg_install('shiny'))"
+RUN R -q -e "pak::pkg_install('tidyverse/ggplot2')"
+RUN R -q -e "pak::pkg_install('.')"
+```
+
+The `installr` utility shipped with the `rhub/r-minimal` image uses `pak`
+to install packages. The `-p` flag will remove `pak` after the installation.
+You can do:
+
+```dockerfile
+RUN installr -p shiny tidyverse/ggplot2 local::.
+```
+
+You can pin version using Git references, e.g. `tidyverse/ggplot2@v1.0.0`,
+or using `remotes::install_version()`.
+
+These functions allow you to provide repositories as argument. But more often,
+the repositories are set globally as part of `options()`. You can include
+the list of repositories in the `Rprofile.site` file:
+
+```R
+local({
+    r <- getOption("repos")
+    r["p3m"] <- "https://p3m.dev/cran/__linux__/noble/2024-07-09"
+    r["archive"] <- "https://cranhaven.r-universe.dev"
+    r["CRAN"] <- "https://cloud.r-project.org"
+    options(repos = r)
+})
+```
+
+The P3M repository is set for Ubuntu 24.04 (Noble) with a snapshot of 
+CRAN taken on July 9th, 2024. This effectively freezes package versions to 
+enhance reproducibility. This way of pining maximum package versions is also
+called "time travel". The [CRAN Haven](https://www.cranhaven.org) 
+repository is a repository for recently archived CRAN. 
+Then `COPY` this file into the `/etc/R` folder on the Rocker images:
+
+```
+COPY Rprofile.site /etc/R
+```
+
+As you develop your Shiny app, you have to occasionally update the `Dockerfile`
+to add in any new dependencies.
+
+### Using the DESCRIPTION File
+
+You have seen how to use `remotes::install_local()` to install a dependency
+from a local directory or a `.tar.gz` source file. The list of packages to be
+installed is determined by the `DESCRIPTION` file that is at the base of any
+package folder. It lists the dependencies of the packages.
+
+Packages listed under the `Imports` field are installed and needed by the
+package. Other packages listed under the `Suggests` field are needed for 
+development but are not essential for using the package.
+
+A commonly used hack in the R community is to highjack the package development
+tooling to simplify installation of the codebase even if it is
+not necessarily structured as a package. The only think you need for
+`remotes::install_local()` and similar functions to work is the 
+`DESCRIPTION` file.
+
+For the Bananas app, we need `shiny`, `plotly` and the `e1071` package listed
+under `Imports`. Put this in the `DESCRIPTION` file:
+
+```text
+Imports: e1071, plotly, shiny
+```
+
+In the `Dockerfile` you need to `COPY` the `DESCRIPTION` file into the
+file system of the image, then call the `remotes::install_deps()` function.
+The `upgrade='never'` argument will prevent installing newer versions of existing
+packages, thus cutting down unnecessary install time:
+
+```dockerfile
+FROM rocker/r2u:24.04
+
+COPY app/DESCRIPTION .
+RUN R -q -e "remotes::install_deps(upgrade='never')"
+
+[...]
+```
+
+You can use the `Rprofile.site` to specify your preferred repositories.
+The `remotes` functions will respect those settings.
+
+Using `DESCRIPTION` file lets you record the dependencies
+outside of your `Dockerfile`. As you develop your Shiny app, you have to update 
+the `DESCRIPTION`. When the file changes, Docker fill invalidate the cache and
+install the dependencies with the new packages included.
+
+### Using renv
+
+The `renv` package [@R-renv] is a dependency management toolkit for R. 
+You can create and manage R libraries in your local project and record the state
+of these libraries to a lockfile. This lockfile can be used later to restore
+the project, thus making projects more isolated, portable, and reproducible.
+
+If you are using `renv` with your Shiny projects, you are probably already
+familiar with the workflow. You can discover dependencies with `renv::init()` 
+and occasionally save the state of these libraries to a lockfile with 
+`renv::snapshot()`. The nice thing about this approach is that the exact version 
+of each package is recorded that makes Docker builds reproducible as well.
+
+The renv package has a few different snapshot modes.
+The default is called "implicit". This mode adds the intersection of all
+your installed packages and those used in your project as inferred by
+`renv::dependencies()` to the lockfile. 
+
+The other mode is called "explicit" snapshot that only captures packages 
+that are listed in the project `DESCRIPTION`.
+With the "custom" model lets you specify filters for modifying the implicit
+snapshot, so that you will not end up with the kitchen sink of packages in
+your Docker image.
+
+Once you have the lockfile in your project folder, you can use it like this:
+
+```dockerfile
+[...]
+RUN install.r renv
+COPY app/renv.lock .
+RUN R -q -e "options(renv.consent=TRUE);renv::restore()"
+[...]
+```
+
+You have to install `renv`, copy the `renv.lock` file over, and use the 
+`renv::restore()` command. The `renv.consent` option gives consent to `renv`
+to write and update certain files.
+
+Read the _Using renv with Docker_ vignette of `renv` for more useful tips.
+
+`renv` pins the exact package versions in the lockfile. This is necessary for
+reproducibility. But full reproducibility is much harder than just the version
+of R and the package versions. You have to think about the operating system,
+your system dependencies, and even the hardware [@Rodrigues2023].
+
+Exact package versions could take quite long to install. The reason for that is
+that binary version of the packages might disappear from the package repositories.
+In that case, `renv` will install it from source and it will need possible
+build time dependencies. The older the lockfile gets, the more problematic
+it can be to install it without hiccups.
+
+### Using deps
+
+`renv` goes to great lengths to make your R projects perfectly
 reproducible. This requires knowing the exact package versions and the
 source where it was installed from (CRAN, remotes, local files). This
-information is registered in a lock file, which serves as the manifest
+information is registered in the lock file, which serves as the manifest
 for recreating the exact replica of the environment.
 
 Full reproducibility is often required for reports, markdown-based
 documents, and scripts. A loosely defined project that is combined with
-strict versioning requirements, often erring on the side of “more
-dependencies are safer”.
+strict versioning requirements, often erring on the side of "more
+dependencies are safer".
 
-On the other end of the spectrum, we have package-based development.
+On the other end of the spectrum, you have package-based development.
 This is the main use case for dependency management-oriented packages,
-such as [remotes](https://cran.r-project.org/package=remotes) and
-[pak](https://cran.r-project.org/package=pak). Note that pak is
-to replace remotes at some point in the future.
+such as `remotes` and `pak`.
 
 In this case, exact versions are managed only to the extent of avoiding
 breaking changes (given that testing can surface these). So what we have
-is a package-based workflow combined with a “no breaking changes”
+is a package-based workflow combined with a "no breaking changes"
 philosophy to version requirements. This approach often leads to leaner
 installation.
 
+If you are developing your Shiny app as an R package, then the the 
+package-based development is probably the way to go. You already have a
+`DESCRIPTION` file, so just keep developing.
 
-#### explicit dependencies
+But what if you are not writing an R package and wanted to combine the best
+of both approaches? A loosely defined project with just strict-enough
+versioning requirements without having to manage a `DESCRIPTION` file.
+Because why would you need a `DESCRIPTION` file when you have no R package? 
+Also, there is a lot that a `DESCRIPTION` file won't do for you.
 
-The first approach is to use `RUN` statements in the `Dockerfile` to
-install the required packages. Check the `Dockerfile` in the
-`03-docker-basic` folder. The structure of the `Dockerfile` follows the
-general pattern outlined in
-[this](https://hosting.analythium.io/dockerizing-shiny-applications/)
-post. We use the `rocker/r-ubuntu:20.04` parent image and specify the
-[RStudio Package
-Manager](https://packagemanager.rstudio.com/)
-(RSPM) CRAN repository in `Rprofile.site` so that we can install binary
-packages for speedy Docker builds. Here are the relevant lines:
-
-```dockerfile
-FROM rocker/r-ubuntu:20.04
-...
-COPY Rprofile.site /etc/R
-...
-RUN install.r shiny forecast jsonlite ggplot2 htmltools
-RUN Rscript -e "install.packages('plotly')"
-...
-```
-
-Required packages are installed with the [littler
-utility](https://cran.r-project.org/web/packages/littler/vignettes/littler-examples.html#install.r-direct-cran-installation)
-`install.r` (littler is installed on all Rocker images). You can also
-use `Rscript` to call `install.packages()`. There are other options too,
-like `install2.r` from littler, or using `R -q -e install.packages()` –
-`-q` suppresses the startup message, `-e` executes an expression then
-quits.
-
-Build and test the image locally, use any image name you like (in
-`export IMAGE=""`), then visit `http://localhost:8080` to see the app:
-
-```bash
-# name of the image
-export IMAGE="analythium/covidapp-shiny:basic"
-
-# build image
-docker build -t $IMAGE .
-
-# run and test locally
-docker run -p 8080:3838 $IMAGE
-```
-
-#### DESCRIPTION file, remotes & pak
-
-The second approach is to record the dependencies in the `DESCRIPTION`
-file. You can find the example in the `04-docker-deps` folder. The
-[`DESCRIPTION`](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file)
-[file](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file)
-contains basic information about an R package. The file states package
-dependencies and is used when installing the packages and their
-dependencies. The `install_deps()` function from the
-[remotes](https://cran.r-project.org/package=remotes)
-package can install dependencies stated in a `DESCRIPTION` file. The
-`DESCRIPTION` file used here is quite rudimentary but it states the
-dependencies to be installed nonetheless:
-
-```text
-Imports:
-  shiny,
-  forecast,
-  jsonlite,
-  ggplot2,
-  htmltools,
-  plotly
-```
-
-Use the same Ubuntu-based R image and the RSPM CRAN repository. Install
-the remotes package, copy the `DESCRIPTION` file into the image. Call
-`remotes::install_deps()` which will find the `DESCRIPTION` file in the
-current directory. Here are the relevant lines from the `Dockerfile`:
-
-```dockerfile
-FROM rocker/r-ubuntu:20.04
-...
-COPY Rprofile.site /etc/R
-...
-RUN install.r remotes
-COPY DESCRIPTION .
-RUN Rscript -e "remotes::install_deps()"
-...
-```
-
-Build and test the image as before, but use a different tag:
-
-```bash
-# name of the image
-export IMAGE="analythium/covidapp-shiny:deps"
-
-# build image
-docker build -t $IMAGE .
-
-# run and test locally
-docker run -p 8080:3838 $IMAGE
-```
-
-#### renv
-
-The [renv](https://cran.r-project.org/package=renv)
-package is a versatile dependency management toolkit for R. You can
-discover dependencies with `renv::init()` and occasionally save the
-state of these libraries to a lockfile with `renv::snapshot()`. The nice
-thing about this approach is that the exact version of each package is
-recorded that makes Docker builds reproducible.
-
-Switch to the `05-docker-renv` directory and inspect the `Dockerfile`.
-Here are the most important lines (Focal Fossa is the code name for
-Ubuntu Linux version 20.04 LTS that matches our parent image):
-
-```dockerfile
-FROM rocker/r-ubuntu:20.04
-...
-RUN install.r remotes renv
-...
-COPY ./renv.lock .
-RUN Rscript -e "options(renv.consent = TRUE); \
-    renv::restore(lockfile = '/home/app/renv.lock', repos = \
-    c(CRAN='https://packagemanager.rstudio.com/all/__linux__/focal/latest'))"
-...
-```
-
-We need the remotes and renv packages. Then copy the `renv.lock` file,
-call `renv::restore()` by specifying the lockfile and the RSPM CRAN
-repository. The `renv.consent = TRUE` option is needed because this is a
-fresh setup (i.e. not copying the whole renv project).
-
-Tag the Docker image with `:renv` and build:
-
-```bash
-# name of the image
-export IMAGE="analythium/covidapp-shiny:renv"
-
-# build image
-docker build -t $IMAGE .
-
-# run and test locally
-docker run -p 8080:3838 $IMAGE
-```
-
-#### deps
-
-What if we are not writing an R package and wanted to combine the best
-of both approaches? – A loosely defined project with just strict-enough
-versioning requirements. All this without having to write a
-`DESCRIPTION` file by hand. Because why would you need a `DESCRIPTION`
-file when you have no package? Also, a `DESCRIPTION` file won’t let you
-pin an exact package version or specify alternative CRAN-like
-repositories.
-
-What if you could manage dependencies by decorating your existing R code
-with special, roxygen-style comments? Just like this:
+You can manage dependencies with the `deps` [@R-deps] package by decorating your 
+existing R code with special, roxygen-style comments. For example, here is
+how you can specify a remote, and alternative CRAN-like repository, pin
+a package version, or install from a local source:
 
 ```R
 #' @remote analythium/rconfig@CRAN-v0.1.3
@@ -352,159 +636,527 @@ library(sf)
 
 #' @ver rgl 0.108.3
 library(rgl)
+
+#' @local mypackage_0.1.0.tar.gz
+library(mypackage)
 ```
 
-This is exactly what deps does:
+You can exclude development packages with the `@dev` decorator and list
+system requirements following the `@sys` decorator.
 
--   helps to find all dependencies from our files,
--   writes these into a `dependencies.json` file,
--   performs package installs according to the decorators.
-
-The decorators make our intent explicit, just like if we were writing an
+`deps` helps to find all dependencies from our files using `renv::dependencies()`.
+It writes these dependencies `dependencies.json` file, including  the information 
+contained in the comments when using the `deps::create()` function.
+The decorators make your intent explicit, just like if we were writing an
 R package. But we do not need to manually write these into a file and
-keep it up-to-date. We can just rerun `create` to update the JSON
+keep it up-to-date. We can just rerun `create()` to update the JSON
 manifest file.
 
-There are many different tags that you can use as part of your
-roxygen-style comments.
+`create()` crawls the project directory for package dependencies. It
+will amend the dependency list and package sources based on the
+comments. The other function is `install()` which looks for the `dependencies.json`
+file in the root of the project directory (or runs `create()` when the JSON file 
+is not found) and performs dependency installation according to the
+instructions in the JSON file.
 
-These tags are listed and explained in the package's GitHub repository.
+Here is the Dockerfile usage where first we install the `deps` package and
+copy the `dependencies.json`. The next `RUN` instruction is needed if you
+had system requirements specified via `@sys`. The `jq` package is used to
+parse the JSON and install any of these libraries. Finally, the 
+`deps::install()` that performs the R package installation based on the JSON file:
 
-The deps package has 2 main functions:
+```dockerfile
+[...]
+RUN install.r deps
+COPY app/dependencies.json .
 
--   `create()` crawls the project directory for package dependencies. It
-    will amend the dependency list and package sources based on the
-    comments and query system requirements for the packages where those
-    requirements are known for a particular platform; the summary is
-    written into the `dependencies.json` file.
--   `install()` looks for the `dependencies.json` file in the root of
-    the project directory (or runs `create()` when the JSON file is not
-    found) and performs dependency installation according to the
-    instructions in the JSON file.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    jq \
+    $( jq -r '.sysreqs | join(" ")' dependencies.json )
 
-In the simplest case, one might have a project folder with some R code
-inside. Running `deps::install()` will perform the package installation
-in one go. Additional arguments can be passed to `install()` so that
-local libraries etc. can be specified.
+RUN R -q -e "deps::install()"
+[...]
+```
 
-These arguments are passed to `install.packages()`. This is a really
-important consideration when it comes to utilizing RSPM or BSPM
-repositories on Linux systems.
-[RSPM](https://cran.r-project.org/package=rspm?ref=hosting.analythium.io)
-(RStudio Package Manager) provides rebuild binaries,
-[BSPM](https://cran.r-project.org/package=bspm?ref=hosting.analythium.io)
-(Bridge to System Package Manager) provides full system dependency
-resolution and integration with `apt` on top of binary packages.
+The `deps` package comes with a small command line utility that can be
+added to the dockerfile to simplify the installation process:
 
-The deps package helps users be more intentional about the R package
-source and version requirements using text decorators in comments. This
-is similar to a package-based workflow without actually writing a
-package. But deps also lends itself to Dockerized development. It
-identifies system requirements for the R packages, which is a welcome
-addition to making the Docker experience for R as user-friendly and
-hands-off as possible.
+```dockerfile
+FROM rocker/r2u:24.04
 
-#### Using the deps CLI
+RUN install.r pak rconfig deps
+RUN cp -p \
+    $(R RHOME)/site-library/deps/examples/03-cli/deps-cli.R \
+    /usr/local/bin/deps-cli
+RUN chmod +x /usr/local/bin/deps-cli
 
-FIXME: explain the deps CLI, note that it also works with pak, etc.
+COPY app .
 
-### Python requirements
+RUN deps-cli all
+[...]
+```
+
+The `deps-cli all` command will analyze dependencies and install system and R 
+dependencies in 1 line. It also looks for the following files before attempting 
+to auto-detect dependencies in the absence of the `dependencies.json`: 
+`renv.lock`, `pkg.lock`, and `DESCRIPTION`. `pkg.lock` is the lockfile created 
+by `pak`.
+
+## Python requirements
 
 FIXME: KALVIN to add here
 
-#### pip
+### renv
+
+<https://cran.r-project.org/web/packages/renv/vignettes/python.html>
+
+### pip
 
 FIXME: KALVIN to add here
 
-#### Other options for python
+### Other options for python
 
 ??? Conda, venv???
 
 FIXME: KALVIN to add here
 
-## Best Practices
+FIXME: mention shinylive installs
 
-The use of Docker with R has been [transformative in many
-ways](https://journal.r-project.org/archive/2020/RJ-2020-007/RJ-2020-007.pdf)
-over the past 5 years. What is common in this diversity of use cases is
-that the Docker images almost always start with a parent image. What
-parent image you use? How do you add new layers to it? These questions
-will determine how quickly you can iterate while in development, and the
-size of the final image you send to production. In this post, I will
-compare using different parent images and outline best practices. I
-focus on Shiny apps but most of these ideas apply generally to any
-dockerized R application, like images for compute jobs or interfaces.
+## Dynamic Shiny Apps
 
-Based on these results and the list of [Dockerfile best
-practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#dont-install-unnecessary-packages),
-here are a few suggestions to improve the developer experience and the
-quality of the final Docker images.
+Dynamic Shiny app require a runtime environment on a host server that can support
+the HTTP and websocket connections required for R and Python to communicate with
+the client (Fig. \@ref(fig:part2-shiny-lifecycle)). Now that we have
+reviewed Shiny app development and general principles of working with Docker,
+we can dive into specific examples. We will use the Old Faithful example.
+You can follow along using the code in the repository at <https://github.com/h10y/faithful>.
 
-### Minimize dependencies
+There are many examples organized into folders inside the repo. Consult the
+readme file about each of these. In general, we provide Docker images
+for the dynamic Shiny app examples in the form of 
+`h10y/faithful/<folder-name>:latest`. You can use `docker run` to pull and 
+start the Shiny app as:
 
-
-#### Minimize dependencies
-
-Avoid installing "nice to have" packages and do not start from
-general-purpose parent images aimed at interactive use. Images for Shiny
-apps and other web services benefit from keeping the images as lean as
-possible by adding those R packages and system requirements that are
-absolutely necessary. [Multi-stage
-builds](https://docs.docker.com/develop/develop-images/multistage-build/)
-can be helpful to only include artifacts that are needed.
-
-### Use caching
-
-When building an image, Docker executes each instruction in the order
-specified in the `Dockerfile`. Docker looks for an existing image in its
-cache that it can reuse, rather than creating a new (duplicate) image.
-Only the instructions `RUN`, `COPY`, `ADD` create layers:
-
--   for the `RUN` instructions, just the command string from the
-    `Dockerfile` is used to find a match from an existing image;
--   for the `ADD` and `COPY` instructions, the contents of the file(s)
-    in the image are examined and a checksum is calculated for each
-    file;
--   the last-modified and last-accessed times of the file(s) are not
-    considered in these checksums for the `ADD` and `COPY` instructions.
-
-### Order layers
-
-Caching can be useful is when installing R package dependencies. In a
-previous post, we looked at [how to use the renv
-package](https://hosting.analythium.io/dockerized-shiny-apps-with-dependencies/#use-the-renv-r-package)
-to install dependencies. Here is a simplified snippet from
-[that](https://github.com/analythium/covidapp-shiny/blob/main/05-docker-renv/Dockerfile)
-`Dockerfile`:
-
-```dockerfile
-## install dependencies
-COPY ./renv.lock .
-RUN Rscript -e "renv::restore()"
-
-## copy the app
-COPY app .
+```bash
+docker run -p 8080:3838 ghcr.io/h10y/faithful/<folder-name>:latest
 ```
 
-What would happen if we switched the two blocks?
+Visit `http://localhost:8080` in your browser to try the app.
+
+### R
+
+The simplest containerized app follows the Dockerfile examples for R that you
+have seen so far. We provide two Dockerfiles, one for the `rocker/r2u` and one
+for the `rhub/r-minimal` image within the `r-shiny` folder. Follow this example
+if your Shiny app consists of a single or multiple files. Put those files in the
+`app` folder. Pick your favorite way of specifying your dependencies, and edit the
+`Dockerfile` accordingly. The `CMD` instruction for this type of setup is:
 
 ```dockerfile
-## copy the app
-COPY app .
+FROM rocker/r2u:24.04
 
-## install dependencies
-COPY ./renv.lock .
-RUN Rscript -e "renv::restore()"
+# Add here your dependencies
+RUN R -q -e "install.packages('shiny')"
+
+RUN groupadd app && useradd -g app app
+WORKDIR /home/app
+COPY app .
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]
 ```
 
-You would have to wait for the build to reinstall all the R packages
-whenever the app files have changed. This is because once the cache is
-invalidated all subsequent `Dockerfile` commands generate new images
-instead of using the cache.
+If your Shiny app is organized as nested files following the structure expected
+by the `rhino` package, check the `r-rhino` folder for an example.
+`rhino` relies on the `renv` package for dependency management, so edit the
+Dockerfile accordingly. The `CMD` instruction for a Rhino app is the same as
+for the `r-shiny` setup, because Rhiny uses an `app.R` file as its entrypoint
+that is being recognized by Posit products as a Shiny app. `shiny::runApp()`
+will also recognize it as a Shiny app. The `app.R` file has a single 
+command, `rhino::app()`, that returns a Shiny app object.
 
-It is best to order the instructions in your `Dockerfile` from the less
-frequently changed to the more frequently changed. This ensures that the
-build cache is reusable.
+If you follow a package based development for your SHiny app, check out the
+`r-package`, `r-golem`, and `r-leprechaun` folders for Dockerfile examples.
+Here is the `r-package` example that does not follow any specific framework,
+but used the `DESCRIPTION` file to define its dependencies that will be picked
+up by `remotes::install_local()`. At the end, we call a function from the package
+itself to launch the Shiny app, i.e. `faithful::run_app()`:
+
+```dockerfile
+FROM rocker/r2u:24.04
+
+RUN groupadd app && useradd -g app app
+
+RUN R -q -e "install.packages('remotes')"
+COPY faithful faithful
+RUN R -q -e "remotes::install_local('faithful')"
+
+USER app
+EXPOSE 3838
+CMD ["R", "-e", "faithful::run_app(host='0.0.0.0', port=3838)"]
+```
+
+The `install.packages('remotes')` line is not necessary for the `rocker/r2u`
+image because it comes preinstalled. But we left the line there so that the
+Dockerfiles can be used with other parent images that might not have `remotes`
+available.
+
+The Golem and Leprechaun framework based Dockerfiles are slight variations of 
+this Here is the one with Golem:
+
+```dockerfile
+[...]
+COPY faithfulGolem faithfulGolem
+RUN R -q -e "remotes::install_local('faithfulGolem')"
+[...]
+CMD ["R", "-e", "faithfulGolem::run_app( \
+    options=list(host='0.0.0.0', port=3838))"]
+```
+
+The same with Leprechaun:
+
+```dockerfile
+[...]
+COPY faithfulLeprechaun faithfulLeprechaun
+RUN R -q -e "remotes::install_local('faithfulLeprechaun')"
+[...]
+CMD ["R", "-e", "faithfulLeprechaun::run( \
+    options=list(host='0.0.0.0', port=3838))"]
+```
+
+### Python
+
+The Python version of the app follows the similar principles. You can find it
+in the `py-shiny` folder.
+The parent image is `python:3.9`, and dependency management is done via `pip` and 
+the `requirements.txt` file. Edit this file as the starting point for your single
+or multiple file Python for Shiny apps The `CMD` instruction calls `uvicorn`
+to host the app:
+
+```dockerfile
+FROM python:3.9
+
+# Add here your dependencies
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+RUN groupadd app && useradd -g app app
+WORKDIR /home/app
+COPY app .
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+RUN mkdir .config
+ENV MPLCONFIGDIR=/home/app/.config
+ENV HOME=/home/app
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "3838"]
+```
+
+### R Markdown
+
+Hosting R MArkdown documents with the `runtime: shiny` is very similar to hosting
+regular Shiny apps. You need `pandoc` as a system requirement that you can
+install with the image operating systems' package manager. The `CMD` instruction
+uses `rmarkdown::run()` to render and run the document every time a user connections
+to it:
+
+```dockerfile
+FROM rocker/r2u:24.04
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    pandoc \
+    && rm -rf /var/lib/apt/lists/*
+RUN R -q -e "install.packages(c('shiny', 'rmarkdown'))"
+RUN groupadd app && useradd -g app app
+WORKDIR /home/app
+COPY app .
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+CMD ["R", "-e", "rmarkdown::run( \
+    shiny_args = list(port = 3838, host = '0.0.0.0'))"]
+```
+
+The prerendered option will with `runtime: shinyrmd` require a rendering step 
+by calling `rmarkdown::render()` before the final `rmarkdown::run()` 
+in the `CMD`. Note that the `RMARKDOWN_RUN_PRERENDER` is set to `0` that tells 
+`rmarkdown` to not render the document for every user. The HTML is rendered only 
+once so only the reactive components need to be dealt with:
+
+```dockerfile
+FROM rocker/r2u:24.04
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    pandoc \
+    && rm -rf /var/lib/apt/lists/*
+RUN R -q -e "install.packages(c('shiny', 'rmarkdown', 'deps'))"
+RUN groupadd app && useradd -g app app
+WORKDIR /home/app
+COPY app .
+RUN R -q -e "deps::install(ask=FALSE)"
+RUN R -e "rmarkdown::render('index.Rmd')"
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+ENV RMARKDOWN_RUN_PRERENDER=0
+CMD ["R", "-e", "rmarkdown::run(shiny_args = list(port = 3838, host = '0.0.0.0'))"]
+```
+
+### Quarto with R
+
+Using Quarto with R to build and image is conceptually very similar to 
+Markdown. First we install `quarto`. There are many ways of installing it,
+this is one option. You need `curl` to download the Quarto installer,
+we use here `gdebi` install Quarto from the downloaded `.deb` package.
+Once we have Quarto installed, we remove the Gdebi build time dependency.
+
+```dockerfile
+FROM rocker/r2u:24.04
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pandoc \
+    curl \
+    gdebi-core \
+    && rm -rf /var/lib/apt/lists/*
+RUN curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb
+RUN gdebi --non-interactive quarto-linux-amd64.deb
+RUN apt-get purge -y gdebi-core && apt-get autoremove -y
+RUN install.r quarto shiny deps
+
+RUN groupadd app && useradd -g app app
+WORKDIR /home/app
+COPY app .
+
+RUN R -q -e "deps::install(ask=FALSE)"
+
+RUN quarto render index.qmd
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+CMD ["quarto", "serve", "index.qmd", "--port", "3838", \
+    "--host", "0.0.0.0", "--no-render"]
+```
+
+The prerendering uses `quarto render` before `quarto serve` with the 
+`--no-render` flag in the `CMD` instruction at the end.
+
+### Quarto with Python
+
+The Python version with Quarto works very similarly, the only difference is the
+`pip install` part based in the `requirements.txt` file. Otherwise, the Python 
+code will be `COPY`-ed over as part of the `.qmd` file. The rendering and serving 
+steps are the same:
+
+```dockerfile
+FROM python:3.9
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pandoc \
+    curl \
+    gdebi-core \
+    && rm -rf /var/lib/apt/lists/*
+RUN curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb
+RUN gdebi --non-interactive quarto-linux-amd64.deb
+RUN gdebi --non-interactive quarto-linux-amd64.deb
+
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+RUN groupadd app && useradd -g app app
+WORKDIR /home/app
+COPY app .
+RUN quarto render index.qmd
+RUN chown app:app -R /home/app
+USER app
+EXPOSE 3838
+CMD ["quarto", "serve", "index.qmd", "--port", "3838", \
+    "--host", "0.0.0.0", "--no-render"]
+```
+
+### Shiny Server
+
+Shiny Server is part of the `rocker/shiny` image which is commonly used Docker
+parent image for hosting SHiny apps. SHiny Server's Professional version was
+originally the enterprise self hosting option for SHiny apps before Posit
+Connect. Nowadays, there is only an Open Source version available.
+We will talk about non-containerized Shiny Server as a hosting option later.
+
+A nice feature of a containerized Shiny Server compared to previously discussed 
+options is that it can host multiple Shiny apps, even R, R Markdown, Python, 
+and Quarto apps together in the same container.
+
+FIXME: find a way where this setup should be. Probably an independent 
+h10y/examples repo where we can have the setup scripts etc for this one and 
+docker compose.
+
+We'll use the following setup, combining multiple version of our three 
+example apps. We include the apps and their version in a hierarchical folder 
+structure within the `apps` folder. Besides these files we have an `index.html`
+file in the root of the `apps` folder which will provide links to the
+different apps inside the nested folders.
+
+```bash
+├── apps
+│   ├── bananas
+│   │   └── r-shiny
+│   ├── faithful
+│   │   ├── py-shiny
+│   │   ├── quarto-r-shiny
+│   │   ├── r-shiny
+│   │   └── rmd-shiny
+│   ├── lbtest
+│   │   ├── py-shiny
+│   │   └── r-shiny
+│   └── index.html
+└── Dockerfile
+```
+
+The `Dockerfile` sits next to the `apps` folder, and here are the contents.
+We use the `rocker/shiny:4.4.1` parent image, install `pip` for Python 3
+because we need it to install requirements for the Python Shiny app (`pip` is
+not part of the parent image but you already have Python). We use `install2.r`
+to manually install R package dependencies.
+
+Shiny Server comes with a few apps pre-installed inside the `/srv/shiny-server`
+folder. We remove all these files before we `COPY` the contents from the `apps`
+directory over to the image. Once all the files are there, we install
+R dependencies by relying on the `deps` packages crawling feature: 
+`deps::install(ask=FALSE)` will create a temporary `dependencies.json` file
+based on exploring all the dependencies inside the newly populated
+`/srv/shiny-server` folder. Next we install Python dependencies.
+Finally, in `CMD` we call the executable `/usr/bin/shiny-server` that will start
+the Shiny Server. It will by default listen on port 3838.
+
+```dockerfile
+FROM rocker/shiny:4.4.1
+
+RUN apt-get update && apt-get install -y \
+    --no-install-recommends \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+RUN install2.r --error --skipinstalled \
+    shiny \
+    bslib \
+    rmarkdown \
+    quarto \
+    deps
+RUN rm -rf /srv/shiny-server/*
+COPY ./apps /srv/shiny-server/
+
+RUN R -q -e "deps::install('/srv/shiny-server',ask=FALSE)"
+RUN pip install --no-cache-dir --upgrade \
+    -r /srv/shiny-server/faithful/py-shiny/requirements.txt
+
+USER shiny
+EXPOSE 3838
+CMD ["/usr/bin/shiny-server"]
+```
+
+You can build the image and start a container as:
+
+```bash
+docker build -t shiny-server .
+docker run -p 8080:3838 shiny-server
+```
+
+Visit `http://localhost:8080` to see the landing page 
+(Fig. \@ref(fig:part2-docker-shinyserver). Use the links to navigate the
+different apps.
+
+```{r part2-docker-shinyserver, eval=TRUE, echo=FALSE,out.width="90%", fig.cap="Landing page for the containerized Shiny Server deployment."}
+include_graphics("images/02/docker-shinyserver.png")
+```
+
+## Static Shiny Apps
+
+Static Shiny apps can be rendered on your local machine as explained in
+FIXME: include reference to chapter: organizing apps/Shinylive
+You'd use `shinylive::export("<input-folder>", "<output-folder>")` in R and 
+`shinylive export <input-folder> <output-folder>` in Python to render the static pages for 
+Shinylive based on a Shiny app inside the `<input-folder>` folder.
+The Quarto examples that used Shinylive were rendered similarly with the
+`quarto render <input-file> --output-dir <output-folder>` command.
+
+As you saw before, you need to have a proper wenserver hosting the pages and
+the required CSS and JavaScript assets to avoid cross-origin resource sharing 
+(CORS) issues.
+You can upload the static files to any file hosting service, like GitHub or
+GitLab Pages, Netlify, or the DigitalOcean App Platform. These platform all
+offer a free tier for hosting static assets. 
+The static pages we rendered based on the Old Faithful example are 
+deployed to GitHub Pages at <https://h10y.github.io/faithful/>.
+You can also set up your self hosted virtual server in the cloud to host 
+static files, as you will see in later chapters.
+
+Apart from static hosting, it is possible to put the static files in a Docker
+image behind a server process. This option assumes that you have all the build
+time requirements for rendering the Shinylive or Quarto with Shinylive
+documents.
+
+You can use R or Python as well to serve the static contents using 
+the much bulkier parent images of `rocker/r2u` or `python:3.9`. You can use
+the `httpuv` R package or the `http.server` Python module.
+Although this is clearly doable, it is not necessary and will result in a much 
+larger Docker image. The same outcome can be achieved by using a slimmer parent
+image and using a multi-stage Docker build process.
+
+We'll use the [OpenFaaS Watchdog](https://github.com/openfaas/of-watchdog) 
+for static hosting. It is a single binary file that is built for multiple
+architectures and is able to serve static assets among other use cases.
+It is well suited for containerized deployments because it provides a healthcheck
+mechanism and exposes metrics for observability. You may notice in this
+example that we have two `FROM` instructions. The first one takes the
+watchdog image, the second one uses a small Alpine linux image.
+We `COPY` the contents from the `app` folder of the build context to the
+`/home/app` folder of the Alpine image's file system as we did before. 
+Then we copy the `fwatchdog` executable file from the watchdog image as well.
+The only thing why the Dockerfile looks a bit verbose is because we want to
+create a non-privileged user as we did before to harden our image's security.
+
+```dockerfile
+FROM ghcr.io/openfaas/of-watchdog:0.10.1 AS watchdog
+
+FROM alpine:3.20
+RUN adduser -D app
+USER app
+WORKDIR /home/app
+COPY app .
+COPY --from=watchdog /fwatchdog .
+ENV mode="static"
+ENV static_path="/home/app"
+HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
+CMD ["./fwatchdog"]
+```
+
+The same `Dockerfile` would work all static Shiny output whether that is coming
+from Shinylive or Quarto with Shinylive. Just have these files in the `app`
+folder and you are done.
+
+The `FROM <image> AS <stage>` specification allows us to
+later specify which parent image we refer to. This is done via the
+`--from=<stage>` flag for the `COPY` instruction. `docker build` will then
+The multiple images used in the same `Dockerfile` are called stages, and the
+a build is referred to as a _multi-stage build_. It is often used to
+use a bulkier image for build purposes and a leaner image to only
+copy specific files to. In this case we copy the static contents and an
+executable file called `watchdog`.
+
+The environment variables tell the watchdog process to use the static mode and
+that the contents are in the `/home/app` folder. The `HEALTHCHECK` specifies that
+we should check the existence of the `/tmp/.lock` file every 3 seconds.
+This lockfile is created by the watchdog process and its existence is proof
+of a healthy server. When you run your containers using container orchestration
+tools like Docker Compose or Kubernetes, a failed healthcheck results in
+creating a new container and removing the old one.
+
+### Multi-stage Builds
+
+A common use case for multi stage builds is to run the building/rendering
+process in the first stage of the build, and copy over the results -- in our
+case the static files -- from the first stage to the final slimmer image
+(Fig. \@ref(fig:part2-docker-layers).
 
 ```{r part2-docker-layers, eval=TRUE, echo=FALSE,out.width="80%", fig.cap="Docker layers for single (left) and multi-stage builds (right). Dashed lines are temporary layers."}
 if (is_latex_output()) {
@@ -514,315 +1166,68 @@ if (is_latex_output()) {
 }
 ```
 
-### Switch user
-
-
-Running the container with root privileges allows unrestricted use which
-is to be avoided in production. Although you can find lots of examples
-on the Internet where the container is run as root, this is generally
-considered bad practice. Use something like this:
+A Python Shinylive example demonstrates this use case of the multi-stage
+build capabilities of Docker. The first stage is called the `builder` and is
+based on the general `python:3.9` image. We save the rendered output into the 
+`/root/output folder`. 
 
 ```dockerfile
-RUN addgroup --system app \
-    && adduser --system --ingroup app app
-WORKDIR /home/app
-COPY app .
-RUN chown app:app -R /home/app
-USER app
+FROM python:3.9 AS builder
+WORKDIR /root
+RUN pip install shinylive
+COPY py-shiny/app app
+RUN pip install --no-cache-dir --upgrade -r /root/app/requirements.txt
+RUN shinylive export app output
+[...]
 ```
 
-### Multi-stage Builds
-
-### Other considerations
-
-#### Use a linter
-
-Best practices for writing Dockerfiles are being followed more and more
-often according to [this
-paper](https://arxiv.org/pdf/2103.12298.pdf)
-after mining more than 10 million Dockerfiles on Docker Hub and GitHub.
-However, there is still room for improvement. This is where
-[linters](https://en.wikipedia.org/wiki/Lint_(software))
-come in as useful tools for static code analysis.
-[Hadolint](https://github.com/hadolint/hadolint#rules)
-lists lots of rules for Dockerfiles and is available as a [VS Code
-extension](https://marketplace.visualstudio.com/items?itemName=exiasr.hadolint).
-
--   [Dockerfile best
-    practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#leverage-build-cache)
--   [Hadolint
-    rules](https://github.com/hadolint/hadolint#rules)
--   [Tips to Speed up Your Docker Image
-    Build](https://vsupalov.com/5-tips-to-speed-up-docker-build/)-->
-
-#### Use labels
-
-#### Docker Security Scanning 
-
-This brings up an important consideration when it comes to production
-code and environments. Knowing the exact versions of your packages is
-not only good for reproducibility but is also the foundation for
-vulnerability scanning.
-
-R users are familiar with the renv package and how it registers the
-exact version of the R packages being used. However, it does not
-register anything about the underlying system libraries, the version of
-curl or openssl or GDAL libraries being used. This is what a Software
-Bill Of Materials (SBOM) is used for. For this reason, Docker Desktop
-4.7.0 introduced the experimental
-[`docker sbom`](https://docs.docker.com/engine/sbom/) CLI command that
-is based on a collaboration with the
-[Syft](https://github.com/anchore/syft) project.
-
-Reproducibility is concerned with keeping the versions immutable. It is
-like a vintage car that is used once a year to derive to the car show.
-As opposed to this, in production, we are more concerned with acting on
-the information and upgrade packages when necessary while also making
-sure that our app is running flawlessly. It is like how people drive
-their kids to dance and soccer practice 7 days a week in a minivan. The
-car is maintained continuously because there is no room for error.
-
-The [`docker scan`](https://docs.docker.com/engine/scan/) CLI command
-was introduced to quickly detect and learn how to remediate
-vulnerabilities in your images.
-
-> Vulnerability scanning for Docker local images allows developers and
-> development teams to review the security state of the container images
-> and take actions to fix issues identified during the scan, resulting
-> in more secure deployments. Docker Scan runs on Snyk engine, providing
-> users with visibility into the security posture of their local
-> Dockerfiles and local images.  
->   
-> Users trigger vulnerability scans through the CLI, and use the CLI to
-> view the scan results. The scan results contain a list of Common
-> Vulnerabilities and Exposures (CVEs), the sources, such as OS packages
-> and libraries, versions in which they were introduced, and a
-> recommended fixed version (if available) to remediate the CVEs
-> discovered.
-
-Another popular vulnerability scanner for container images and
-filesystems is called [Grype](https://github.com/anchore/grype).
-You will find links to some tutorials below walking through the use of
-Syft and Grype.
-
-SBOM was announced in 2022.
-Here is the original announcement about SBOM from Docker in April 2022:
-
-> making what is inside your container images more visible so that you
-> can better secure your software supply chain
-
-Announcing Docker SBOM: Increased Docker Image Visibility <https://www.docker.com/blog/announcing-docker-sbom-a-step-towards-more-visibility-into-docker-images/>
-
-Image visibility and transparency are key to securing your software
-supply chain. Learn how our Docker SBOM feature highlights core image
-components.
-
-Here is a short intro to how `docker sbom` command and the Syft project
-are related (Syft supports the OCI, Docker, and Singularity image
-formats):
-[How to Improve Docker Security with `docker sbom` and Syft](https://thenewstack.io/how-to-improve-docker-security-with-docker-sbom-and-syft/)
-
-Grype can use the SBOM output or scan the Docker image or local file
-system directly. Then it performs a vulnerability scan by comparing the
-package versions to information found in vulnerability databases. This
-tutorial outlines the whole process:
-[Container vulnerability scan with Syft and Grype](https://medium.com/rahasak/container-vulnerability-scan-with-syft-and-grype-f4ec9cd4d7f1)
-
-[How to add a Software Bill of Materials (SBOM) to your containers with GitHub Actions](https://actuated.dev/blog/sbom-in-github-actions):
-
-You might use GitHub actions to build a new image every time you merge
-changes to your production branch. It can be important to make sure
-there are no vulnerabilities. This post outlines how to do that:
-
-## WHAT ELSE
-
-### Layers and Caching
-
-### Hardware Architectures
-
-### Multi-stage builds
-
-### Mounting volumes
-
-### Ports
-
-### UID
-
-### Troubleshooting
-
-FIXME: Accessing the logs: 
-FIXME: how to enter a running container to find runtime info
-
-
-### Shinylive
-
-Shinylive: R & Python using Nginx and of-watchdog
-
-### Rmd
-
-Rmd: this is for R
-
-### Quarto
-
-Quarto: R & Python
-
-### Using BuildKit
-
-Docker versions 18.09 or higher come with a new opt-in builder backend
-called
-<a href="https://github.com/moby/buildkit"
-rel="noreferrer noopener">BuildKit</a>. BuildKit prints out a nice
-summary of each layer including timing for the layers and the overall
-build. This is the general build command that I used to compare the four
-parent images:
-
-```bash
-DOCKER_BUILDKIT=1 docker build --no-cache -f $FILE -t $IMAGE .
-```
-
-BuildKit backend is enabled by turning on the `DOCKER_BUILDKIT=1`
-environment variable. I use the `--no-cache` option to avoid using
-cached layers, thus having a fair assessment of build times (you usually
-only build 1 and not 4). The `-f $FILE` flag allows building from
-different files kept in the same folder.
-
-All the code used here can be found in our Covid-19 Shiny app [GitHub repository](https://github.com/analythium/covidapp-shiny), look in
-the folder `99-images`.
-
-#### Image build times
-
-This is the script I used to build the four images with BuildKit:
-
-```bash
-# rhub/r-minimal
-export IMAGE="analythium/covidapp-shiny:minimal"
-export FILE="Dockerfile.minimal"
-DOCKER_BUILDKIT=1 docker build --no-cache -f $FILE -t $IMAGE .
-
-# rocker/r-base
-export IMAGE="analythium/covidapp-shiny:base"
-export FILE="Dockerfile.base"
-DOCKER_BUILDKIT=1 docker build --no-cache -f $FILE -t $IMAGE .
-
-# rocker/r-ubuntu
-export IMAGE="analythium/covidapp-shiny:ubuntu"
-export FILE="Dockerfile.ubuntu"
-DOCKER_BUILDKIT=1 docker build --no-cache -f $FILE -t $IMAGE .
-
-# rstudio/r-base
-export IMAGE="analythium/covidapp-shiny:focal"
-export FILE="Dockerfile.focal"
-DOCKER_BUILDKIT=1 docker build --no-cache -f $FILE -t $IMAGE .
-```
-
-I changed the CRAN repository for the Debian and Ubuntu Rocker images to
-see timing differences between installing packages as binary or from
-source. Total build times (on a 6-year old MacBook Pro) were the
-following:
-
--   `rhub/r-minimal`: 27 minutes with building packages from source
--   `rocker/r-base`: 12 minutes when building from source, 2.9 minutes
-    when installing binary packages
--   `rocker/r-ubuntu`: 12 minutes when building from source, 3.2 minutes
-    when installing binary packages
--   `rstudio/r-base`: 3.1 minutes with installing binary packages
-
-The difference between the binary vs. source package installs is
-expected. What is interesting is the 12 vs. 27 minutes between the
-Debian/Ubuntu images and the minimal Alpine image. Is it worth waiting
-for?
-
-#### Image sizes
-
-I got the image sizes from `docker images` and made a small data frame
-in R to calculate the size difference between the final and parent
-images:
-
-```R
-x = data.frame(TAG=c("minimal", "base", "ubuntu", "focal"),
-  PARENT_SIZE=c(35, 761, 673, 894) / 1000, # base image
-  FINAL_SIZE=c(222 / 1000, 1.05, 1.22, 1.38)) # final image
-
-x$DIFF = x$FINAL_SIZE - x$PARENT_SIZE
-
-#       TAG PARENT_SIZE FINAL_SIZE  DIFF
-# 1 minimal       0.035      0.222 0.187
-# 2    base       0.761      1.050 0.289
-# 3  ubuntu       0.673      1.220 0.547
-# 4   focal       0.894      1.380 0.486
-```
-
-The image sizes themselves differed quite a bit, the RStudio Ubuntu
-image was 6.2x larger than the minimal R image. Size differences were
-similarly different.
-
-Image sizes can be deceiving. It might not matter much if images are
-large if for example, we have multiple images [sharing some of the
-layers](https://semaphoreci.com/blog/2018/03/14/docker-image-size.html)
-(i.e. ones from the parent image). The CPU and RAM footprint of the
-containers might also be unrelated to the image sizes. But it might
-impact "cold start" performance when images are pulled to an empty
-server.
-
-#### Alpine Linux based image
-
-The Dockerfiles and the build experience for the Ubuntu and Debian
-images were very similar. Build times and image sizes were also
-comparable. The Alpine Linux-based minimal image took the longest time
-to build but resulted in the smallest image size. The Dockerfile for
-this setup also looks quite different from the Debian/Ubuntu setup:
+The same idea works for Quarto with Shinylive:
 
 ```dockerfile
-FROM rhub/r-minimal:4.0.5
+FROM python:3.9 AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pandoc \
+    curl \
+    gdebi-core \
+    && rm -rf /var/lib/apt/lists/*
+RUN curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb
+RUN gdebi --non-interactive quarto-linux-amd64.deb
+RUN apt-get purge -y gdebi-core && apt-get autoremove -y
+RUN pip install shinylive
+WORKDIR /root/app
+COPY quarto-py-shinylive/index.qmd /root/app/index.qmd
+COPY quarto-py-shiny/app/requirements.txt /root/app/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN quarto add quarto-ext/shinylive --no-prompt
+RUN quarto render /root/app/index.qmd --output-dir /root/output
 
-RUN apk update
-RUN apk add --no-cache --update-cache \
-    --repository http://nl.alpinelinux.org/alpine/v3.11/main \
-    autoconf=2.69-r2 \
-    automake=1.16.1-r0 \
-    bash tzdata
-RUN echo "America/Edmonton" > /etc/timezone
-
-RUN installr -d \
-    -t "R-dev file linux-headers libxml2-dev gnutls-dev openssl-dev libx11-dev cairo-dev libxt-dev" \
-    -a "libxml2 cairo libx11 font-xfree86-type1" \
-    remotes shiny forecast jsonlite ggplot2 htmltools plotly Cairo
-
-RUN rm -rf /var/cache/apk/*
-
-RUN addgroup --system app && adduser --system --ingroup app app
-WORKDIR /home/app
-COPY app .
-RUN chown app:app -R /home/app
-USER app
-
-EXPOSE 3838
-
-CMD ["R", "-e", "options(tz='America/Edmonton');shiny::runApp('/home/app', port = 3838, host = '0.0.0.0')"]
+[...]
 ```
 
-The base image is so bare-bones that it needs to install time zones,
-fonts and the Cairo device for ggplot2 to work (read the limitations
-[here](https://github.com/r-hub/r-minimal#limitations)).
-Instead of `apt` you have `apk` and might have to work a bit harder to
-find all the Alpine-specific dependencies.
+The R version is slightly different because of the different packages
+that one has to install. Refer to the brevious Quarto examples or
+the example website for the corresponding changes.
 
-One interesting aspect of this image is that instead of the littler
-utilities familiar from the Rocker images, we have the very similar
-`installr` script that installs R packages and system requirements:
+The second part for the `Dockerfile` for both the Shinylive and the Quarto
+with Shinylive examples (R and Python alike) is the following:
 
--   the `-d` flag installs then removes compilers ( `gcc`, `musl-dev`,
-    `g++`), as these are typically not needed on the final image;
--   system packages listed after the `-t` flag are removed after the R
-    packages have been installed;
--   system packages listed after the `-a` flag are run-time dependencies
-    that are needed for the packages to function properly and are not
-    removed from the image.
+```dockerfile
+[...]
+FROM ghcr.io/openfaas/of-watchdog:0.10.1 AS watchdog
 
-The installation of the system packages – that are all available on the
-other parent images – contributes to the longer build times. The
-BuildKit output gives you a clue about where exactly the time was spent.
+FROM alpine:3.20
+RUN adduser -D app
+USER app
+WORKDIR /home/app
+COPY --from=builder /root/output /home/app
+COPY --from=watchdog /fwatchdog .
+ENV mode="static"
+ENV static_path="/home/app"
+HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
+CMD ["./fwatchdog"]
+```
 
-The rest of the `Dockerfile` is very similar to the other distributions:
-add Linux user, copy files, expose port, define the entrypoint command.
-But how do you figure out what system packages you need?
+This is identical to the previous example where you had the static files
+rendered locally and outside of the Docker image, and then included with
+`COPY app .`. Instead, you have `COPY --from=builder /root/output /home/app`
+here which means: grab the files from the output folder of the build stage.

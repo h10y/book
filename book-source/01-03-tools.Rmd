@@ -76,7 +76,13 @@ an extensible, polyglot tool for writing code and exploring data.
 ### Web Browser
 
 You likely already have a web browser on your local machine. Most people use
-Chrome, Saferi, Edge, Firefox.
+Chrome, Safari, Edge, Firefox.
+Sometimes, as you develop apps and check the results in your browser, you
+might run into very obscure errors. In such cases, before searching for
+fixes on the Internet, try clearing the browser cache or do a hard refresh.
+You might also find it useful to view the apps in incognito mode. This way
+it will automatically clear the cache and cookies without affecting your 
+regular browser windows.
 
 ### Quarto
 
@@ -88,6 +94,9 @@ can include Shiny apps. You can find install instructions at <https://quarto.org
 To download and install Docker for your platform of choice, visit the
 [Docker download page](https://docs.docker.com/get-docker/) and
 follow the instructions.
+Note that commercial use of Docker Desktop in larger enterprises 
+(more than 250 employees or more than $10 million USD in annual revenue) 
+requires a paid subscription.
 
 If you are a Mac OS X user on Apple Silicone (M1 chip and above), you might want 
 to enable virtualization to be able to run and build images for AMD64 architecture.

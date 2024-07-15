@@ -226,8 +226,8 @@ docker login ghcr.io
 
 This command will ask for our credentials interactively. If you want,
 you can provide your username and password. But it is usually
-recommended to use a personal access token (PAT) instead of your
-password because PAT can have more restricted scopes, i.e. only used to
+recommended to use an access token instead of your
+password because the token can have more restricted scopes, i.e. only used to
 (read) access the container registry which is a lot more secure.
 You can also set expiry dates and can revoke these tokens any time.
 
@@ -289,13 +289,18 @@ For our R Shiny example this is what is inside the `Dockerfile`:
 
 ```dockerfile
 FROM rocker/r2u:24.04
+
 RUN R -q -e "install.packages('shiny')"
+
 RUN groupadd app && useradd -g app app
 WORKDIR /home/app
+
 COPY app .
+
 RUN chown app:app -R /home/app
 USER app
 EXPOSE 3838
+
 CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]
 ```
 
@@ -342,7 +347,8 @@ As of Docker Engine 23.0 and Docker Desktop 4.19, Buildx is the default build
 client and user interface. Buildx brings extended build capabilities with 
 BuildKit. BuildKit is the server that handles the build execution, e.g.
 it communicates with registries, instructs the Docker Engine and accesses
-the local file system.
+the local file system. You can enable the use of BuildKit on older Docker 
+systems by setting the environment variable `DOCKER_BUILDKIT=1`.
 
 The Buildx output is nicer and it provides you with timings for every step
 of your `Dockerfile`:
@@ -471,19 +477,25 @@ docker run -p 8080:3838 r-shiny:v1
 FIXME: provide link to this example.
 The `Dockerfile` for the Python version looks like this:
 
-```Dockerfile
+```dockerfile
 FROM python:3.9
+
 COPY app/requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
 RUN groupadd app && useradd -g app app
 WORKDIR /home/app
+
 COPY app .
+
 RUN chown app:app -R /home/app
 USER app
+EXPOSE 3838
+
 RUN mkdir .config
 ENV MPLCONFIGDIR=/home/app/.config
 ENV HOME=/home/app
-EXPOSE 3838
+
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "3838"]
 ```
 
@@ -491,12 +503,24 @@ Again, we'll explain each line shortly. To build anc check the Docker image,
 use the following commands:
 
 ```bash
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 docker build -t py-shiny:v1 .
 
 docker run -p 8080:3838 py-shiny:v1
 ```
 
-## Managing Images and Containers
+The `DOCKER_DEFAULT_PLATFORM` environment variable is not strictly necessary,
+but it can save you some headaches on Mac OS X when the platform for parent 
+images is not matching the local ARM64 architecture of your Apple Silicone.
+
+## Managing Objects
+
+There are a few commands that you need to know to manage your Docker objects,
+such as images and containers, in the absence of the Docker Desktop interface.
+This will pay off later when you have no such luxuries on a server.
+
+### Images
 
 To list the Docker images, use the `docker images` command. It will give you
 a quick summary of the images:
@@ -507,15 +531,38 @@ py-shiny     v1        ed11a2980c07   5 seconds ago       1.24GB
 r-shiny      v1        4d10f42d6a52   About an hour ago   909MB
 ```
 
+Size is the space taken up by the image and all its parent images.
+
+You can filter the output, for example `docker images --filter=reference="py-*"`
+will give you images whose name starts with `py-`, whereas
+`docker images --filter=reference="*:v1"` will list images that are tagged with
+`v1`.
+
+Use the `docker rmi <image-name>` to remove an image.
+
+The `docker system df` command will give you a concise summary of disk usage 
+by the Docker daemon including images, containers, and volumes:
+
+```bash
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          2         1         1.457GB   1.355GB (98%)
+Containers      1         1         0B        0B
+Local Volumes   0         0         0B        0B
+Build Cache     117       0         3.005GB   3.005GB
+```
+ 
+
+### Containers
+
 Try the `docker ps` command which lists the containers. If you have a container
 running, you will see it listed with status `Up`. If you stopped all the containers
 by exiting with CTRL+C, you will not see any running containers listed. 
 To see the stopped but not removed containers, use the `docker ps -a` command:
 
 ```bash
-CONTAINER ID   IMAGE        COMMAND                  CREATED        [...]
-3d91a5a2a47f   r-shiny:v1   "R -e 'shiny::runApp…"   3 minutes ago  [...]
-3d91a5a2a47f   r-shiny:v1   "R -e 'shiny::runApp…"   53 minutes ago [...]
+CONTAINER ID   IMAGE        COMMAND                    CREATED        [...]
+3d91a5a2a47f   r-shiny:v1   "R -e 'shiny::runApp..."   3 minutes ago  [...]
+3d91a5a2a47f   r-shiny:v1   "R -e 'shiny::runApp..."   53 minutes ago [...]
 ```
 
 Sometimes you need to be able to manage containers because the kill signal
@@ -545,11 +592,13 @@ same you will end up with "dangling" images that are untagged and are not used
 any longer. Dangling images can accumulate over time and fill up the
 available space that Docker Desktop is allocating for images.
 Use `docker system prune` to clean up these dangling images.
-The command `docker system prune -a` will remove all unused images and containers.
+The command `docker system prune --all` will remove all unused images and containers.
 
-Dangling images `docker system prune` or all image layers with 
-`docker system prune -a` to save up space (sometimes the available space
-for your docker desktop (64GB?) fills up -- see the bottom of you desktop UI).
+The Docker Desktop uses a finite amount of disk space that can fill up.
+Do the cleanup or go to the Docker Desktop settings and under Resources you 
+should be able to change the virtual disk limit.
+You can check the RAM, CPU, and disk usage by looking at the bottom of the
+Docker Desktop window.
 
 ## Sharing Images
 
@@ -659,6 +708,10 @@ password through standard input from a file:
 cat ~/my_password.txt | docker login -u USER --password-stdin
 ```
 
+The `my_password.txt` in this example is is a simple text file with the token
+inside and it can be found in the root of your home folder (`~`). Change the
+file path and file name as needed.
+
 You can also use an environment variable to store your token value
 that you can pass to the login command as:
 
@@ -671,20 +724,19 @@ Notice the white space before the `export` statement, use double spaces so that
 the command after the spaces will not be saved in your shell history.
 The history allows you to recall previous commands by pushing the up arrow
 key. The shell history is really just a text file, so copy pasting secrets
-into the terminal will leave a trace.
+into the terminal will leave a trace. Use this trick for sensitive information.
 
-Use one of these approaches to log into any public or private repository
+With one of these approaches you can log into any public or private repository
 for which you have credentials. The credentials will be stored
 locally in `$HOME/.docker/config.json` on Linux and Mac or in
 `%USERPROFILE%/.docker/config.json` on Windows. After login, there is no
 need to re-authenticate until you log out with `docker logout`.
 
-Note that `docker login` requires users to use `sudo` or be `root` in
-most cases.
-
 It is always a good idea to use a token instead of your password. Tokens
 can have limited scope (i.e. only for pulling images), and can be
 revoked at any time without it impacting other areas of your life.
+
+Note that `docker login` requires users to use `sudo` or be the `root` user.
 
 ### Local Registry
 
@@ -693,18 +745,23 @@ air gapped environment, or you are setting up a registry within your
 virtual private network (VPN). In these situations, you can host your own
 container registry.
 
-
 If you want a registry hosted on your machine, just pull the registry image. 
 The next command will pull the registry image, and run the similarly named 
 container in the background on port 5000:
 
 ```bash
-docker run -d \      # daemonixed background process
-  -p 5000:5000 \     # expose port
-  --restart=always \ # restart after errors
-  --name registry \  # give it a name
-  registry:2         # image name and version tag
+docker run -d \
+  -p 5000:5000 \
+  --restart=always \
+  --name registry \
+  registry:2
 ```
+
+Giving a container a name makes it easier to remove the container later, this
+way you don't have to find the container ID. The restart policy always restarts 
+the container if it stops, but not when it is manually stopped.
+The `-d` flag will start the container in a background process, so you get back
+the shell prompt, and you will not see the container log messages.
 
 Tag an image with the host name of your local registry, `localhost:5000`, and 
 push the image:
@@ -748,19 +805,22 @@ and use private repositories to control access to your images.
 
 ## The Dockerfile
 
-Let's review the Dockerfiles line by line. The full Dockerfile
-reference can be found
-[here](https://docs.docker.com/engine/reference/builder/).
+It is time to review the Dockerfiles line by line and learn about each of the
+different types of instructions and their uses.
+We organize the sections according to functional steps based on the Dockerfiles 
+for our R and Python apps. The full Dockerfile reference can be found at
+<https://docs.docker.com/reference/dockerfile/>.
 
-The [`FROM`
-instruction](https://docs.docker.com/engine/reference/builder/#from)
-initializes a new build stage and sets the *base image*.  
-Take the latest `r-base` image from the `rocker` project (see on [Docker
-Hub](https://hub.docker.com/r/rocker/r-base)):
+### The Parent Image
 
-```dockerfile
-FROM rocker/r-base:latest
-```
+The `FROM` instruction initializes a new build stage and sets the base
+(`FROM SCRATCH`) or parent image (e.g. `FROM ubuntu:24.04`).
+For the R version we used the `FROM rocker/r2u:24.04` and for the Python version
+we used `FROM python:3.9`. We will review the different parent images and
+how to use multiple parent images in the same Dockerfil as part of a 
+multi-stage build later.
+
+### Metadata
 
 The `LABEL` instruction is optional, it adds metadata to an image, e.g.
 who to contact in case of issues or questions:
@@ -769,159 +829,205 @@ who to contact in case of issues or questions:
 LABEL maintainer="USER <user@example.com>"
 ```
 
-The
-[`RUN`](https://docs.docker.com/engine/reference/builder/#run)
-[instruction](https://docs.docker.com/engine/reference/builder/#run)
-executes the command in a new *layer* (a
-[layer](https://docs.docker.com/glossary/#layer)
-is a modification to the image) on top of the current image. The
-following command updates the base image with a couple of libraries that
-are required by Shiny and related R packages (system dependencies):
+We'll talk more about labels as part of continuous integration and continuous
+delivery (CICD).
+
+### Dependencies
+
+We often use the `RUN` instruction to install dependencies and use other
+shell commands to set permissions to files, etc.
+`RUN` executes a command in a new layer on top of the current 
+image. We used the `RUN R -q -e "install.packages('shiny')"` to install
+the `shiny` R package, whereas the Python version used the
+`requirements.txt` alongside the `pip` command as:
 
 ```dockerfile
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    sudo \
-    libcurl4-gnutls-dev \
-    libcairo2-dev \
-    libxt-dev \
-    libssl-dev \
-    libssh2-1-dev \
-    && rm -rf /var/lib/apt/lists/*
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 ```
 
-The following `RUN` command uses the
-[littler](https://github.com/eddelbuettel/littler)
-command-line interface shipped with the `r-base` image to install the
-Shiny package and its dependencies:
+We also used `RUN` to add a user called `app` to a Linux user group called `app`.
+This is needed because you do not want to run containers as the `root` user in 
+production. Running the container with root privileges allows unrestricted 
+use which is to be avoided. Although you can find lots of examples on the 
+Internet where the container is run as root, this is generally considered bad 
+practice. This is how we created the non-root user:
 
 ```dockerfile
-RUN install.r shiny
+RUN groupadd app && useradd -g app app
 ```
 
-The next command sets the options in the `Rprofile.site` file which are
-going to be loaded by the R session. These options specify the Shiny
-host and port that `runApp` will use.
+### Directories and Files
 
-Do not run containers as root in production. Running the container with
-root privileges allows unrestricted use which is to be avoided in
-production. Although you can find lots of examples on the Internet where
-the container is run as root, this is generally considered bad practice.
-
-> Switching to the root `USER` opens up certain security risks if an
-> attacker gets access to the container. In order to mitigate this,
-> switch back to a non privileged user after running the commands you
-> need as root. – [Hadolint rule
-> DL3002](https://github.com/hadolint/hadolint#rules)
-
-The following command creates a Linux group and user, both called `app`.
-This user will have access to the app instead of the default root user:
-
-```dockerfile
-RUN addgroup --system app \
-    && adduser --system --ingroup app app
-```
-
-You can read more about security considerations
-[here](https://engineering.bitnami.com/articles/why-non-root-containers-are-important-for-security.html)
-and Dockerfile related code smells
-[here](https://arxiv.org/abs/2103.12298). Read
-about [best
-practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-and [linting
-rules](https://github.com/hadolint/hadolint#readme)
-in general that can be helpful in reducing vulnerabilities of your
-containerized application.
-
-The [`WORKDIR`
-instruction](https://docs.docker.com/engine/reference/builder/#workdir)
-sets the working directory for subsequent instructions. Change this to
-the home folder of the `app` user which is `/home/app`:
+Next we changed the working directory to `/home/app` that is he home folder
+of the non-privileged `app` user:
 
 ```dockerfile
 WORKDIR /home/app
 ```
 
-The [`COPY`
-instruction](https://docs.docker.com/engine/reference/builder/#copy)
-copies new files or directories from the source (our `app` folder
-containing the R script files for our Shiny app) and adds them to the
-file system of the container at the destination path (`.` refers to the
-current work directory defined at the previous step):
+The `WORKDIR` instruction sets the working directory for any 
+`RUN`, `CMD`, `ENTRYPOINT`, `COPY` and `ADD` instructions that follow it in the 
+`Dockerfile`.
+
+The `COPY` instruction copies new files or directories from the source
+and adds them to the file system of the container at the destination path.
 
 ```dockerfile
 COPY app .
 ```
 
-The next command sets permissions for the `app` user:
+The source here is the `app` folder inside the Docker build context.
+The contents of the folder, including the Shiny app files, are copied.
+The destination path `.` refers to the current work directory defined previously,
+in this case, the `/home/app` folder.
+
+Use an alternative format if the paths contain whitespace:
+`COPY ["dir with space", "."]`. 
+
+You would almost always use `COPY` in your Dockerfile, but a very similar
+instruction is `ADD`. `ADD` allows the source to be a URL, a Git
+repository, or a compressed file.
+
+Wildcards, such as `*` for multiple characters and `?` for single character,
+are supported in `COPY` and `ADD` instructions. For example
+`COPY app/*.py .` will copy only the Python scripts and nothing else.
+
+Normally when the source does not exist `docker build` exits with an error.
+An interesting feature of wildcards is that the build does not error
+if there are no matching results. For example `COPY *renv.lock .` will copy 
+the `renv.lock` file if it exists, but the build won't stop if it does not.
+
+The owner of the files and directories at the destination is the root user.
+If you want to set the user and the group so that the non-root user will
+be able to access these resources you can use the optional `--chown` flag
+that stands for change owner:
 
 ```dockerfile
+COPY --chown app:app app .
+```
+
+Here the `--chown app:app` sets the user and the group values to `app`.
+This is equivalent to the following combination of `COPY` and `RUN`:
+
+```dockerfile
+COPY app .
 RUN chown app:app -R /home/app
 ```
 
-In general, use the shell form for RUN, and the exec form for CMD and ENTRYPOINT.
-https://emmer.dev/blog/docker-shell-vs.-exec-form/
+Similarly, use the `--chmod` flag to define read/write/execute permissions.
 
-The [`USER`
-instruction](https://docs.docker.com/engine/reference/builder/#user)
-sets the user name (or UID) and optionally the user group (or GID) to
-use when running the image:
+### Switching User
 
-```dockerfile
-USER app
-```
+The `USER` instruction sets the user name to use as the default user for 
+the `ENTRYPOINT` and `CMD` commands. We used `USER app` to switch to the
+non-root `app` user.
 
-The [`EXPOSE`
-instruction](https://docs.docker.com/engine/reference/builder/#expose)
-tells Docker which ports the container listens on at runtime. Set this
-to the Shiny port defined in the `Rprofile.site` file:
+### Expose a Port
 
-```dockerfile
-EXPOSE 3838
-```
+The `EXPOSE` instruction defines the port that Docker container listens on 
+at runtime. We chose port 3838 with the `EXPOSE 3838` instruction.
+This is the container port that we connect to using the 
+`docker run -p 8080:3838 <image-name>` command.
 
-Finally, the [`CMD`
-instruction](https://docs.docker.com/engine/reference/builder/#cmd)
-closes off our `Dockerfile`. The `CMD` instruction provides the defaults
-for an executing container. There can only be one `CMD` instruction in a
-`Dockerfile` (only the last `CMD` will take effect). Our `CMD` specifies
-the executable (`"R"`) and parameters for the executable in an array.
-The `-e` option means you are running an expression that is
-`shiny::runApp('/home/app')`. The expression will run the Shiny app that
-we copied into the `/home/app` folder:
+You can pick any port, but remember that exposing a lower port number, like 
+80 (the standard HTTP port) will require elevated privileges.
+In general, we recommend using port numbers 1024 and above. Using lower
+ports will result in failures with a non-root user, such as our `app` user.
+
+### Variables
+
+The `ENV` instruction sets the default values for environment variables.
+We set two variables for the Python app to allow configs to be written
+for `matplotlib` by the `app` user:
 
 ```dockerfile
-CMD ["R", "-e", "shiny::runApp('/home/app')"]
+ENV MPLCONFIGDIR=/home/app/.config
+ENV HOME=/home/app
 ```
 
-In general, use the shell form for RUN, and the exec form for CMD and ENTRYPOINT.
-https://emmer.dev/blog/docker-shell-vs.-exec-form/
+These environment variables will be part of the final image, so do not use it
+to add secrets to the image at build time. Such environment variables should be
+added at runtime, e.g. with `docker run --env TOKEN=<token-value> <image-name>`
+or using a file as `docker run --env-file .env <image-name>` which will
+read the variables from the `.env` file.
 
-
-Build the image using `docker build` by specifying the tag (`-t`) and
-the context (`.` indicates the current directory):
+The `ARG` instruction defines a variable that users can pass at build-time.
+For example, adding `ARG GITHUB_PAT` to the Dockerfile
+would allow you to use the `remotes::install_github()` function to install
+R an package from a private GitHub repository. You can provide the toke
+value to `docker build` as:
 
 ```bash
-docker build -t registry.gitlab.com/analythium/shinyproxy-hello/hello .
+  export GITHUB_PAT=<your-token>
+docker build -t <image-tag> --build-arg="GITHUB_PAT=${GITHUB_PAT}" .
 ```
 
-You can test and push the locally build Docker image to the container as
-before.
+The token value will not be available in the container at runtime.
 
-#### Shiny host and port
+### Executable and Command
 
-When we discussed [local hosting of Shiny
-apps](https://hosting.analythium.io/run-shiny-apps-locally/) and
-`runApp`, we did not review all the possible arguments for this R
-function. Besides the app location (app object, list, file, or
-directory) there are two other important arguments:
+We got to the end of the Dockerfile. This is where we define the 
+_process_ that is executed inside the container at run time via the
+`ENTRYPOINT` instruction. This is often omitted. In that case, the default
+executable is set to `/bin/sh -c` that is the shell executable. 
+Shell is a basic command-line interpreter and the `-c`
+flag indicates that the shell will read the commands to execute from a string.
+This string is provided through the `CMD` instruction.
+For example we can add `CMD uvicorn app:app --host 0.0.0.0 --port 3838`
+is the default set of arguments supplied to the `ENTRYPOINT` process
+to start the Python Shiny app.
 
--   `host`: this defines the IP address (defaults to 'localhost':
-    127.0.0.1),
--   `port`: TCP port that the application should listen on; a random
-    port when no value provided.
+The `RUN`, `CMD`, and `ENTRYPOINT` instructions have two possible forms.
+The shell form is used mostly with the `RUN` instruction because it allows
+useful shell features like piping output and chaining commands.
+The shell form is written without square brackets and for the 
+R Shiny app would look like this:
 
-When you run the shiny app locally, you see a message
-`Listening on http://127.0.0.1:7800` or similar, which is the protocol
-(HTTP), the host address, and the port number. The Shiny app is running
-in a web server that listens to client requests and provides a response.
+```dockerfile
+CMD R -e "shiny::runApp(host='0.0.0.0', port=3838)"
+```
 
+This command will execute as child processes of the shell, and as such,
+signals like CTRL+C will not be forwarded to the child process by the shell.
+This is why it is recommended to use the so called "exec" form for `CMD` and 
+`ENTRYPOINT` instructions. The "exec" form that is written between square
+brackets. Here it is for the R version:
+
+```dockerfile
+CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]
+```
+
+And for the Python version:
+
+```dockerfile
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "3838"]
+```
+
+When we discussed local hosting of the Shiny apps we did not review all the 
+possible arguments for the R and Python commands.
+Two options here beg for introduction.
+The `host` defines the IP address that the app listens on. The default host
+value is `127.0.0.1` (also known as `localhost` or loopback address). 
+If we leave the host at its default value, we will not be able to access the 
+container from outside because localhost can only be accessed from the same 
+address. This is the reason we need to set it to `0.0.0.0` which can be accessed
+from outside of the container.
+
+The other important argument os the TCP port that the application is listening
+on. If the prot is not provided for the R Shiny command, Shiny will pick a
+random port number. We obviously do not want to guess this port, so we need to
+set it. The 3838 port number is the same as the number we exposed via the
+`EXPOSE 3838` instruction.
+
+It is possible to use an environment variable for the port number
+and substitute it in the `CMD` command:
+
+
+```dockerfile
+ENV PORT=3838
+CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=$PORT)"]
+```
+
+This way the default value is set to 3838, but you can override it at runtime
+as `docker run --env PORT=5000 <image-name>`.
