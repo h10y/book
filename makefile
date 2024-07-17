@@ -1,5 +1,5 @@
 install:
-	R -q -e 'if(!require(deps)){install.packages("deps")}'
+	R -q -e 'if(!require(deps)){install.packages(c("deps","rmarkdown"))}'
 	R -q -e 'deps::install("book-source", ask=FALSE)'
 
 build:
