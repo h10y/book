@@ -23,7 +23,7 @@
 <meta name="author" content="Péter Sólymos and Kalvin Eng" />
 
 
-<meta name="date" content="2024-07-06" />
+<meta name="date" content="2024-07-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -299,7 +299,11 @@ div.csl-indent {
 <li class="chapter" data-level="6.3.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#inspecting-the-image"><i class="fa fa-check"></i><b>6.3.3</b> Inspecting the Image</a></li>
 <li class="chapter" data-level="6.3.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-for-python"><i class="fa fa-check"></i><b>6.3.4</b> R for Python</a></li>
 </ul></li>
-<li class="chapter" data-level="6.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#managing-images-and-containers"><i class="fa fa-check"></i><b>6.4</b> Managing Images and Containers</a></li>
+<li class="chapter" data-level="6.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#managing-objects"><i class="fa fa-check"></i><b>6.4</b> Managing Objects</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#images-1"><i class="fa fa-check"></i><b>6.4.1</b> Images</a></li>
+<li class="chapter" data-level="6.4.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#containers-1"><i class="fa fa-check"></i><b>6.4.2</b> Containers</a></li>
+</ul></li>
 <li class="chapter" data-level="6.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#sharing-images"><i class="fa fa-check"></i><b>6.5</b> Sharing Images</a>
 <ul>
 <li class="chapter" data-level="6.5.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pushing-images"><i class="fa fa-check"></i><b>6.5.1</b> Pushing Images</a></li>
@@ -307,43 +311,72 @@ div.csl-indent {
 <li class="chapter" data-level="6.5.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#log-in-to-a-registry"><i class="fa fa-check"></i><b>6.5.3</b> Log In to a Registry</a></li>
 <li class="chapter" data-level="6.5.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#local-registry"><i class="fa fa-check"></i><b>6.5.4</b> Local Registry</a></li>
 </ul></li>
-<li class="chapter" data-level="6.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile-1"><i class="fa fa-check"></i><b>6.6</b> The Dockerfile</a></li>
-<li class="chapter" data-level="6.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shiny-apps-with-dependencies-use-bananas"><i class="fa fa-check"></i><b>6.7</b> Shiny Apps With Dependencies (use bananas)</a>
+<li class="chapter" data-level="6.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-dockerfile-1"><i class="fa fa-check"></i><b>6.6</b> The Dockerfile</a>
 <ul>
-<li class="chapter" data-level="6.7.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#parent-images"><i class="fa fa-check"></i><b>6.7.1</b> Parent Images</a></li>
-<li class="chapter" data-level="6.7.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#system-libraries"><i class="fa fa-check"></i><b>6.7.2</b> system libraries</a></li>
-<li class="chapter" data-level="6.7.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-dependencies"><i class="fa fa-check"></i><b>6.7.3</b> R dependencies</a></li>
-<li class="chapter" data-level="6.7.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#python-requirements"><i class="fa fa-check"></i><b>6.7.4</b> Python requirements</a></li>
+<li class="chapter" data-level="6.6.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#the-parent-image"><i class="fa fa-check"></i><b>6.6.1</b> The Parent Image</a></li>
+<li class="chapter" data-level="6.6.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#metadata"><i class="fa fa-check"></i><b>6.6.2</b> Metadata</a></li>
+<li class="chapter" data-level="6.6.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#dependencies"><i class="fa fa-check"></i><b>6.6.3</b> Dependencies</a></li>
+<li class="chapter" data-level="6.6.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#directories-and-files"><i class="fa fa-check"></i><b>6.6.4</b> Directories and Files</a></li>
+<li class="chapter" data-level="6.6.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#switching-user"><i class="fa fa-check"></i><b>6.6.5</b> Switching User</a></li>
+<li class="chapter" data-level="6.6.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#expose-a-port"><i class="fa fa-check"></i><b>6.6.6</b> Expose a Port</a></li>
+<li class="chapter" data-level="6.6.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#variables"><i class="fa fa-check"></i><b>6.6.7</b> Variables</a></li>
+<li class="chapter" data-level="6.6.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#executable-and-command"><i class="fa fa-check"></i><b>6.6.8</b> Executable and Command</a></li>
 </ul></li>
-<li class="chapter" data-level="6.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#best-practices"><i class="fa fa-check"></i><b>6.8</b> Best Practices</a>
+<li class="chapter" data-level="6.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#parent-images"><i class="fa fa-check"></i><b>6.7</b> Parent Images</a>
 <ul>
-<li class="chapter" data-level="6.8.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#minimize-dependencies"><i class="fa fa-check"></i><b>6.8.1</b> Minimize dependencies</a></li>
-<li class="chapter" data-level="6.8.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#use-caching"><i class="fa fa-check"></i><b>6.8.2</b> Use caching</a></li>
-<li class="chapter" data-level="6.8.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#order-layers"><i class="fa fa-check"></i><b>6.8.3</b> Order layers</a></li>
-<li class="chapter" data-level="6.8.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#switch-user"><i class="fa fa-check"></i><b>6.8.4</b> Switch user</a></li>
-<li class="chapter" data-level="6.8.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds"><i class="fa fa-check"></i><b>6.8.5</b> Multi-stage Builds</a></li>
-<li class="chapter" data-level="6.8.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#other-considerations"><i class="fa fa-check"></i><b>6.8.6</b> Other considerations</a></li>
+<li class="chapter" data-level="6.7.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#popular-parent-images-for-r"><i class="fa fa-check"></i><b>6.7.1</b> Popular Parent Images for R</a></li>
+<li class="chapter" data-level="6.7.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#popular-parent-images-for-python"><i class="fa fa-check"></i><b>6.7.2</b> Popular Parent Images for Python</a></li>
 </ul></li>
-<li class="chapter" data-level="6.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#what-else"><i class="fa fa-check"></i><b>6.9</b> WHAT ELSE</a>
+<li class="chapter" data-level="6.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#installing-system-libraries"><i class="fa fa-check"></i><b>6.8</b> Installing System Libraries</a>
 <ul>
-<li class="chapter" data-level="6.9.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#layers-and-caching"><i class="fa fa-check"></i><b>6.9.1</b> Layers and Caching</a></li>
-<li class="chapter" data-level="6.9.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#hardware-architectures"><i class="fa fa-check"></i><b>6.9.2</b> Hardware Architectures</a></li>
-<li class="chapter" data-level="6.9.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds-1"><i class="fa fa-check"></i><b>6.9.3</b> Multi-stage builds</a></li>
-<li class="chapter" data-level="6.9.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#mounting-volumes"><i class="fa fa-check"></i><b>6.9.4</b> Mounting volumes</a></li>
-<li class="chapter" data-level="6.9.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#ports"><i class="fa fa-check"></i><b>6.9.5</b> Ports</a></li>
-<li class="chapter" data-level="6.9.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#uid"><i class="fa fa-check"></i><b>6.9.6</b> UID</a></li>
-<li class="chapter" data-level="6.9.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting"><i class="fa fa-check"></i><b>6.9.7</b> Troubleshooting</a></li>
-<li class="chapter" data-level="6.9.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shinylive-1"><i class="fa fa-check"></i><b>6.9.8</b> Shinylive</a></li>
-<li class="chapter" data-level="6.9.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#rmd"><i class="fa fa-check"></i><b>6.9.9</b> Rmd</a></li>
-<li class="chapter" data-level="6.9.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#quarto-1"><i class="fa fa-check"></i><b>6.9.10</b> Quarto</a></li>
-<li class="chapter" data-level="6.9.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#using-buildkit"><i class="fa fa-check"></i><b>6.9.11</b> Using BuildKit</a></li>
+<li class="chapter" data-level="6.8.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#manually-installation"><i class="fa fa-check"></i><b>6.8.1</b> Manually Installation</a></li>
+<li class="chapter" data-level="6.8.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#automated-dependency-resolution-with-r2u"><i class="fa fa-check"></i><b>6.8.2</b> Automated Dependency Resolution with r2u</a></li>
+<li class="chapter" data-level="6.8.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#dependencies-on-alpine-linux"><i class="fa fa-check"></i><b>6.8.3</b> Dependencies on Alpine Linux</a></li>
 </ul></li>
-<li class="chapter" data-level="6.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-orchestration"><i class="fa fa-check"></i><b>6.10</b> Container Orchestration</a>
+<li class="chapter" data-level="6.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#installing-r-packages"><i class="fa fa-check"></i><b>6.9</b> Installing R Packages</a>
 <ul>
-<li class="chapter" data-level="6.10.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-compose"><i class="fa fa-check"></i><b>6.10.1</b> Docker Compose</a></li>
+<li class="chapter" data-level="6.9.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#explicitly-stating-dependencies"><i class="fa fa-check"></i><b>6.9.1</b> Explicitly Stating Dependencies</a></li>
+<li class="chapter" data-level="6.9.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#using-the-description-file"><i class="fa fa-check"></i><b>6.9.2</b> Using the DESCRIPTION File</a></li>
+<li class="chapter" data-level="6.9.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#using-renv"><i class="fa fa-check"></i><b>6.9.3</b> Using renv</a></li>
+<li class="chapter" data-level="6.9.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#using-deps"><i class="fa fa-check"></i><b>6.9.4</b> Using deps</a></li>
 </ul></li>
-<li class="chapter" data-level="6.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting-1"><i class="fa fa-check"></i><b>6.11</b> Troubleshooting</a></li>
-<li class="chapter" data-level="6.12" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#summary-5"><i class="fa fa-check"></i><b>6.12</b> Summary</a></li>
+<li class="chapter" data-level="6.10" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#python-requirements"><i class="fa fa-check"></i><b>6.10</b> Python requirements</a>
+<ul>
+<li class="chapter" data-level="6.10.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#renv"><i class="fa fa-check"></i><b>6.10.1</b> renv</a></li>
+<li class="chapter" data-level="6.10.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#pip"><i class="fa fa-check"></i><b>6.10.2</b> pip</a></li>
+<li class="chapter" data-level="6.10.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#other-options-for-python"><i class="fa fa-check"></i><b>6.10.3</b> Other options for python</a></li>
+</ul></li>
+<li class="chapter" data-level="6.11" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#dynamic-shiny-apps"><i class="fa fa-check"></i><b>6.11</b> Dynamic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.11.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-2"><i class="fa fa-check"></i><b>6.11.1</b> R</a></li>
+<li class="chapter" data-level="6.11.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#python-1"><i class="fa fa-check"></i><b>6.11.2</b> Python</a></li>
+<li class="chapter" data-level="6.11.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#r-markdown-1"><i class="fa fa-check"></i><b>6.11.3</b> R Markdown</a></li>
+<li class="chapter" data-level="6.11.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#quarto-with-r-1"><i class="fa fa-check"></i><b>6.11.4</b> Quarto with R</a></li>
+<li class="chapter" data-level="6.11.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#quarto-with-python-1"><i class="fa fa-check"></i><b>6.11.5</b> Quarto with Python</a></li>
+<li class="chapter" data-level="6.11.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#shiny-server"><i class="fa fa-check"></i><b>6.11.6</b> Shiny Server</a></li>
+</ul></li>
+<li class="chapter" data-level="6.12" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#static-shiny-apps"><i class="fa fa-check"></i><b>6.12</b> Static Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.12.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#multi-stage-builds"><i class="fa fa-check"></i><b>6.12.1</b> Multi-stage Builds</a></li>
+</ul></li>
+<li class="chapter" data-level="6.13" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#best-practices"><i class="fa fa-check"></i><b>6.13</b> Best Practices</a>
+<ul>
+<li class="chapter" data-level="6.13.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#parent-images-1"><i class="fa fa-check"></i><b>6.13.1</b> Parent Images</a></li>
+<li class="chapter" data-level="6.13.2" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#minimize-dependencies"><i class="fa fa-check"></i><b>6.13.2</b> Minimize Dependencies</a></li>
+<li class="chapter" data-level="6.13.3" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#cache-and-order-layers"><i class="fa fa-check"></i><b>6.13.3</b> Cache and Order Layers</a></li>
+<li class="chapter" data-level="6.13.4" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#switch-to-non-root-user"><i class="fa fa-check"></i><b>6.13.4</b> Switch to Non-root User</a></li>
+<li class="chapter" data-level="6.13.5" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#do-not-store-sensitive-info"><i class="fa fa-check"></i><b>6.13.5</b> Do Not Store Sensitive Info</a></li>
+<li class="chapter" data-level="6.13.6" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#security-scanning"><i class="fa fa-check"></i><b>6.13.6</b> Security Scanning</a></li>
+<li class="chapter" data-level="6.13.7" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#readability"><i class="fa fa-check"></i><b>6.13.7</b> Readability</a></li>
+<li class="chapter" data-level="6.13.8" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#automation-maybe-leave-this-for-later"><i class="fa fa-check"></i><b>6.13.8</b> Automation (maybe leave this for later)</a></li>
+<li class="chapter" data-level="6.13.9" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#other-things-to-mention"><i class="fa fa-check"></i><b>6.13.9</b> Other things to mention</a></li>
+</ul></li>
+<li class="chapter" data-level="6.14" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#container-orchestration"><i class="fa fa-check"></i><b>6.14</b> Container Orchestration</a>
+<ul>
+<li class="chapter" data-level="6.14.1" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#docker-compose"><i class="fa fa-check"></i><b>6.14.1</b> Docker Compose</a></li>
+</ul></li>
+<li class="chapter" data-level="6.15" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#troubleshooting"><i class="fa fa-check"></i><b>6.15</b> Troubleshooting</a></li>
+<li class="chapter" data-level="6.16" data-path="6-containerizing-shiny-apps.html"><a href="6-containerizing-shiny-apps.html#summary-5"><i class="fa fa-check"></i><b>6.16</b> Summary</a></li>
 </ul></li>
 <li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
 <li class="chapter" data-level="7" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html"><i class="fa fa-check"></i><b>7</b> A Review of Shiny Hosting Options</a>
@@ -369,13 +402,13 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="7.12.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#systemd"><i class="fa fa-check"></i><b>7.12.1</b> systemd</a></li>
 </ul></li>
-<li class="chapter" data-level="7.13" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-shiny-apps"><i class="fa fa-check"></i><b>7.13</b> Static Shiny Apps</a>
+<li class="chapter" data-level="7.13" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-shiny-apps-1"><i class="fa fa-check"></i><b>7.13</b> Static Shiny Apps</a>
 <ul>
 <li class="chapter" data-level="7.13.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-without-containers-r-vs-python"><i class="fa fa-check"></i><b>7.13.1</b> Compiling without containers (R vs Python)</a></li>
 <li class="chapter" data-level="7.13.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#compiling-with-containers"><i class="fa fa-check"></i><b>7.13.2</b> Compiling with containers</a></li>
 <li class="chapter" data-level="7.13.3" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#static-hosting-options"><i class="fa fa-check"></i><b>7.13.3</b> Static Hosting Options</a></li>
 </ul></li>
-<li class="chapter" data-level="7.14" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#dynamic-shiny-apps"><i class="fa fa-check"></i><b>7.14</b> Dynamic Shiny Apps</a>
+<li class="chapter" data-level="7.14" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#dynamic-shiny-apps-1"><i class="fa fa-check"></i><b>7.14</b> Dynamic Shiny Apps</a>
 <ul>
 <li class="chapter" data-level="7.14.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#hosting-platforms-paas"><i class="fa fa-check"></i><b>7.14.1</b> Hosting platforms (PaaS)</a></li>
 <li class="chapter" data-level="7.14.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#reverse-proxy-required"><i class="fa fa-check"></i><b>7.14.2</b> Reverse Proxy Required</a></li>
@@ -383,8 +416,8 @@ div.csl-indent {
 <li class="chapter" data-level="7.15" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-static-files-with-shinylive"><i class="fa fa-check"></i><b>7.15</b> Deploying Static Files with Shinylive</a></li>
 <li class="chapter" data-level="7.16" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#deploying-shiny-apps-to-shinyapps.io"><i class="fa fa-check"></i><b>7.16</b> Deploying Shiny Apps to Shinyapps.io</a>
 <ul>
-<li class="chapter" data-level="7.16.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#r-2"><i class="fa fa-check"></i><b>7.16.1</b> R</a></li>
-<li class="chapter" data-level="7.16.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#python-1"><i class="fa fa-check"></i><b>7.16.2</b> Python</a></li>
+<li class="chapter" data-level="7.16.1" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#r-3"><i class="fa fa-check"></i><b>7.16.1</b> R</a></li>
+<li class="chapter" data-level="7.16.2" data-path="7-a-review-of-shiny-hosting-options.html"><a href="7-a-review-of-shiny-hosting-options.html#python-2"><i class="fa fa-check"></i><b>7.16.2</b> Python</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="8-considerations-hosting.html"><a href="8-considerations-hosting.html"><i class="fa fa-check"></i><b>8</b> Considerations for Hosting Production Shiny Apps</a>
@@ -415,7 +448,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-python-version"><i class="fa fa-check"></i>The Python Version</a></li>
 <li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#the-r-version"><i class="fa fa-check"></i>The R Version</a></li>
-<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#shinylive-2"><i class="fa fa-check"></i>Shinylive</a></li>
+<li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#shinylive-1"><i class="fa fa-check"></i>Shinylive</a></li>
 <li class="chapter" data-level="" data-path="appendix-lb-app.html"><a href="appendix-lb-app.html#test-load-balancing"><i class="fa fa-check"></i>Test Load Balancing</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="appendix-how-to-pick.html"><a href="appendix-how-to-pick.html"><i class="fa fa-check"></i>How to Pick the Right Hosting Option</a>
@@ -552,20 +585,19 @@ folder and put this inside the file:</p>
 <span id="cb7-20"><a href="5-developing-shiny-apps.html#cb7-20" tabindex="-1"></a>)</span>
 <span id="cb7-21"><a href="5-developing-shiny-apps.html#cb7-21" tabindex="-1"></a></span>
 <span id="cb7-22"><a href="5-developing-shiny-apps.html#cb7-22" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
-<span id="cb7-23"><a href="5-developing-shiny-apps.html#cb7-23" tabindex="-1"></a>    <span class="at">@output</span></span>
-<span id="cb7-24"><a href="5-developing-shiny-apps.html#cb7-24" tabindex="-1"></a>    <span class="at">@render.plot</span>(alt<span class="op">=</span><span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
-<span id="cb7-25"><a href="5-developing-shiny-apps.html#cb7-25" tabindex="-1"></a>    <span class="kw">def</span> histogram():</span>
-<span id="cb7-26"><a href="5-developing-shiny-apps.html#cb7-26" tabindex="-1"></a>        plt.hist(</span>
-<span id="cb7-27"><a href="5-developing-shiny-apps.html#cb7-27" tabindex="-1"></a>            x, </span>
-<span id="cb7-28"><a href="5-developing-shiny-apps.html#cb7-28" tabindex="-1"></a>            bins <span class="op">=</span> <span class="bu">input</span>.n(), </span>
-<span id="cb7-29"><a href="5-developing-shiny-apps.html#cb7-29" tabindex="-1"></a>            density<span class="op">=</span><span class="va">False</span>, </span>
-<span id="cb7-30"><a href="5-developing-shiny-apps.html#cb7-30" tabindex="-1"></a>            color<span class="op">=</span><span class="st">&quot;#BB74DB&quot;</span>,</span>
-<span id="cb7-31"><a href="5-developing-shiny-apps.html#cb7-31" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;white&quot;</span>)</span>
-<span id="cb7-32"><a href="5-developing-shiny-apps.html#cb7-32" tabindex="-1"></a>        plt.title(<span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
-<span id="cb7-33"><a href="5-developing-shiny-apps.html#cb7-33" tabindex="-1"></a>        plt.xlabel(<span class="st">&quot;Waiting time to next eruption [mins]&quot;</span>)</span>
-<span id="cb7-34"><a href="5-developing-shiny-apps.html#cb7-34" tabindex="-1"></a>        plt.ylabel(<span class="st">&quot;Frequency&quot;</span>)</span>
-<span id="cb7-35"><a href="5-developing-shiny-apps.html#cb7-35" tabindex="-1"></a></span>
-<span id="cb7-36"><a href="5-developing-shiny-apps.html#cb7-36" tabindex="-1"></a>app <span class="op">=</span> App(ui <span class="op">=</span> app_ui, server <span class="op">=</span> server)</span></code></pre></div>
+<span id="cb7-23"><a href="5-developing-shiny-apps.html#cb7-23" tabindex="-1"></a>    <span class="at">@render.plot</span>(alt<span class="op">=</span><span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
+<span id="cb7-24"><a href="5-developing-shiny-apps.html#cb7-24" tabindex="-1"></a>    <span class="kw">def</span> histogram():</span>
+<span id="cb7-25"><a href="5-developing-shiny-apps.html#cb7-25" tabindex="-1"></a>        plt.hist(</span>
+<span id="cb7-26"><a href="5-developing-shiny-apps.html#cb7-26" tabindex="-1"></a>            x, </span>
+<span id="cb7-27"><a href="5-developing-shiny-apps.html#cb7-27" tabindex="-1"></a>            bins <span class="op">=</span> <span class="bu">input</span>.n(), </span>
+<span id="cb7-28"><a href="5-developing-shiny-apps.html#cb7-28" tabindex="-1"></a>            density<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb7-29"><a href="5-developing-shiny-apps.html#cb7-29" tabindex="-1"></a>            color<span class="op">=</span><span class="st">&quot;#BB74DB&quot;</span>,</span>
+<span id="cb7-30"><a href="5-developing-shiny-apps.html#cb7-30" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;white&quot;</span>)</span>
+<span id="cb7-31"><a href="5-developing-shiny-apps.html#cb7-31" tabindex="-1"></a>        plt.title(<span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
+<span id="cb7-32"><a href="5-developing-shiny-apps.html#cb7-32" tabindex="-1"></a>        plt.xlabel(<span class="st">&quot;Waiting time to next eruption [mins]&quot;</span>)</span>
+<span id="cb7-33"><a href="5-developing-shiny-apps.html#cb7-33" tabindex="-1"></a>        plt.ylabel(<span class="st">&quot;Frequency&quot;</span>)</span>
+<span id="cb7-34"><a href="5-developing-shiny-apps.html#cb7-34" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="5-developing-shiny-apps.html#cb7-35" tabindex="-1"></a>app <span class="op">=</span> App(ui <span class="op">=</span> app_ui, server <span class="op">=</span> server)</span></code></pre></div>
 <p>Besides Shiny, you’ll need to have the <code>seaborn</code> and <code>matplotlib</code> libraries
 installed for the geyser data set and the histogram. R has these functions as
 part of the base distribution, so no additional installation is needed.
@@ -717,25 +749,24 @@ app. Changes in <code>input</code> (<code>input$n</code> here) will invalidate r
 reference these reactive dependencies
 and cause the relevant render functions (<code>renderPlot()</code> here) to re-execute.</p>
 <p>We can see some differences in the Python version.
-Shiny for Python uses decorators (e.g. <code>@output</code>) instead of
+Shiny for Python uses decorators (e.g. <code>@render</code>) instead of
 render functions and inputs are invoked as <code>input.n()</code>.
 (See the <a href="https://shiny.posit.co/py/docs/comp-r-shiny.html">Framework Comparisons</a>
 section of the Shiny for Python documentation for a detailed overview of
 R vs. Python similarities and differences.)</p>
-<p>FIXME: KALVIN please explain here the <code>@output</code> part etc.</p>
+<p>FIXME: KALVIN please explain here the decorators etc. as needed.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="5-developing-shiny-apps.html#cb14-1" tabindex="-1"></a><span class="kw">def</span> server(<span class="bu">input</span>, output, session):</span>
-<span id="cb14-2"><a href="5-developing-shiny-apps.html#cb14-2" tabindex="-1"></a>    <span class="at">@output</span></span>
-<span id="cb14-3"><a href="5-developing-shiny-apps.html#cb14-3" tabindex="-1"></a>    <span class="at">@render.plot</span>(alt<span class="op">=</span><span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
-<span id="cb14-4"><a href="5-developing-shiny-apps.html#cb14-4" tabindex="-1"></a>    <span class="kw">def</span> histogram():</span>
-<span id="cb14-5"><a href="5-developing-shiny-apps.html#cb14-5" tabindex="-1"></a>        plt.hist(</span>
-<span id="cb14-6"><a href="5-developing-shiny-apps.html#cb14-6" tabindex="-1"></a>            x, </span>
-<span id="cb14-7"><a href="5-developing-shiny-apps.html#cb14-7" tabindex="-1"></a>            bins <span class="op">=</span> <span class="bu">input</span>.n(), </span>
-<span id="cb14-8"><a href="5-developing-shiny-apps.html#cb14-8" tabindex="-1"></a>            density<span class="op">=</span><span class="va">False</span>, </span>
-<span id="cb14-9"><a href="5-developing-shiny-apps.html#cb14-9" tabindex="-1"></a>            color<span class="op">=</span><span class="st">&quot;#BB74DB&quot;</span>,</span>
-<span id="cb14-10"><a href="5-developing-shiny-apps.html#cb14-10" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;white&quot;</span>)</span>
-<span id="cb14-11"><a href="5-developing-shiny-apps.html#cb14-11" tabindex="-1"></a>        plt.title(<span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
-<span id="cb14-12"><a href="5-developing-shiny-apps.html#cb14-12" tabindex="-1"></a>        plt.xlabel(<span class="st">&quot;Waiting time to next eruption [mins]&quot;</span>)</span>
-<span id="cb14-13"><a href="5-developing-shiny-apps.html#cb14-13" tabindex="-1"></a>        plt.ylabel(<span class="st">&quot;Frequency&quot;</span>)</span></code></pre></div>
+<span id="cb14-2"><a href="5-developing-shiny-apps.html#cb14-2" tabindex="-1"></a>    <span class="at">@render.plot</span>(alt<span class="op">=</span><span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
+<span id="cb14-3"><a href="5-developing-shiny-apps.html#cb14-3" tabindex="-1"></a>    <span class="kw">def</span> histogram():</span>
+<span id="cb14-4"><a href="5-developing-shiny-apps.html#cb14-4" tabindex="-1"></a>        plt.hist(</span>
+<span id="cb14-5"><a href="5-developing-shiny-apps.html#cb14-5" tabindex="-1"></a>            x, </span>
+<span id="cb14-6"><a href="5-developing-shiny-apps.html#cb14-6" tabindex="-1"></a>            bins <span class="op">=</span> <span class="bu">input</span>.n(), </span>
+<span id="cb14-7"><a href="5-developing-shiny-apps.html#cb14-7" tabindex="-1"></a>            density<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb14-8"><a href="5-developing-shiny-apps.html#cb14-8" tabindex="-1"></a>            color<span class="op">=</span><span class="st">&quot;#BB74DB&quot;</span>,</span>
+<span id="cb14-9"><a href="5-developing-shiny-apps.html#cb14-9" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;white&quot;</span>)</span>
+<span id="cb14-10"><a href="5-developing-shiny-apps.html#cb14-10" tabindex="-1"></a>        plt.title(<span class="st">&quot;Histogram of waiting times&quot;</span>)</span>
+<span id="cb14-11"><a href="5-developing-shiny-apps.html#cb14-11" tabindex="-1"></a>        plt.xlabel(<span class="st">&quot;Waiting time to next eruption [mins]&quot;</span>)</span>
+<span id="cb14-12"><a href="5-developing-shiny-apps.html#cb14-12" tabindex="-1"></a>        plt.ylabel(<span class="st">&quot;Frequency&quot;</span>)</span></code></pre></div>
 <p>The server function is called once for each Shiny session.
 A new session with a new websocket connection is created every time a web
 browser connects to the Shiny application.</p>
@@ -937,7 +968,7 @@ You can see how the import statement is structured at the beginning, and how a
 Shiny module is used for the <code>ui</code> and <code>server</code>:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="5-developing-shiny-apps.html#cb23-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
 <span id="cb23-2"><a href="5-developing-shiny-apps.html#cb23-2" tabindex="-1"></a>  shiny[fixedPage, moduleServer, NS, plotOutput, sliderInput, </span>
-<span id="cb23-3"><a href="5-developing-shiny-apps.html#cb23-3" tabindex="-1"></a>    renderPlot],</span>
+<span id="cb23-3"><a href="5-developing-shiny-apps.html#cb23-3" tabindex="-1"></a>    renderPlot, h2],</span>
 <span id="cb23-4"><a href="5-developing-shiny-apps.html#cb23-4" tabindex="-1"></a>  graphics[hist, box],</span>
 <span id="cb23-5"><a href="5-developing-shiny-apps.html#cb23-5" tabindex="-1"></a>  datasets[faithful],</span>
 <span id="cb23-6"><a href="5-developing-shiny-apps.html#cb23-6" tabindex="-1"></a>)</span>
@@ -1568,7 +1599,7 @@ whereas Pyodide is a port of Python and many Python packages compiled to WASM.</
 the <a href="https://github.com/posit-dev/py-shinylive"><code>posit-dev/py-shinylive</code></a> GitHub repository.
 First, export the app inside the <code>py-shiny</code> folder with the single-file app
 and put the Shinylive version in the <code>py-shinylive</code> folder:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb52-1"><a href="5-developing-shiny-apps.html#cb52-1" tabindex="-1"></a><span class="ex">shinylive</span> export python py-shinylive</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb52-1"><a href="5-developing-shiny-apps.html#cb52-1" tabindex="-1"></a><span class="ex">shinylive</span> export py-shiny py-shinylive</span></code></pre></div>
 <p>The Shiny live version will consist of <em>static</em> files, which means that we can
 copy these files to any static hosting site (like Netlify or GitHub Pages),
 and a browser will be able to display the contents irrespective of the
@@ -1605,7 +1636,7 @@ be gone (port 8000 is the default port for <code>http.server</code>).</p>
 Here is how to create an R Shinylive version of the <em>Hello Shiny</em> app
 following the <a href="https://github.com/posit-dev/r-shinylive/"><code>posit-dev/r-shinylive</code></a>
 GitHub repository using the interactive R console:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="5-developing-shiny-apps.html#cb55-1" tabindex="-1"></a>shinylive<span class="sc">::</span><span class="fu">export</span>(<span class="st">&quot;r&quot;</span>, <span class="st">&quot;r-shinylive&quot;</span>)</span>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="5-developing-shiny-apps.html#cb55-1" tabindex="-1"></a>shinylive<span class="sc">::</span><span class="fu">export</span>(<span class="st">&quot;r-shiny&quot;</span>, <span class="st">&quot;r-shinylive&quot;</span>)</span>
 <span id="cb55-2"><a href="5-developing-shiny-apps.html#cb55-2" tabindex="-1"></a>httpuv<span class="sc">::</span><span class="fu">runStaticServer</span>(<span class="st">&quot;r-shinylive&quot;</span>)</span></code></pre></div>
 <p>The first line compiles the Shiny app that is inside the <code>r-shiny</code> folder into
 the Shinylive version in the <code>r-shinylive</code> folder.
