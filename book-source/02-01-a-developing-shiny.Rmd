@@ -39,7 +39,7 @@ if (is_latex_output()) {
 
 The Old Faithful (`faithful`) app is a relatively simple example that is concise enough to 
 demonstrate the structure of Shiny apps with the basics of reactivity.
-It draws a histogram based on the Old Faithful geyser waiting times.
+It draws a histogram based on the Old Faithful geyser waiting times in Yellowstone National Park.
 The number of bins in the histogram can be changed by the user with a slider.
 
 The source code for the different builds of the Old Faithful Shiny app is at
@@ -135,10 +135,9 @@ def server(input, output, session):
 app = App(ui = app_ui, server = server)
 ```
 
-Besides Shiny, you'll need to have the `seaborn` and `matplotlib` libraries 
-installed for the geyser data set and the histogram. R has these functions as 
-part of the base distribution, so no additional installation is needed. 
-Install Python dependencies from the `requirements.txt` file with 
+Besides Shiny, you'll need to have the `seaborn` library installed to load the dataset and the `matplotlib` library installed to visualize the geyser data set with a histogram. R has these functions as 
+part of the base distribution, so no additional installation is needed. You can 
+install the Python dependencies from the `requirements.txt` file with 
 `pip install -r py-shiny/requirements.txt`. Here are the contents of 
 the `requirements.txt` file:
 
@@ -149,11 +148,9 @@ matplotlib
 seaborn
 ```
 
-You have probably noticed the similarities between the R and Python versions.
-Both started with loading/importing libraries and defining a globally available
-that contained the Old Faithful geyser waiting times. The files then defined
+You have probably noticed the similarities between the R and Python versions. Both begin by loading/importing libraries and defining a globally available variable that contains the Old Faithful geyser waiting times. The files then define
 the user interface (`app_ui`) and the `server` function. At the end,
-we defined the Shiny app as `shinyApp(ui = app_ui, server = server)` and
+the Shiny app is defined as `shinyApp(ui = app_ui, server = server)` and
 `App(ui = app_ui, server = server)`.
 Now let us explore the user interface and the server function.
 
@@ -220,9 +217,8 @@ Shiny. The final HTML page will also contain all the JavaScript and CSS
 dependencies required to make the app interactive and styled properly.
 
 The Python UI uses the `ui` object imported from `shiny`. The setup is very 
-similar to the R setup, but naming conventions are slightly different 
-(`fixedPage` vs. `page_fixed`, `plotOutput` vs. `output_plot` and
-`sliderInput` vs. `input_slider`).
+similar to the R setup, but naming conventions are slightly different. Python uses the snake case naming convention (e.g. `page_fixed`, `output_plot`, and `input_slider`). While R uses the camel case naming convention (e.g. `fixedPage`, `plotOutput`, and
+`sliderInput`).
 
 ```python
 app_ui = ui.page_fixed(
@@ -278,8 +274,8 @@ The only difference relative to the R output is that you can see the `<html>`,
 ### The Server Function
 
 The server function contains the instructions for the reactivity needed
-for the Shiny app. The server function takes two arguments: `input` and
-`output` (sometimes also `session`). These reactive objects are created
+for the Shiny app. The server function takes mainly two arguments: `input` and
+`output`. Sometimes the server function also takes `session`. These reactive objects are created
 by Shiny and passed to the server function.
 
 `input` is used to pass the control values, in this case, `input$n`,
@@ -321,8 +317,6 @@ render functions and inputs are invoked as `input.n()`.
 section of the Shiny for Python documentation for a detailed overview of 
 R vs. Python similarities and differences.)
 
-FIXME: KALVIN please explain here the decorators etc. as needed.
-
 ```python
 def server(input, output, session):
     @render.plot(alt="Histogram of waiting times")
@@ -338,9 +332,17 @@ def server(input, output, session):
         plt.ylabel("Frequency")
 ```
 
-The server function is called once for each Shiny session. 
-A new session with a new websocket connection is created every time a web 
-browser connects to the Shiny application.
+The server function is called once for each Shiny session in Python. Like the R version of Shiny, it also takes in as arguments: `input`, `output`, and `session`. 
+
+The `input` object stores reactive values. For example, `input.n()` means that when a reactive value `input.n()` is changed, a reactive function that uses `input.n()` will be triggered to re-render. The reactive function for `input.n()` in the Python code is `histogram` which is made reactive with the `render.plot` Python decorator.
+
+Python decorators are a design pattern to modify a function by wrapping a function into another function. For example, the `@render.plot` decorator is a function that wraps the `histogram` function making it a reactive expression. The `histogram` function creates a plot, and the `@render.plot` attempts to retrieve the created plot by the `histogram` and renders it as `histogram` to the `output` object that can be called by a Shiny `ui` object. The use of the `output` object is similar to R, where reactive output objects such as `histogram` are stored.
+
+Finally, session refers to a connection made by a client to the Shiny application. A new session with a new websocket connection is created every time a web browser connects to the Shiny application. It should be noted that code outside the `server` function runs once per application startup and not per user session.
+
+In short, like R Shiny, `input` and `output` together describe the state of the
+app. When changes are made to an `input`, their corresponding reactive expressions are re-excuted and their results are stored in the `output` object.
+
 
 ### Shiny Express
 
@@ -348,7 +350,7 @@ Python for Shiny has two different syntax options, Shiny Core that you saw
 in the previous sections, and [Shiny Express](https://shiny.posit.co/py/docs/express-vs-core.html).
 Shiny Core drew inspiration from the original Shiny for R framework, 
 but is _not_ a literal port of Shiny for R.
-Shiny Expressed was introduced quite recently, and is focused on making it 
+Shiny Express was introduced quite recently, and is focused on making it 
 easier for beginners to use Shiny, and might feel more natural to Python users.
 
 Shiny Core offers the separation between the UI and the server components, 
@@ -489,7 +491,7 @@ the model we trained earlier. There is also the file `functions.R` in the `R`
 folder that gets source automatically.
 
 It is important to note, that functions defined inside the files of the `R` 
-folder, or anything the you `source()` (e.g. `source("R/functions.R")`) will 
+folder, or anything that you `source()` (e.g. `source("R/functions.R")`) will 
 be added to the global environment. If you want a sourced file to have
 local scope, you can include that for example inside your server function as 
 `source("functions.R", local = TRUE)`.
@@ -519,28 +521,40 @@ bananas/py-shiny
 └── requirements.txt
 ```
 
-Sourcing files in Python works slight differently in Python. It is not like
-adding scripts inline as you saw for R. But rather it follows the same
-namespace pattern as importing from libraries.
+Separating files works slightly different in Python. Instead of sourcing scripts inline like you saw for R, you must import the objects and variables from separated files similar to importing from libraries as Python considers a `.py` file as a "module".  
 
 These are the first few lines of the `app.py` file:
 
 ```python
 # bananas/py-shiny/app.py
 from shiny import App, render, reactive, ui
-from functions import *
+import functions
 [...]
 ```
 
 We import objects from `shiny`, then import everything from the `functions.py`
-file. We define plotting helper functions in this file. But we also have to 
-import libraries used inside `functions.py` within the scope of that file:
+file into the `functions` namespace which is used to define plotting helper functions. 
 
-FIXME: KALVIN please clarify this to be clear for python users
+To call anything that appeared in the `functions.py` in `app.py`, we prepend `functions.` to any functions or objects in `functions.py`:
 
 ```python
 # bananas/py-shiny/app.py
-import plotly.graph_objects as go
+[...]
+    ternary = functions.go.FigureWidget(
+        data=[
+            functions.trace_fun(
+                x[x.ripeness == "Under"], "#576a26", "Under"
+            ),
+            functions.trace_fun(
+                x[x.ripeness == "Ripe"], "#eece5a", "Ripe"
+            ),
+            functions.trace_fun(
+                x[x.ripeness == "Very"], "#966521", "Very"
+            ),
+            functions.trace_fun(
+                x[x.ripeness == "Over"], "#261d19", "Over"
+            ),
+            functions.trace_fun(pd.DataFrame([{
 [...]
 ```
 

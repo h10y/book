@@ -271,6 +271,6 @@ dependencies installed, sometimes with specific versions of the libraries.
 As you will see in the next chapter, sharing the app as a Docker image
 is also an option. This might help with having a runtime environment and
 managing dependencies, but again, your users will need to understand and use 
-Docker that can be often too much to ask for.
+Docker and that can be often too much to ask for.
 So the real reason we are talking about Docker is that it can help you host the
 app.

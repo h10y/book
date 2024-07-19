@@ -514,13 +514,11 @@ The `DOCKER_DEFAULT_PLATFORM` environment variable is not strictly necessary,
 but it can save you some headaches on Mac OS X when the platform for parent 
 images is not matching the local ARM64 architecture of your Apple Silicone.
 
-## Managing Objects
+## Managing Images
 
-There are a few commands that you need to know to manage your Docker objects,
-such as images and containers, in the absence of the Docker Desktop interface.
+There are a few commands that you need to know to manage your Docker images 
+in the absence of the Docker Desktop interface.
 This will pay off later when you have no such luxuries on a server.
-
-### Images
 
 To list the Docker images, use the `docker images` command. It will give you
 a quick summary of the images:
@@ -550,42 +548,6 @@ Containers      1         1         0B        0B
 Local Volumes   0         0         0B        0B
 Build Cache     117       0         3.005GB   3.005GB
 ```
- 
-
-### Containers
-
-Try the `docker ps` command which lists the containers. If you have a container
-running, you will see it listed with status `Up`. If you stopped all the containers
-by exiting with CTRL+C, you will not see any running containers listed. 
-To see the stopped but not removed containers, use the `docker ps -a` command:
-
-```bash
-CONTAINER ID   IMAGE        COMMAND                    CREATED        [...]
-3d91a5a2a47f   r-shiny:v1   "R -e 'shiny::runApp..."   3 minutes ago  [...]
-3d91a5a2a47f   r-shiny:v1   "R -e 'shiny::runApp..."   53 minutes ago [...]
-```
-
-Sometimes you need to be able to manage containers because the kill signal
-is not properly relayed to the container when using CTRL+C. This happens when
-the `CMD` instruction is provided in shell form 
-(i.e. `CMD R -e "shiny::runApp()"` instead of `CMD ["R", "-e", "shiny::runApp()"]`).
-The shell form runs as a child process of `/bin/sh -c` (default `ENTRYPOINT`), 
-and the executable does not receive Unix signals.
-
-If this happens, you need to find a way to stop the container.
-The following commands help you manage the containers:
-
-- `docker container stop <container-id>`: gracefully stop a running container 
-  (wait for the process to stop),
-- `docker container start <container-id>`: start a stopped container,
-- `docker container restart <container-id>`: restart a container,
-- `docker container rm <container-id>`; remove a container,
-- `docker container kill <container-id>`: kill a container (abruptly terminate 
-  the entry point process).
-
-`docker container rm --force <container-id>` will remove running containers too.
-You can make sure the container is removed after CTRL+C if you add the `--rm` 
-option to automatically remove the container when it exits.
 
 If you build images during development while keeping the image name and tag the
 same you will end up with "dangling" images that are untagged and are not used

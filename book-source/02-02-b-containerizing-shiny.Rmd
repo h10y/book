@@ -218,11 +218,11 @@ You can also utilize the `pak` R package [@R-pak] to query system requirements:
 
 ```R
 pak::pkg_sysreqs("curl", sysreqs_platform="ubuntu")
-# ── Install scripts ─────────────────────────────────────── Ubuntu NA ──
+# -- Install scripts ---------------------------- Ubuntu NA --
 # apt-get -y update
 # apt-get -y install libcurl4-openssl-dev libssl-dev
 #
-# ── Packages and their system dependencies ─────────────────────────────
+# -- Packages and their system dependencies ------------------
 # curl - libcurl4-openssl-dev, libssl-dev
 ```
 
@@ -703,7 +703,7 @@ to auto-detect dependencies in the absence of the `dependencies.json`:
 `renv.lock`, `pkg.lock`, and `DESCRIPTION`. `pkg.lock` is the lockfile created 
 by `pak`.
 
-## Python requirements
+## Python Requirements
 
 FIXME: KALVIN to add here
 
@@ -713,15 +713,18 @@ FIXME: KALVIN to add here
 
 ### pip
 
-FIXME: KALVIN to add here
+FIXME: KALVIN to add content here
 
 ### Other options for python
 
-??? Conda, venv???
+??? Conda, venv ???
+Docker's purpose is isolation, so multiple venv's do not make sense in containers according to some posts. Maybe explain that here?
 
-FIXME: KALVIN to add here
+FIXME: KALVIN to add content here
 
 FIXME: mention shinylive installs
+
+FIXME: how to reuse `.cache` by mounting it: <https://testdriven.io/blog/docker-best-practices/#cache-python-packages-to-the-docker-host>
 
 ## Dynamic Shiny Apps
 
@@ -901,7 +904,8 @@ RUN chown app:app -R /home/app
 USER app
 EXPOSE 3838
 ENV RMARKDOWN_RUN_PRERENDER=0
-CMD ["R", "-e", "rmarkdown::run(shiny_args = list(port = 3838, host = '0.0.0.0'))"]
+CMD ["R", "-e", "rmarkdown::run( \
+    shiny_args = list(port = 3838, host = '0.0.0.0'))"]
 ```
 
 ### Quarto with R

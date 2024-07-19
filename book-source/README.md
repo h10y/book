@@ -290,3 +290,58 @@ Use 70 char width in latex code (we can fit 80 chars but then inline code bacome
 
 It is set to `H` which right where it is mentioned.
 We can probably use `fig.pos = "btp"` to override this as needed.
+
+## More notes on container life cycle and orchestration
+
+Container life cycle:
+
+- <https://docs.docker.com/reference/cli/docker/container/ls/#status>
+- <https://medium.com/@maheshwar.ramkrushna/understanding-the-docker-container-lifecycle-states-and-transitions-28dd0bcbf753>
+- <https://www.baeldung.com/ops/docker-container-states>
+- <https://dev.to/docker/docker-architecture-life-cycle-of-docker-containers-and-data-management-1a9c>
+- <https://medium.com/@BeNitinAgarwal/lifecycle-of-docker-container-d2da9f85959>
+- <http://docker-saigon.github.io/post/Docker-Internals/>
+
+`docker inspect -f '{{.State.Status}}' mycontainer`
+
+Status	Description
+created	A container that has never been started.
+running	A running container, started by either docker start or docker run.
+paused	A paused container. See docker pause.
+restarting	A container which is starting due to the designated restart policy for that container.
+exited	A container which is no longer running. For example, the process inside the container completed or the container was stopped using the docker stop command.
+removing	A container which is in the process of being removed. See docker rm.
+dead	A "defunct" container; for example, a container that was only partially removed because resources were kept busy by an external process. dead containers cannot be (re)started, only removed.
+
+
+
+Healthcheck:
+
+- https://stackoverflow.com/questions/42737957/how-to-view-docker-compose-healthcheck-logs
+- https://testdriven.io/blog/docker-best-practices/#include-a-healthcheck-instruction
+- https://docs.docker.com/reference/dockerfile/#healthcheck
+
+```
+# Add health check
+#HEALTHCHECK --start-period=30s \
+#    CMD curl --fail http://localhost:3838 || exit 1
+# HEALTHCHECK --interval=5s CMD curl --fail http://localhost:3838 || exit 1
+# HEALTHCHECK --interval=5s CMD bash -c ':> /dev/tcp/127.0.0.1/3838' || exit 1
+HEALTHCHECK --interval=5s CMD bash -c ':> /dev/tcp/127.0.0.1/3839' || exit 1
+```
+
+```
+export NAME=test
+docker run --rm -p 8080:3838 --name $NAME $TAG
+docker inspect --format "{{json .State.Health }}" $NAME | jq
+```
+
+`docker container stats` Display a live stream of container(s) resource usage statistics
+
+
+
+Mention swarm mode:
+
+- need to disambiguate docker swarm and swarm mode of the docker engine
+- this belongs to advanced / what is next besides Kubernetes
+- <https://stackoverflow.com/questions/40039031/what-is-the-difference-between-docker-swarm-and-swarm-mode>

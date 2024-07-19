@@ -420,7 +420,7 @@ underlying operating system, and without the need to have a Python available.
 
 Can we view the output locally? If you click on the `index.html` sitting
 in the `py-shinylive` folder, you will most likely get an error in the browser.
-To read the error you have to find the _developer tools_ and check the
+To read the error you have to find the _developer tools_ (often opened by pressing F12 on your keyboard) and check the
 error messages. You will see something like this:
 
 ```text

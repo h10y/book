@@ -16,12 +16,12 @@ It might surprise you, but there are at least /FIXME: CHECK THIS NUMBER/ 20 host
 Navigating these options and finding up-to-date advice on choosing one and 
 getting started is not easy or trivial. Information about Shiny hosting is 
 scattered around the Internet and is often incomplete. Recommendations are 
-usually narrowly focused and never really ask such important questions as: 
+usually narrowly focused and never really ask important questions such as: 
 Why do you want this app deployed? Who is this app for? What is your budget? 
 The goal of the book is to help you learn about the hosting options and what 
 it takes to host your apps securely.
 
-Currently available books also focus on the R aspect of Shiny,
+Current available books focus on the R aspect of Shiny,
 which is not surprising given that Shiny for Python is a relatively recent
 addition to the Shiny ecosystem. Luckily, Shiny 
 for R and Python have very similar deployment and hosting patterns. Therefore, 
@@ -32,20 +32,21 @@ programming enthusiasts and data science professionals alike.
 
 ## Who Is This Book For? {-}
 
-If you are asking the following questions, this book is definitely for you: 
-What Shiny hosting solutions are out there? How do I decide which of these 
-options suits my needs, my budget, and my skill level the best? How can I get 
-started, and where can I get help if I get stuck? If you are not (yet) asking 
-these questions, but want to learn about servers, cloud instances, and 
-containers from the perspective of Shiny apps, this book is still for you.
+If you are asking any of the following questions, this book is definitely for you: 
+
+* What Shiny hosting solutions are out there? 
+* How do I decide which of these options suits my needs, my budget, and my skill level the best? 
+* How can I get started, and where can I get help if I get stuck? 
+
+If you are not (yet) asking these questions, but want to learn about servers, cloud instances, and containers from the perspective of Shiny apps, this book is still for you.
 
 You might be a researchers in academia, government, and at a nonprofit 
 organization who wants to self-host Shiny apps so that you can show your
 results to your colleagues, your stakeholders, or to the public.
-You might work at a small agency or a startups and want to securely host 
-apps for your clients and users. Or you might be a data scientists who wants 
-to effectively collaborate with people at the IT and engineering department
-about Shiny app deployment and hosting.
+You might work at a small agency or a startup and want to securely host 
+apps for your clients and users. Or you might be a data scientist who wants 
+to effectively collaborate with people in the IT and engineering department
+on Shiny app deployment and hosting.
 
 ## What Will You Learn? {-}
 
@@ -101,7 +102,7 @@ packages (e.g. `shiny`, `pandas`), also for functions and methods
 (e.g. `summary()`, `pandas.read_csv()`), and file names (`image.png`).
 _Italicized_ text will be preserved for publication titles 
 (e.g. _Mastering Shiny_) and for cases when we imitate self talk.
-FOr example: _I feel a little bit lost, what do I do now?_ 
+For example: _I feel a little bit lost, what do I do now?_ 
 We will use **bold** when highlighting or emphasizing words. 
 URLs when pointing to Internet resources, like websites, will be in 
 normal font (e.g. <https://mastering-shiny.org>), URLs when mentioning with
@@ -148,6 +149,10 @@ _Delivering applied statistics from concept to production_.
 FIXME: add here more names as needed
 - The authors would like to thank a whole bunch more people.
 - Who provided reviews and we know there names.
+- Alex Ellis
+- Mention the HDA blog and community support through feedback and encouragement
+- Michael Thomas, Eric Nantz.
+- Dean Attali
 
 
 <!-- For use only in PDF, is skipped in HTML -->

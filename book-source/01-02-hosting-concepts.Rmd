@@ -56,16 +56,14 @@ The data that comes from a server is provided in a raw format that needs to be i
 
 Shiny applications use HTML, CSS, and JavaScript to render a web application. The HTML contains textual information about a website. While the CSS provides styling for a website. The JavaScript enables interactivity for a website by communicating with the Shiny application backend.
 
-The Shiny applciation backend runs on either R or Python and renders the data needed to render the application on a web browser.
+The Shiny applciation backend runs on either R or Python and creates the data needed to render the application on a web browser.
 
 ## Servers
 A server is a computer that runs indefinitely, and is available to serve content to anybody that requests it. Servers can be costly to run and are often shared with other users. To alleviate any concerns of security and resource sharing a server can be shared through a virtual layer.
 
 By using a virtual layer, a virtual private server can be created. This is where a server's resources can be allocated to be used exclusively by a user.
 
-Servers can be offered as either as a IaaS (infrastructure as a service) or PaaS (platform as a service). IaaS requires more configuration and requires some server administration knowledge. While PaaS simplifies configuration by abstracting management to a platform.
-
-FIXME: Expand on IaaS and PaaS
+Servers can be offered as either as a IaaS (infrastructure as a service) or PaaS (platform as a service). IaaS provides access to a server without any support. It requires configuration and some server administration knowledge. While PaaS usually abstract direct access to the server by offering tools to help host and manage your application on a platform.
 
 <!-- - What is a server? <https://cloud.google.com/learn/what-is-a-virtual-private-server>
 - SaaS/PaaS/IaaS <https://do4ds.com/chapters/sec2/2-1-cloud.html> -->
