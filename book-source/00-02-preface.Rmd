@@ -2,8 +2,8 @@
 
 ## Motivation {-}
 
-Shiny is a reactive web application framework used by R\index{R} and 
-Python\index{Python} users to communicate their results to others. Whether 
+Shiny is a reactive web application framework used by **R** and 
+**Python** users to communicate their results to others. Whether 
 you are just starting out with Shiny, or you are a seasoned programmer, at 
 some point you'll need to share your app with your colleagues and users. 
 You might decide to send them scripts or deploy the app and share the URL 
@@ -17,7 +17,7 @@ Navigating these options and finding up-to-date advice on choosing one and
 getting started is not easy or trivial. Information about Shiny hosting is 
 scattered around the Internet and is often incomplete. Recommendations are 
 usually narrowly focused and never really ask important questions such as: 
-Why do you want this app deployed? Who is this app for? What is your budget? 
+Why do you want this app to be deployed? Who is this app for? What is your budget? 
 The goal of the book is to help you learn about the hosting options and what 
 it takes to host your apps securely.
 
@@ -34,11 +34,14 @@ programming enthusiasts and data science professionals alike.
 
 If you are asking any of the following questions, this book is definitely for you: 
 
-* What Shiny hosting solutions are out there? 
-* How do I decide which of these options suits my needs, my budget, and my skill level the best? 
-* How can I get started, and where can I get help if I get stuck? 
+- What Shiny hosting solutions are out there? 
+- How do I decide which of these options suits my needs, my budget, and my skill 
+  level the best? 
+- How can I get started, and where can I get help if I get stuck? 
 
-If you are not (yet) asking these questions, but want to learn about servers, cloud instances, and containers from the perspective of Shiny apps, this book is still for you.
+If you are not (yet) asking these questions, but want to learn about servers, 
+cloud instances, and containers from the perspective of Shiny apps, this book is 
+still for you.
 
 You might be a researchers in academia, government, and at a nonprofit 
 organization who wants to self-host Shiny apps so that you can show your
@@ -50,15 +53,14 @@ on Shiny app deployment and hosting.
 
 ## What Will You Learn? {-}
 
-The book is structured into four main parts plus appendices. This is what the 
-four main parts will cover:
+The book is structured into four main parts:
 
 - Part I. Getting started -- This will give you the fundamentals for the rest
   of the book, including some background, concepts, and setup instructions.
 - Part II. Shiny Apps -- This part deals with everything that happens on your
   **local** machine, including developing and organizing Shiny apps, and ways
   of running the apps locally.
-- Part III. Hosting Shiny Apps -- This part describes all the ways how Shiny
+- Part III. Hosting Shiny Apps -- This part describes all the ways of how Shiny
   apps can be hosted on **remote** machines, like cloud servers. This part is
   the longest, because there are quite a few hosting options.
 - Part IV. What is next -- You'll find a summary of all the things you might
@@ -67,7 +69,7 @@ four main parts will cover:
 
 The book does not end on the last page. You can find online supplements,
 including the HTML version of the book and all the code that we present
-in the book and more on the book's website <`r book_website_link`>.
+in the book and more on the book's website at FIXME: add final website.
 
 ## What Will You Not Learn? {-}
 
@@ -81,7 +83,7 @@ but knowing at least one is definitely needed.
 We will use example Shiny apps to test and demonstrate the different hosting
 options, but we are not going to teach you how to master Shiny,
 how to engineer production-grade apps, and how to make outstanding user
-interfaces with Shiny. You can find all those in these excellent books:
+interfaces with Shiny. You can find all about those topics in these excellent books:
 
 - [_Mastering Shiny_](https://mastering-shiny.org/) [@Wickham2021]
 - [_Engineering Production-Grade Shiny Apps_](https://engineering-shiny.org/) [@Fay2021]
@@ -115,7 +117,7 @@ We will use backslash (`\`) to break up long commands to help readability and
 to fit on the printed page.
 
 We use the _h10y_ as a shorthand for _Hosting Shiny_, and it means that between
-the first letter _H_ and the last letter _Y_ there are 10 other letters.
+the first letter _h_ and the last letter _y_ there are 10 other letters.
 You will see the domain [h10y.com](https://h10y.com) used to shorten links and to
 prevent link rot after the print version of the book is out. We will also use
 `h10y` in Docker image namespaces to make image tags shorter.
@@ -128,18 +130,22 @@ he has authored 70 peer-reviewed publications and several statistical software
 packages. He is passionate about using statistics and data science to bridge 
 the gap between data and decision making. His focus is on enabling this by 
 helping organizations adopting cloud-native practices into their operations.
-FIXME: PETER to revise.
+FIXME: revise.
 <https://peter.solymos.org>
 
-Kalvin Eng is a PhD candidate in Computing Science at the University of Alberta with over 15 years of software development experience. His research involves understanding and improving the processes of software engineering. He is passionate about helping organizations develop efficient processes to build software more effectively.  
-FIXME: KALVIN to revise.
+Kalvin Eng is a PhD candidate in Computing Science at the University of Alberta 
+with over 15 years of software development experience. His research involves 
+understanding and improving the processes of software engineering. He is 
+passionate about helping organizations develop efficient processes to build 
+software more effectively.  
+FIXME: revise.
 <https://kalvineng.com>
 
 ## Acknowledgements {-}
 
 We are grateful for Kahlid Lemzouji for continuously finding new reasons to
 up our game with Shiny hosting. Thanks to Kalob Taulien for helping with our 
-early endeavors with Shiny hosting.
+early Shiny hosting endeavors.
 
 Some of the content of this book was developed as part of workshops
 held by the authors at the _Edmonton R User Group (YEGRUG)_. We are thankful
@@ -147,13 +153,14 @@ for the Statistical Society of Canada for inviting us to teach the course
 _Delivering applied statistics from concept to production_.
 
 FIXME: add here more names as needed
+<!--
 - The authors would like to thank a whole bunch more people.
 - Who provided reviews and we know there names.
 - Alex Ellis
 - Mention the HDA blog and community support through feedback and encouragement
 - Michael Thomas, Eric Nantz.
 - Dean Attali
-
+-->
 
 <!-- For use only in PDF, is skipped in HTML -->
 \mainmatter

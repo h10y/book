@@ -1,6 +1,6 @@
-# Examples
+# Examples {#part1-examples}
 
-Shiny apps come in many different shapes and form. We will not be able to
+Shiny apps come in many different shapes and forms. We will not be able to
 represent this vast diversity, but instead we wanted some apps that can be
 used to showcase common patterns, and that can also fit onto the pages of a
 printed book reasonably well.
@@ -10,7 +10,7 @@ We will use 3 Shiny apps as examples, all 3 are implemented in both R and Python
 - `faithful`: a "Hello Shiny!" app displaying the Old Faithful geyser
   waiting times data as a histogram with a slider that allows to adjust
   the number of bins used in the histogram --- this app demonstrates the
-  very basics of of interactivity, and it is very short.
+  very basics of of reactivity, and it is very short.
 - `bananas`: an app that classifies the ripeness of banana fruits based on
   the color composition (green, yellow, brown) --- this app demonstrates
   a more complex use case with dependencies, and the app also relies on a
@@ -20,7 +20,7 @@ We will use 3 Shiny apps as examples, all 3 are implemented in both R and Python
 
 Let's learn about the example apps.
 
-## Old Faithful
+## Old Faithful {#part1-example-faithful}
 
 This is the classic "Hello Shiny!" app that you can see in R by trying
 `shiny::runExample("01_hello")`. The app displays the Old Faithful geyser
@@ -51,24 +51,24 @@ The source code for the different builds of the Old Faithful Shiny app is at
 az a zip file from GitHub, or clone the repository with
 `git clone https://github.com/h10y/faithful.git`.
 
-## Bananas
+## Bananas {#part1-example-bananas}
 
 The `bananas` app was born out of a "stuck-in-the-house" COVID-19 project when
 one of the authors bought some green bananas at the store and took daily
 photographs of each fruit.
-Later, the data set was used as part of workshops. The motivation for the app
-is that it follows workflow that is fairly common in all kinds of data science
+Later, the data set was used as part of teaching a workshops. The motivation for the app
+is that it follows a workflow that is fairly common in all kinds of data science
 projects:
 
 1. Have a question to answer: _Is my banana ripe?_
 2. Collect data: _Go to the store, buy bananas, set up a ring light and take pictures every day over 3 weeks._
 3. Compile the training data: _Classify colour pixels and calculate the relative proportions, score pictures according to ripeness status._
 4. Run exploratory data analysis: _Let's explore and visualize the data set._
-5. Train a classification model: _Estimate the probability that the banana ripeness given colour composition._
-6. Build a "scoring engine": _Given some colour inputs for a new fruit, tell me the probability that the banana is ripe._
-6. Build a user interface: _Let a non technical user to do the  data exploration and classification as part of a web application._
+5. Train a classification model: _Estimate the the banana ripeness class and probability given the colour composition._
+6. Build a "scoring engine": _Given some colour inputs for a new fruit, tell me the probability for the ripeness classes._
+6. Build a user interface: _Let a non technical user to do the data exploration and classification as part of a web application._
 
-### The Bananas Data Set
+### The Bananas Data Set {#part1-example-bananas-data}
 
 The data set tracks the ripening colour composition of banana fruits daily over a
 3-week period. The full data set can be found in the [GitHub repository](https://github.com/psolymos/bananas)
@@ -83,12 +83,8 @@ The table has the following fields:
 
 - `fruit`: the identifier of the fruit,
 - `day`: number between 0 and 20, the number of days since the first set of photographs,
-- `ripeness`: the ripeness class of the fruit based in Peter's personal judgement (Under, Ripe, Very, Over),
+- `ripeness`: the ripeness class of the fruit based in Péter's personal judgement (Under, Ripe, Very, Over),
 - `green`, `yellow`, `brown`: colour composition, these 3 values add up to 1 (100%).
-
-The colour composition was determined based on colour mapping the pixel values of 
-the banana fruits and converting the pixel based 2-dimensional area to proportions.
-
 
 ```{r eval=FALSE,echo=FALSE}
 bananas <- read.csv("data/bananas.csv")
@@ -107,8 +103,8 @@ txt <- '
 The colour composition was determined based on colour mapping the pixel values of 
 the banana fruits and converting the pixel based 2-dimensional area to proportions.
 
-The following summary presents the ripeness (U = Under, R = Ripe, V = Very, O = Over)
-and the percentage values of green, yellow, brown colours.
+The following summary presents the ripeness and the percentage values of 
+green, yellow, brown colours.
 '
 }
 cat(txt)
@@ -226,10 +222,10 @@ ggplot(
     theme_linedraw()
 ```
 
-### Model Training
+### Model Training {#part1-example-bananas-model}
 
 We chose Support Vector Machines (SVM) to model a multi-level response variable
-(under, ripe, very, over) as a function of the green, yellow, and brown colours.
+(Under, Ripe, Very, Over) as a function of the green, yellow, and brown colours.
 
 We used the `e1071` package [@R-e107] in R, and the SVM model's prediction accuracy was 90.8%.
 We saved the trained model object as an R binary `.rds` file:
@@ -295,7 +291,7 @@ svm_model.predict_proba([[0.1, 0.2, 0.7]])
 dump(svm_model, 'bananas-svm.joblib')
 ```
 
-### The Shiny App
+### The Shiny App {#part1-example-bananas-app}
 
 The Shiny app consists of a ternary plot showing the daily colour composition
 of each banana fruit, alongside the new point to be classified (in red),
@@ -314,17 +310,17 @@ The source code for the different builds of the Bananas Shiny app is at
 az a zip file from GitHub, or clone the repository with
 `git clone https://github.com/h10y/bananas.git`.
 
-## Load Balancing Test
+## Load Balancing Test {#part1-example-lbtest}
 
 Shiny apps can run multiple sessions in the same app instance.
-A common problem when scaling the number of replicas for shiny apps is that
+A common problem when scaling the number of replicas for Shiny apps is that
 traffic might not be sent to the same session and thus the app might randomly fail.
 This app is used to determine if the HTTP requests made by the client are correctly 
 routed back to the same R or Python process for the session.
 
 Both the Python and the R version of the app registers a [dynamic route](https://shiny.posit.co/r/reference/shiny/latest/session.html) 
 for the client to try to connect to. The JavaScript code on the client side will repeatedly hit the
-dynamic route. The server will send a 200 OK status code only if the client reached
+dynamic route\index{Dynamic route}. The server will send a 200 OK status code only if the client reached
 the correct Shiny session, where it originally came from (Fig. \@ref(fig:part1-examples-lbtest)).
 
 ```{r part1-examples-lbtest, eval=TRUE, echo=FALSE, fig.cap="The `lbtest` example Shiny app."}
@@ -335,8 +331,8 @@ The original Python app was written by Joe Cheng and is from the `rstudio/py-shi
 [GitHub repository](https://github.com/rstudio/py-shiny/blob/7ba8f90a44ee25f41aa8c258eceeba6807e0017a/examples/load_balance/app.py). We wrote the R version to mirror the Python
 version.
 
-This app will be useful when the deployment includes load balancing between
-multiple replicas. For such deployments, session affinity (or sticky sessions) needs to 
+This app will be useful when the deployment includes load balancing\index{Load balancing} between
+multiple replicas. For such deployments, session affinity (or sticky sessions)\index{Sticky session} needs to 
 be available. This app can be used to test such setups.
 If the test fails, it will stop before the counter reaches 100 and will say _Failure!_
 If the app succeeds 100 times, you'll see _Test complete_.
@@ -359,4 +355,4 @@ available on your computer. This way you will be able to follow all the examples
 from the following chapters and won't have to copy paste the text from the 
 book to files. Visit the GitHub organization `h10y` which stands for
 _hostingshiny_ (there are 10 letters between the first _h_ and the last _y_):
-<https://github.com/h10y>.
+<https://github.com/h10y/>.

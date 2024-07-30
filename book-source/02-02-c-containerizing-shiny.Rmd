@@ -1,21 +1,19 @@
-## Image Analysis
+## Image Analysis {#part2-image-analysis}
 
-Image analysis is a two part process. First, we extract the 
-Software Bill of Material (SBOM) and other image metadata.
-These are called attestations.
-
+Image analysis\index{Image analysis} is a two part process. First, we extract the 
+Software Bill of Material (SBOM) and other image metadata, these are called attestations.
 Second, we evaluate these data against vulnerability data from security 
 advisories. Docker Scout can perform image analysis among other things and 
 is available by default for Docker Hub repositories.
 
 Some of these features are experimental and are not universally supported
-by default in all registries, so we won't cover everything in detail.
+in all registries, so we won't cover everything in detail.
 You can consult the Docker CLI reference for `docker scout`.
 
-### Attestations
+### Attestations {#part2-image-analysis-attestations}
 
 Attestations describe how an image was built, and what it contains.
-The first kind of attestation is referred to as _provenance_.
+The first kind of attestation is referred to as **provenance**.
 You can add the minimum set of provenance information to an image using BuildKit
 as:
 
@@ -31,7 +29,7 @@ docker buildx imagetools inspect <image-name>:<image-tag> \
     --format "{{ json .Provenance.SLSA }}"
 ```
 
-The second kind of attestation is the _Software Bill of Material_ (SBOM). 
+The second kind of attestation is the **Software Bill of Material** (SBOM)\index{Software Bill of Material}. 
 The SBOM is a complete inventory of a codebase, the license and version information. 
 The `docker scout` command can scan images and create an SBOM. 
 Here is the list view of the SBOM from the `rocker/r2u:24.04` image:
@@ -51,13 +49,13 @@ docker scout sbom --format list rocker/r2u:24.04
 #   zlib1g-dev                1:1.3.dfsg-3.1ubuntu2         deb
 ```
 
-Write the SBOM information into a JSON file:
+Write the SBOM information into a JSON file for further processing:
 
 ```bash
 docker scout sbom rocker/r2u:24.04 > sbom-r2u.json
 ```
 
-### Vulnerability Scanning
+### Vulnerability Scanning {#part2-image-analysis-scanning}
 
 Image analysis uses image SBOMs to understand what packages and versions an image 
 contains. Knowing the exact versions of your packages is not only good for 
@@ -69,7 +67,7 @@ The quick view gives a high level overview of different levels of
 vulnerabilities. Vulnerabilities are ordered by severity:
 critical (`C`), high (`H`), medium (`M`) or low (`L`).
 There are no critical vulnerabilities known for the `rocker/r2u` image
-and there are 2 vulnerabilities classified as high, 6 as medium, and 6 as low.
+and there are 2 vulnerabilities classified as high but no critical vulnerabilities.
 
 ```bash
 docker scout quickview rocker/r2u:24.04
@@ -95,10 +93,10 @@ CVE is short for Common Vulnerabilities and Exposures.
 You might want to filter this result to show only critical and high vulnerability
 packages. 
 
-It is not wise to ignore critical vulnerabilities. You should probably need
-to find alternatives and do not include such packages in your image.
-Such vulnerabilities often shake the whole software industry and usually patched
-in a short amount of time, or at least a workaround is suggested.
+It is not wise to ignore critical vulnerabilities. In such cases you should 
+find alternatives and not include such packages in your image.
+Critical vulnerabilities can shake the whole software industry and are usually 
+patched in a short amount of time, or at least a workaround is suggested.
 Get only critical CVEs as:
 
 ```bash
@@ -128,16 +126,16 @@ docker scout cves --format only-packages --only-vuln-packages \
 You can see that the 2 high CVEs are part of Linux itself and
 are not coming from packages that r2u adds on top of the Ubuntu parent image.
 
-## Containers
+## Containers {#part2-containers}
 
 You have learnt how to build images using the Dockerfile to contain a Shiny app.
 A "live" version of this image is called the container, that is the 
 runtime instance of the docker image. Besides the image, it 
-consists of a set of instructions that you set before or during run time,
-and execution environment. Let's see how you can create, start, and manage
+consists of a set of instructions that you specify before or during run time,
+and an execution environment. Let's see how you can create, start, and manage
 Docker containers.
 
-### Docker Run
+### Docker Run {#part2-containers-run}
 
 The `docker run` command is a versatile tool because it can
 not only create and run a new container from an image, but it can also pull
@@ -167,9 +165,8 @@ it will not only stop the container, but it will also remove it and
 You can provide environment variables through the `-e` or `--env` option
 or provide a file with the variables using `--env-file`.
 
-Setting the platform via `--platform` is needed when working with different
+Specifying the platform via `--platform` is needed when working with different
 architectures, such as ARM64 and AMD64.
-
 Setting resources available for the container is possible with the 
 `--cpus` (number of CPUs) and setting memory limits by `--memory`.
 
@@ -179,7 +176,7 @@ to rely on external storage (databases, object stores) for anything that
 needs to persist and you do not want it to disappear when the container is
 deleted.
 
-Docker can persisting data on the file system using 
+Docker can persist data on the file system using 
 [bind mounts or volumes](https://docs.docker.com/storage/).
 Bind mounts may be stored anywhere on the host system and you can specify
 this via the `--mount` option in `docker run`.
@@ -218,7 +215,7 @@ docker ps
 
 The `docker ps` command lists running containers. You see not only the info
 we provided with `docker run` or that were defined in the `Dockerfile`, but also
-for how ling the container has been running (time since its creation) and also
+for how long the container has been running (time since its creation) and also
 the status of the container.
 
 The `docker run` command is equivalent of first creating a container that 
@@ -229,8 +226,8 @@ more convenient to use `docker run`.
 When the container is running in the background, you cannot stop it with CTRL+C.
 You have to manage it using the container ID or the container name.
 To stop the container, use `docker stop <container-name-or-id>`.
-This will "gracefully" shut down the Shiny app sending it a so called SIGTERM
-signal. If you use `docker kill <container-name-or-id>` instead, the process
+This will "gracefully" shut down the Shiny app by sending a so called SIGTERM
+signal to it. If you use `docker kill <container-name-or-id>` instead, the process
 will be abruptly killed with a so called SIGKILL signal. Try `docker stop`
 first.
 
@@ -255,7 +252,7 @@ specify a restart policy:
 
 A non-zero exit status and running out of resources are clear signs of the app
 not running as expected. You will see in a bit how to troubleshoot 
-using the Docker logs. But in less serious cases, we might hot know the 
+using the Docker logs. But in less serious cases, we might not know the 
 "health" of the container without looking at the logs or a user telling us
 that something is not right. This is where health checks come in.
 Before we introduce health checks, let's stop the container:
@@ -268,8 +265,7 @@ We used the `--rm` flag, so the container will be removed after being stopped.
 If we haven't used the `--rm` flag, we would still see it listed with 
 `docker ps -a`.
 
-
-### Health Check
+### Health Check {#part2-health-check}
 
 Shiny apps, just like any other web application, can crash for many different 
 reasons. It might be due to a bug in the code, your user might do something
@@ -281,7 +277,7 @@ From a monitoring perspective, one is easier to detect than the other.
 The purpose of the health check is to report on the status of our application,
 so that we know when it is "unhealthy", which means users cannot access it.
 
-The `HEALTHCHECK` Dockerfile instruction checks a container's health on startup.
+The `HEALTHCHECK`\index{Helthcheck} Dockerfile instruction checks a container's health on startup.
 It is written as `HEALTHCHECK <options> CMD <command>`.
 The options determine how often the health check command is run
 (`--interval`, default is 30s), the timeout duration (`--timeout`, 
@@ -295,7 +291,7 @@ number of retries. If a health check succeeds during the start period, the
 container is considered started.
 
 The health check command's exit status indicates the health status of the 
-container. The exit status can be either 0 (health) or 1 (unhealthy).
+container. The exit status can be either 0 (healthy) or 1 (unhealthy).
 Different commands might return different exit statuses. This is why you often 
 see the health check command formatted as `<command> || exit 1` which will
 force any non-0 exit status to be 1.
@@ -308,7 +304,7 @@ Shiny app or it fails due to the `--fail` flag (same as `-f`).
 The health check instruction could look like this:
 
 ```dockerfile
-HEALTHCHECK --interval=5s \
+HEALTHCHECK --interval=15s \
     CMD curl --fail http://localhost:3838 || exit 1
 ```
 
@@ -338,7 +334,7 @@ docker run --rm -d -p 8080:3838 \
 
 Let's start another container with a health check targeting a different port,
 this will cause the check to fail. Note that the `healthy` container is already
-using the 8080 port, we map the `unhealthy` container to run on port 8081:
+using the 8080 port, we map the `unhealthy` container to port 8081:
 
 ```bash
 docker run --rm -d -p 8081:3838 \
@@ -347,8 +343,8 @@ docker run --rm -d -p 8081:3838 \
   ghcr.io/h10y/faithful/r-shiny:latest
 ```
 
-Try `docker ps` a few times. The status for the health image should be `(healthy)`.
-The unhealth image should display `(health: starting)`, which would switch
+Try `docker ps` a few times. The status for the healthy image should be `(healthy)`.
+The unhealthy image should display `(health: starting)`, which would switch
 to `(unhealthy)` after the start period. You can also access the health status
 with the `docker inspect` command. You'll need the `jq` command line tool that
 can parse JSON output:
@@ -370,7 +366,7 @@ docker inspect --format "{{json .State.Health }}" healthy | jq
 ```
 
 The output shows the health check results and the failing streak (how many times 
-the check has failed). A 0 failing streak is your target.
+the check has failed in a row). A 0 failing streak is your target.
 The same command for the `unhealthy` container would show a very unhealthy
 failing streak:
 
@@ -403,14 +399,14 @@ instruction as:
 HEALTHCHECK CMD ./healthcheck.sh
 ```
 
-### Container Life Cycle
+### Container Life Cycle {#part2-container-life-cycle}
 
 You have seen the some of the possible statuses of containers. Let's review
 the container life cycle in a bit more details so that you get a better sense
 of how to manage containers that are in different states.
-Figure \@ref(fig:part2-container-lifecycle) illustrates the container life cycle.
+Figure \@ref(fig:part2-container-lifecycle) illustrates the container life cycle\index{Container life cycle}.
 
-```{r part2-container-lifecycle, eval=TRUE, echo=FALSE,out.width="80%", fig.cap="The Docker container life cycle."}
+```{r part2-container-lifecycle, eval=TRUE, echo=FALSE,out.width="100%", fig.pos = "bt", fig.cap="The Docker container life cycle."}
 if (is_latex_output()) {
     include_graphics("images/02/container-life-cycle.pdf")
 } else {
@@ -418,14 +414,14 @@ if (is_latex_output()) {
 }
 ```
 
-Containers can be on one of seven states:
+Containers can be in one of seven states:
 `created`, `running`, `paused`, `restarting`, `exited`, `removing`, and `dead`.
 First the container is `created`, which means it has never been started.
 A freshly created container does not yet consumes resources.
 
 After the startup, the container is either `running` or `exited`.
 An `exited` status can mean that the container finished its job and exited with
-status code `0`, or instead of `running` the container failed to start and 
+status code `0`, or instead of `running`, the container failed to start and 
 exited with an error code `1`. The exited container does not consumes resources.
 
 A `running` container is started by either `docker start` or `docker run`.
@@ -452,7 +448,7 @@ containers stopped manually.
 
 A running container can enter the `restarting` state due to the designated restart 
 policy or by calling the `docker restart` command on a running container.
-After that the container will enter the `running` (or the `exited`) state.
+After that, the container will enter the `running` (or the `exited`) state.
 
 If you pause a running container with `docker pause` it will be considered `paused`.
 All processes are suspended for an indefinite time, memory is still allocated
@@ -471,7 +467,7 @@ because resources were kept busy by an external process. Such a "defunct" contai
 is called a `dead` container and it cannot be started, restarted, only removed.
 
 You can check the status of the two containers that we were using for
-the health check (we called them `healty` and `unhealthy`) as:
+the health check (we called them `healthy` and `unhealthy`) as:
 
 ```bash
 docker inspect --format '{{.State.Status}}' healthy
@@ -486,7 +482,7 @@ parts of the overall object returned by the `docker inspect` command.
 Within that list, we are interested in the `Status` property. This is what the
 `.State.Status` notation means.
 
-There are other interesting properties as part of the `State`, `Status` and 
+There are other interesting properties as part of the `State`. `Status` and 
 `Health` are two properties that we have seen. But there are others:
 
 ```bash
@@ -513,7 +509,7 @@ docker inspect --format "{{json .State }}" healthy | jq
 # }
 ```
 
-### Managing Containers
+### Managing Containers {#part2-containers-managing}
 
 Here we summarize the most important commands related to containers.
 The `docker ps` command lists the containers. If you have container
@@ -543,7 +539,7 @@ c8c4dad4e371   unhealthy   0.18%     94.35MiB / 7.657GiB   1.20%
 3b44c40aadb7   healthy     0.11%     122MiB / 7.657GiB     1.56%
 ```
 
-Use `docker logs <container-name-or-id>` will print (all) the logs for a
+Use `docker logs <container-name-or-id>` will print (all) the logs\index{Logging} for a
 given container. Logs are made up of the container's STDOUT and STDERR.
 To print only the tail of the logs use
 `docker logs -n 10 <container-name-or-id>` that will print the last 10 lines.
@@ -576,7 +572,7 @@ inserts the output and `$(docker ps -q)` will print out the container IDs.
 If you stopped all the containers, you will not see any running containers listed
 with `docker ps`. To see the stopped but not removed containers, 
 use the `docker ps -a` command. We started the `healthy` and `unhealthy`
-containers with the `--rm` flag, so there were removed after being stopped.
+containers with the `--rm` flag, so those were removed after being stopped.
 As a result, not even `docker ps -a` will list them.
 
 Sometimes you need to be able to manage containers because the kill signal
@@ -602,7 +598,7 @@ You can make sure the container is removed after CTRL+C if you add the `--rm`
 option to the `docker run` command and it will automatically remove the container 
 when it exits.
 
-### Docker Compose
+### Docker Compose {#part2-docker-compose}
 
 You have seen how to manage a single container. But in practice, we often
 manage multiple containers: multiple replicas of the same app, different 
@@ -613,10 +609,10 @@ Managing all this complexity with Docker on a single container basis is going
 to be a problem. It is not impossible, but it will be difficult and error prone, 
 and as a result less secure. 
 
-Docker Compose is a tool for defining and running multi-container applications.
+Docker Compose\index{Docker Compose} is a tool for defining and running multi-container applications.
 Docker Compose is declarative in nature, it uses a single, comprehensible YAML 
 configuration file to define the expected state of your system. The YAML defines 
-the services, networks, volumes.
+the services, networks, and volumes.
 
 Version 1 of the Docker Compose project stopped receiving updates from July 2023.
 Compose Version 2 is included with any new install of Docker Desktop. Version 2
@@ -629,7 +625,7 @@ that you find online might refer to the use of Version 1 and `docker-compose`.
 We will use the recommended Version 2 and `docker compose` for our examples 
 to make this distinction clear.
 
-### The Compose File
+### The Compose File {#part2-compose-file}
 
 You will see older tutorials using `docker-compose.yml` which refers to
 Version 1 of Docker Compose. Version 2 still supports this file naming,
@@ -651,12 +647,14 @@ services:
       - DEBUG=1
 ```
 
+FIXME: provide link to the example.
+
 The Compose file specification has several top level elements:
 
 - `version` is obsolete but can be important for backwards compatibility.
 - `name` is a value to override the default project name that is derived from 
   the base name of the project directory.
-- `services` must be defined, it is abstract definition of a computing resource 
+- `services` must be defined, it is the abstract definition of a computing resource 
   within an application that can be "composed" together and modified 
   independently from other components.
 - `networks` defines how the services communicate with each other. By default, 
@@ -671,7 +669,7 @@ Attributes are very similar to the command line options we saw for `docker run`.
 See the [Compose file specification](https://docs.docker.com/compose/compose-file/) 
 for all the details.
 
-The compose file can also define a service via a Dockerfile under the
+The compose file\index{Compose file} can also define a service via a Dockerfile under the
 `build` attribute. The image will be built and started by Compose.
 Similarly, you can define the `image` attribute for pulling the image from a
 registry. The `ports` attribute should look familiar by now. It is used to 
@@ -684,7 +682,7 @@ We defined two services, the Python version of the Faithful example and
 the R version of the Bananas app. You see environment variables defined for
 the `bananas` service.
 
-### Compose Command Line
+### Compose Command Line {#part2-compose-cli}
 
 You can use Docker Compose through the `docker compose` command of the 
 Docker Command Line Interface (CLI), and its subcommands.
@@ -712,12 +710,14 @@ You'll see logs appearing in your terminal. First about pulling the images if
 those are not yet available, or if a newer version can be found.
 Visit `http://localhost:8080` to see the Faithful app and
 `http://localhost:8081` to see the Bananas app.
-Hit CTRL+C to stop the containers.
+Hit CTRL+C in the terminal to stop the containers.
 
 Similarly to `docker run`, we can use the `-d` (or `--detach`) flag to start
 the containers in the background as `docker compose up -d`.
 You'll get back your terminal. Use `docker compose ls` to list currently running
 Compose projects:
+
+FIXME: edit the compose project name according to example repo name.
 
 ```bash
 docker compose ls
@@ -753,8 +753,8 @@ for a given service. Hit CTRL+C to get back into the terminal.
 
 To poke around in the running containers, use `docker compose exec`.
 `docker compose exec bananas sh` will give you a shell inside the
-container. Let's type the `env` command to see the environment variables
-`DB_PWD` and `DEBUG` that we defined in the Compose file:
+container. Let's type the `env` command to see the environment variable
+`DEBUG` that we defined in the Compose file:
 
 ```bash
 $ env
@@ -782,7 +782,7 @@ docker compose up -d
 #  ✔ Container 03-compose-faithful-1  Running              0.0s 
 #  ⠏ Container 03-compose-bananas-1   Recreate
 
-# Wait for a fe seconds ...
+# Wait for a few seconds ...
 
 # [+] Running 2/2
 #  ✔ Container 03-compose-faithful-1  Running                0.0s 
@@ -802,13 +802,13 @@ docker compose down
 #  ✔ Network 03-compose_default       Removed 0.1s
 ```
 
-### Container Orchestration
+### Container Orchestration {#part2-container-orchestration}
 
 Complexity does not stop at managing multiple containers. The number of 
 containers might not stay constant as you might to demand by scaling up and down. 
 You might also want to roll out new versions by causing minimal disruption in 
 the system. Even Docker Compose might be insufficient for
-use cases at such scale. This is where container orchestration comes in.
+use cases at such scale. This is where container orchestration\index{Container orchestration} comes in.
 
 Container orchestration makes this complexity manageable for development and 
 operations (DevOps). Container orchestration automates the provisioning, 
@@ -816,11 +816,11 @@ deployment, scaling, and management of containerized applications.
 It also abstracts away the underlying infrastructure.
 
 Kubernetes is a widely used container orchestration platform.
-Running Shiny apps is an advanced topic, but all that you have learnt about
-containerized application development will be useful if you ever need to
-use Kubernetes for your production deployment.
+Running Shiny apps with Kubernetes is an advanced topic, but all that you have 
+learnt about containerized application development will be useful if you ever 
+need to use Kubernetes for your production deployment.
 
-## Best Practices
+## Best Practices {#part2-best-practices}
 
 No matter the use case, Docker images start with a parent image. What
 parent image you use? How do you add new layers to it? These decisions
@@ -835,7 +835,7 @@ development but to any containerized application and workflow.
 These will all improve the developer experience and the
 quality of the final Docker images.
 
-#### Parent Images {-}
+### Parent Images {#part2-best-practices-parent-images}
 
 Decide which is the right parent image for the `FROM` instruction of your image.
 The type of the application might dictate this, e.g. R or Python. If you have
@@ -857,7 +857,7 @@ Pinning the parent image version might also help with other dependencies as well
 e.g. in the Rocker versioned stack of images you'll have a maximum R package
 version also pinned that was available at the time of the R versioned image.
 
-#### Minimize Dependencies {-}
+### Minimize Dependencies {#part2-best-practices-minimize-deps}
 
 Minimizing dependencies is advantageous for many reasons. It results in a smaller
 final image size, but more importantly, it presents smaller attack surface
@@ -873,7 +873,7 @@ possible by adding only those R packages and system requirements that are
 absolutely necessary. You should also uninstall unnecessary build time libraries.
 Multi-stage builds can be helpful to only include artifacts that are needed.
 
-#### Cache and Order Layers {-}
+### Cache and Order Layers {#part2-best-practices-cache}
 
 When building an image, Docker executes each instruction in the order
 specified in the `Dockerfile`. Docker looks for an existing image in its
@@ -925,7 +925,7 @@ through a lock file, etc. In this case you have to copy the lock file
 separately, install dependencies, then copy the rest of the source code
 in another `COPY` instruction.
 
-#### Switch to Non-root User {-}
+### Switch to Non-root User {#part2-best-practices-user}
 
 By default, Docker containers run as the root user. Root privileges allow 
 unrestricted use which is to be avoided in production. Although you can find 
@@ -946,7 +946,7 @@ USER <user>
 [...]
 ```
 
-#### No Secrets {-}
+### No Secrets {#part2-best-practices-secrets}
 
 Avoid hard coding sensitive information into the Dockerfile or the image. 
 Do not set environment variables with `ENV` that store passwords or tokens. 
@@ -963,7 +963,7 @@ common files used for storing secrets:
 **/.ssh
 ```
 
-#### Shell vs. Exec Syntax {-}
+### Shell vs. Exec Syntax {#part2-best-practices-syntax}
 
 Use the exec array syntax for `CMD` and `ENTRYPOINT` instructions,
 e.g. `CMD ["R", "-e", "shiny::runApp()"]`. This will ensure that when you
@@ -972,31 +972,31 @@ properly and you won't have to abruptly kill the container.
 Use the shell syntax only for `RUN` instructions, e.g. 
 `RUN R -e "install.packages('shiny')"`.
 
-#### Log to STDOUT and STDERR {-}
+### Log to STDOUT and STDERR {#part2-best-practices-log}
 
 Your apps should writ logs to standard output (STDOUT) and standard error (STDERR)
 instead of writing these messages to a file. This way you will be able to
 use standard Docker tools for reding and collecting the logs later.
 
-#### Include HEALTHCHECK {-}
+### Include HEALTHCHECK {#part2-best-practices-healthcheck}
 
 Use the `HEALTHCHECK` instruction to determine if the process running in your 
 container is "healthy" and not just up and running.
 
-#### Version Your Images {-}
+### Version Your Images {#part2-best-practices-version}
 
 Use timestamps, Git commit hashes, or semantic versioning for your image tags,
 or a combination of these. You can avoid overwriting existing images and will 
 be able to roll back changes when you send some bugs into production. 
 You can automate this using GitHub actions as you'll see later.
 
-#### Readability {-}
+### Readability {#part2-best-practices-readability}
 
 Chain commands in your `RUN` instructions and sort multiline arguments using `\`.
 This will also help in updating your Dockerfile and track the changes with Git.
 The difference will be only a line instead of the whole  statement.
 
-#### More Tips {-}
+### More Tips {#part2-best-practices-tips}
 
 Linters, like Hadolint use many more rules for Dockerfiles that are worth consulting
 as an extension of this best practices list. Hadolint is also available as a 

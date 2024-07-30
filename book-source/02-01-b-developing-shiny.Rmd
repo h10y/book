@@ -1,6 +1,6 @@
-### Dynamic Documents
+### Dynamic Documents {#part2-dynamic-documents}
 
-Dynamic documents stem from the _literate programming_ paradigm [@Knuth1992],
+Dynamic documents stem from the _literate programming_\index{Literate programming} paradigm [@Knuth1992],
 where natural language (like English) is interspersed with computer code snippets.
 Nowadays, dynamic documents are used to create technical reports, slide decks
 for presentations, and books, like the one you are reading.
@@ -17,7 +17,7 @@ and closing triple backticks. Underneath, you can find the
 A more recent iteration of this idea is [Quarto](https://quarto.org/).
 Quarto is an open-source scientific and technical publishing system
 that can include code chunks in many different formats frequently used by
-data scientists (e.g. R, Python, Julia, Observable).
+data scientists, e.g. R, Python, Julia, Observable.
 
 Both R Markdown and Quarto let you to use Shiny inside the documents
 to build lightweight apps without worrying too much about a user interface.
@@ -26,17 +26,18 @@ designing your apps as a standard Shiny app would, but it works wonders for
 simpler use cases. Let's review how you can use Shiny in R Markdown (`.Rmd`)
 and Quarto (`.qmd`) documents.
 
-#### R Markdown
+#### R Markdown {#part2-r-markdown}
 
-Markdown files usually begin with a _header_ that defines metadata for the 
+Markdown\index{Markdown} files usually begin with a _header_ that defines metadata for the 
 document, like the title, the author, etc. The header is between
-tripple dashes (`---`) and is written in YAML format (YAML stands for
+triple dashes (`---`) and is written in YAML format (YAML stands for
 YAML Ain't Markup Language).
 
-We'd like to include the Old Faithful example in an R Markdown document.
-So we create a file called `index.Rmd`.
+We'd like to include the Old Faithful example in an R Markdown\index{R Markdown} document.
+So we create a file called `index.Rmd`. Look for the file inside the `rmd-shiny`
+folder of the Faithful repository.
 In the YAML header we need to specify an output format that produces
-HTML, e.g. `html_document`, and the runtime to be set to `shiny`:
+HTML, e.g. `html_document`, and the runtime to be set to `shiny`\index{Shiny runtime}:
 
 ```{r eval=TRUE,echo=FALSE,results="asis"}
 cat(c('    ---',
@@ -47,7 +48,8 @@ cat(c('    ---',
 ```
 
 The first code chunk would contain the data set definition and a `knitr` option 
-to set the echo to false so we don't have to set it for every chunk:
+to set the echo to false (do not print the code) 
+so we don't have to set it for every chunk:
 
 ```{r eval=TRUE,echo=FALSE,results="asis"}
 cat(c('    ```{r include=FALSE}',
@@ -94,25 +96,23 @@ cat(c('    ```{r}',
 '```'), sep="\n    ")
 ```
 
-FIXME: where can you find the full document.
-
-The output format can be any format tha creates an HTML file. So for example,
+The output format can be any format that creates an HTML file. So for example,
 you can use `ioslides_presentation` to create a slideshow with Shiny widgets
 and interactivity. But because Shiny is involved, you need a server to run the 
 document.
 
 To render and run the document and the app inside it you can use
-`rmarkdown::run("index.Rmd")`. As a result, the `rmarkdown` package will
+`rmarkdown::run("index.Rmd")` from inside the `rmd-shiny` folder. As a result, the `rmarkdown` package will
 extract the code chunks to create a server definition and uses the
 `index.html` output file to stich in the reactive elements.
 
 When you start the document, you will notice that it always renders the document
 at startup. Not only that, but it also requires a full document render for each 
-end user browser session when deployed.
+end user's browser session when deployed.
 This startup time for the users can be reduced if we render the HTML only once.
 Running expensive data import and manipulation tasks only once would also greatly 
 help the startup times. The runtime for this is called `shinyrmd` 
-(or its alias, `shiny_prerendered`):
+(or its alias, `shiny_prerendered`)\index{Prerendered Shiny runtime}:
 
 ```{r eval=TRUE,echo=FALSE,results="asis"}
 cat(c('    ---',
@@ -123,11 +123,12 @@ cat(c('    ---',
 ```
 
 We'll use the `flexdashboard` [@R-flexdashboard] package to give the document
-more of a dashboard look and feel.
+more of a dashboard look and feel. This R Markdown version of the Faithful app
+is inside the `rmd-prerendered` folder of the repository.
 
 The execution of pre-rendered Shiny documents is divided into two 
-execution contexts, the _rendering_ of the user interface and data,
-and the _serving_ of the document to the users.
+execution contexts, the **rendering** of the user interface and data,
+and the **serving** of the document to the users.
 
 To indicate the rendering context, you can use `context="render"` chunk option,
 but this can be omitted because this is the default context for all R code chunks.
@@ -200,29 +201,32 @@ cat(c('    ```{r context="server"}',
 
 The `"render"` and `"server"` contexts are run in separate R sessions.
 The first one is run when rendering happens, the second one is run many times,
-once for each user. A consequence of this _context separation_ is that you cannot 
+once for each user. A consequence of this **context separation** is that you cannot 
 access variables created in "render" chunks within "server" chunks, and the 
 other way around.
 
 To render the document, we use `rmarkdown::render("index.Rmd")`,
-then use `rmarkdown::run("index.Rmd")` to run the dashboard.
-You can also set the `RMARKDOWN_RUN_PRERENDER` environment variable to `0`
-to prevent any pre-rendering from happening, e.g. with 
+then use `rmarkdown::run("index.Rmd")` to run the dashboard from inside the 
+`rmd-prerendered` folder. Set the `RMARKDOWN_RUN_PRERENDER` environment variable 
+to `0` to prevent any pre-rendering from happening, e.g. with 
 `Sys.setenv(RMARKDOWN_RUN_PRERENDER=0)`.
 
 You can include Python code chunks in your R Markdown documents. Python code is
 evaluated using the `reticulate` package [@R-reticulate].
 But you cannot include Shiny for Python in R Markdown. For that, you have Quarto.
 
-#### Quarto with R
+#### Quarto with R {#part2-quarto-with-r}
 
-Quarto is very similar to R Markdown in many respects. You can think of it as a
+Quarto\index{Quarto} is very similar to R Markdown in many respects. You can think of it as a
 generalized version of R Markdown that natively supports different programming
 languages to run code chunks. You will find the YAML header familiar.
-To use the Shiny runtime, we define `server: shiny`. The `format: html` is
+To use the Shiny runtime, we define `server: shiny`. The `format: html`
 means to produce HTML output. The `execute` part refers to global options,
-so for `echo: false` means that example we don't want to code to be echoed into 
-the document. Let's start with the following header information in a file 
+`echo: false` means that we don't want to code to be echoed into 
+the document. 
+
+The basic Quarto example for the Faithful example in R is inside the 
+`quarto-r-shiny` folder. Let's start with the following header information in a file 
 called `index.qmd`:
 
 ```{r eval=TRUE,echo=FALSE,results="asis"}
@@ -293,11 +297,11 @@ cat(c('    ```{r}',
 ```
 
 To render and serve this document we have to use the command
-`quarto serve index.qmd`. Pre-rendering our document to speed up startup
+`quarto serve index.qmd` from inside the folder. Pre-rendering our document to speed up startup
 times for the users is really straightforward. We do not have to change
 the server type. We only have to first render the document with 
 `quarto render index.qmd`. Then we can serve it with a flag that will tell
-quarto not to render it again: `quarto serve index.qmd --no-render`.
+Quarto not to render it again: `quarto serve index.qmd --no-render`.
 
 If you wanted to split the `.qmd` file into multiple files corresponding to
 the evaluation contexts, you can have the header and the UI definition in
@@ -326,12 +330,14 @@ function(input, output, session) {
 }
 ```
 
-#### Quarto with Python
+Find this Quarto example inside the `quarto-r-shiny-multifile` folder.
+
+#### Quarto with Python {#part2-quarto-with-python}
 
 The Python version or our Quarto-based Shiny app is very similar to the R version.
-No change is headed in the header. The code chunks will have `{python}`
+No change in the header. The code chunks will have `{python}`
 defined instead of `{r}`, and of course you have to copy the Python code
-inside the chunks.
+inside the chunks. See the `quarto-py-shiny` folder of the Faithful repository.
 
 ```{r eval=TRUE,echo=FALSE,results="asis"}
 cat(c('    ---',
@@ -388,23 +394,26 @@ cat(c('    ```{python}',
 '```'), sep="\n    ")
 ```
 
-Rendering and serving the Python document is the same you used for the R version:
+Rendering and serving the Python document is the same that you used for the R version:
 `quarto serve index.qmd` will do both, so for a pre rendered version, use
 `quarto render index.qmd` first and the serve with the `--no-render` flag.
 
-### Shinylive
+### Shinylive {#part2-shinylive}
 
-Using [Shinylive](https://shiny.posit.co/py/docs/shinylive.html), you can run 
+Using [Shinylive](https://shiny.posit.co/py/docs/shinylive.html)\index{Shinylive}, you can run 
 Shiny applications entirely in a web browser, i.e. on the client side, without 
 the need for a separate server running in R or Python. This is achieved by 
 R or Python running in the browser. The Python implementation of Shinylive uses 
-[WebAssembly (WASM)](https://webassembly.org/) and [Pyodide](https://pyodide.org/). 
-WASM is a binary format for compiled programs that can run in a web browser, 
-whereas Pyodide is a port of Python and many Python packages compiled to WASM.
+[WebAssembly (Wasm)](https://webassembly.org/) and [Pyodide](https://pyodide.org/). 
+Wasm is a binary format for compiled programs that can run in a web browser, 
+whereas Pyodide is a port of Python and many Python packages compiled to Wasm.
 
-#### Python Shinylive
+The Shinylive version of the Old Faithful example can be viewed at
+<https://h10y.github.io/faithful/>. 
 
-We will create Python Shinylive version of the _Hello Shiny_ app following 
+#### Python Shinylive {#part2-shinylive-python}
+
+We will create Python Shinylive version of the Faithful app following 
 the [`posit-dev/py-shinylive`](https://github.com/posit-dev/py-shinylive) GitHub repository.
 First, export the app inside the `py-shiny` folder with the single-file app
 and put the Shinylive version in the `py-shinylive` folder:
@@ -413,15 +422,16 @@ and put the Shinylive version in the `py-shinylive` folder:
 shinylive export py-shiny py-shinylive
 ```
 
-The Shiny live version will consist of _static_ files, which means that we can 
+The Shiny live version will consist of **static** files, which means that we can 
 copy these files to any static hosting site (like Netlify or GitHub Pages), 
 and a browser will be able to display the contents irrespective of the 
 underlying operating system, and without the need to have a Python available.
 
-Can we view the output locally? If you click on the `index.html` sitting
+Can we view the output locally? If you double click on the `index.html` sitting
 in the `py-shinylive` folder, you will most likely get an error in the browser.
-To read the error you have to find the _developer tools_ (often opened by pressing F12 on your keyboard) and check the
-error messages. You will see something like this:
+To read the error you have to find the **developer tools**\index{Developer tools} (often opened by 
+pressing F12 on your keyboard) and check the error messages. You will see 
+something like this:
 
 ```text
 Cross-Origin Request Blocked: The Same Origin Policy disallows reading 
@@ -430,10 +440,10 @@ the remote resource at file:///[...]/shinylive/shinylive.js.
 ```
 
 For security reasons, browsers restrict cross-origin HTTP requests initiated from scripts.
-But what is this cross-origin resource sharing ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS))?
+But what is this cross-origin resource sharing\index{CORS} ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS))?
 If you load the HTML file (like our `index.html`) from a source, the default CORS
-behaviour will expect any other files, like images, or JavaScript/CSS scripts
-to have the same _origin_. By origin, we mean the domain and subdomain.
+behavior will expect any other files, like images, or JavaScript/CSS scripts
+to have the same origin. By origin we mean the domain and subdomain.
 
 Now the problem here is that you are viewing a local version of the files,
 which will set the protocol part of the URIs to be `file://` instead of
@@ -442,9 +452,8 @@ file protocol is the same, but this is considered as having opaque origins
 by most browsers and therefore will be disallowed.
 
 If you want to view the files locally, you do it through a local server. 
-That way, all files are served from the same scheme and domain (`localhost`) 
-and have the same origin.
-Start the server as:
+That way all files are served from the same scheme and domain (`localhost`) 
+and have the same origin. Start the server as:
 
 ```bash
 python3 -m http.server --directory py-shinylive
@@ -453,11 +462,11 @@ python3 -m http.server --directory py-shinylive
 Now visit `http://localhost:8000/` in your browser, and the CORS error should
 be gone (port 8000 is the default port for `http.server`).
 
-#### R Shinylive
+#### R Shinylive {#part2-shinylive-r}
 
 Shinylive for R uses similar technology built on WebAssembly using the 
 [WebR](https://docs.r-wasm.org/webr/latest/) R package.
-Here is how to create an R Shinylive version of the _Hello Shiny_ app 
+Here is how to create an R Shinylive version of the Faithful app 
 following the [`posit-dev/r-shinylive`](https://github.com/posit-dev/r-shinylive/) 
 GitHub repository using the interactive R console:
 
@@ -471,14 +480,14 @@ the Shinylive version in the `r-shinylive` folder.
 The second command will start the server and open the page in the browser.
 You will see a random port used on localhost, e.g. `http://127.0.0.1:7446`.
 
-#### Shinylive in Quarto
+#### Shinylive in Quarto {#part2-shinylive-quarto}
 
 We can include Shinylive (R or Python) apps in Quarto. For that, we need to
 install the [Shinylive quarto extension](https://github.com/quarto-ext/shinylive) 
 inside the Quarto project folder with `quarto add quarto-ext/shinylive`.
 
 The header of the Quarto document should list the `shinylive` extension under 
-`filter`:
+`filters`:
 
     ---
     title: "Old Faithful"
@@ -513,3 +522,6 @@ single-file Old Faithful Shiny app:
 
 To view the Quarto document in your browser, use `quarto preview index.qmd`. 
 This will work with the R and the Python versions alike.
+
+The Quarto Shinylive examples can be found inside the `quarto-r-shinylive` and
+`quarto-py-shinylive` folders of the Faithful repository.

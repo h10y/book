@@ -1,25 +1,25 @@
 # (PART) Shiny Apps {-} 
 
-# Developing Shiny Apps 
+# Developing Shiny Apps {#part2-developing-shiny-apps}
 
-Shiny apps can be written in two languages, R and Python. These 2 programming 
+Shiny apps can be written in two languages, R\index{R} and Python\index{Python}. These 2 programming 
 languages are commonly used for data analysis.
-R is an interpreted computer language for statistical computing and graphics. 
+R is an interpreted language for statistical computing and graphics. 
 Likewise, Python is an interpreted general programming language that is often 
 used for data science. Both R and Python run on a wide variety of operating 
-systems including Windows, MacOS, and Linux.
+systems including Windows, Mac OS X, and Linux.
 
-In this first chapter, we will cover getting started with developing in Shiny 
+In this chapter, we will cover getting started with developing in Shiny 
 using R and Python environments. We discuss the tools commonly used for these 
 programming languages and provide instructions on how to run our example Shiny 
 application projects in an integrated development environment (IDE). Then we'll 
-review some of the easiest ways of sharing and deploying Shiny apps.
+review some of the easiest ways of sharing the Shiny apps.
 
-## Creating a Shiny App
+## Creating a Shiny App {#part2-creating-a-shiny-app}
 
 A Shiny app is made up of the user interface (UI) and the 
 server function. The UI and the server can be written in pure R or Python, 
-but it can also incorporate JavaScript, CSS, or HTML code.
+but it can also incorporate JavaScript, CSS, HTML, or Markdown code.
 
 The app is served to the client (app user) through a host (Internet
 Protocol or IP address) and port number. The server then keeps a
@@ -28,24 +28,26 @@ will make sure this request translates into the desired interactivity and sends
 back the response, usually an updated object, like a plot or a table
 (Fig. \@ref(fig:part2-shiny-app-architecture)).
 
-```{r part2-shiny-app-architecture, eval=TRUE, echo=FALSE, fig.cap="Simplified Shiny app architecture."}
+```{r part2-shiny-app-architecture, eval=TRUE, echo=FALSE, fig.pos = "bt", fig.cap="Simplified Shiny app architecture."}
 if (is_latex_output()) {
     include_graphics("images/02/shiny-app-architecture.pdf")
 } else {
     include_graphics("images/02/shiny-app-architecture.png")
 }
-
 ```
 
-The Old Faithful (`faithful`) app is a relatively simple example that is concise enough to 
+The Old Faithful app is a relatively simple example that is concise enough to 
 demonstrate the structure of Shiny apps with the basics of reactivity.
-It draws a histogram based on the Old Faithful geyser waiting times in Yellowstone National Park.
+It draws a histogram based on the Old Faithful geyser waiting times in the Yellowstone National Park.
 The number of bins in the histogram can be changed by the user with a slider.
 
 The source code for the different builds of the Old Faithful Shiny app is at
-<https://github.com/h10y/faithful>. You can download the GitHub repository
+<https://github.com/h10y/faithful/>. You can download the GitHub repository
 az a zip file from GitHub, or clone the repository with
-`git clone https://github.com/h10y/faithful.git`.
+`git clone https://github.com/h10y/faithful.git`. The repository should be 
+inside the `faithful` folder. We'll refer to the files inside the folder
+using relative paths. You can either open these files, or follow the
+instructions for creating the folders and files fresh.
 
 To run this app in R, create a folder called `r-shiny` with a new file called 
 `app.R` inside the folder. Put this inside the file:
@@ -135,7 +137,9 @@ def server(input, output, session):
 app = App(ui = app_ui, server = server)
 ```
 
-Besides Shiny, you'll need to have the `seaborn` library installed to load the dataset and the `matplotlib` library installed to visualize the geyser data set with a histogram. R has these functions as 
+Besides Shiny, you'll need to have the `seaborn` library installed to load the 
+dataset and the `matplotlib` library installed to visualize the geyser data set 
+with a histogram. R has these functions as 
 part of the base distribution, so no additional installation is needed. You can 
 install the Python dependencies from the `requirements.txt` file with 
 `pip install -r py-shiny/requirements.txt`. Here are the contents of 
@@ -148,13 +152,15 @@ matplotlib
 seaborn
 ```
 
-You have probably noticed the similarities between the R and Python versions. Both begin by loading/importing libraries and defining a globally available variable that contains the Old Faithful geyser waiting times. The files then define
-the user interface (`app_ui`) and the `server` function. At the end,
+You have probably noticed the similarities between the R and Python versions. 
+Both begin by loading/importing libraries and defining a globally available 
+variable that contains the Old Faithful geyser waiting times. The files then define
+the user interface\index{User interface} (`app_ui`) and the `server` function\index{Server function}. At the end,
 the Shiny app is defined as `shinyApp(ui = app_ui, server = server)` and
 `App(ui = app_ui, server = server)`.
 Now let us explore the user interface and the server function.
 
-### The User Interface
+### The User Interface {#part2-ui}
 
 The user interface (UI) object controls the layout and appearance of the 
 Shiny app. The UI in R is defined as and object called `app_ui`:
@@ -211,14 +217,20 @@ arguments in the HTML version:
 </div>
 ```
 
-You can see the container, and the plot and the slider nested inside.
-This is going to be added to the body of the HTML page rendered by
+The `<div>` HTML\index{HTML} tag stands for division, and most opening tags are followed
+by a closing tag, i.e. `</div>`. HTML defines a nested structure.
+You can see the outermost division with the container class.
+The second level header, the plot and the slider are nested inside this outermost division.
+
+This HTML snippet is going to be added to the body of the HTML page rendered by
 Shiny. The final HTML page will also contain all the JavaScript and CSS
 dependencies required to make the app interactive and styled properly.
 
 The Python UI uses the `ui` object imported from `shiny`. The setup is very 
-similar to the R setup, but naming conventions are slightly different. Python uses the snake case naming convention (e.g. `page_fixed`, `output_plot`, and `input_slider`). While R uses the camel case naming convention (e.g. `fixedPage`, `plotOutput`, and
-`sliderInput`).
+similar to the R setup, but naming conventions are slightly different. Python 
+uses the snake case naming convention (e.g. `page_fixed`, `output_plot`, and 
+`input_slider`) whereas R uses the camel case naming convention (e.g. `fixedPage`, 
+`plotOutput`, and `sliderInput`).
 
 ```python
 app_ui = ui.page_fixed(
@@ -271,9 +283,9 @@ Printing the `app_ui` in Python gives the following (slightly edited) HTML outpu
 The only difference relative to the R output is that you can see the `<html>`,
 `<head>` and `<body>` tags. Shiny will inject elements into the HTML head later.
 
-### The Server Function
+### The Server Function {#part2-server-function}
 
-The server function contains the instructions for the reactivity needed
+The server function\index{Server function} contains the instructions for the reactivity needed
 for the Shiny app. The server function takes mainly two arguments: `input` and
 `output`. Sometimes the server function also takes `session`. These reactive objects are created
 by Shiny and passed to the server function.
@@ -311,11 +323,11 @@ reference these reactive dependencies
 and cause the relevant render functions (`renderPlot()` here) to re-execute.
 
 We can see some differences in the Python version.
-Shiny for Python uses decorators (e.g. `@render`) instead of 
+Shiny for Python uses decorators\index{Decorator} (e.g. `@render`) instead of 
 render functions and inputs are invoked as `input.n()`.
-(See the [Framework Comparisons](https://shiny.posit.co/py/docs/comp-r-shiny.html) 
+See the [Framework Comparisons](https://shiny.posit.co/py/docs/comp-r-shiny.html) 
 section of the Shiny for Python documentation for a detailed overview of 
-R vs. Python similarities and differences.)
+R vs. Python similarities and differences.
 
 ```python
 def server(input, output, session):
@@ -332,22 +344,38 @@ def server(input, output, session):
         plt.ylabel("Frequency")
 ```
 
-The server function is called once for each Shiny session in Python. Like the R version of Shiny, it also takes in as arguments: `input`, `output`, and `session`. 
+The server function is called once for each Shiny session in Python. Like the R 
+version of Shiny, it also takes in arguments: `input`, `output`, and `session`. 
 
-The `input` object stores reactive values. For example, `input.n()` means that when a reactive value `input.n()` is changed, a reactive function that uses `input.n()` will be triggered to re-render. The reactive function for `input.n()` in the Python code is `histogram` which is made reactive with the `render.plot` Python decorator.
+The `input` object stores reactive values. For example, `input.n()` means that 
+when a reactive value `input.n()` is changed, a reactive function that uses 
+`input.n()` will be triggered to rerender. The reactive function for `input.n()` 
+in the Python code is `histogram` which is made reactive with the `render.plot` 
+Python decorator.
 
-Python decorators are a design pattern to modify a function by wrapping a function into another function. For example, the `@render.plot` decorator is a function that wraps the `histogram` function making it a reactive expression. The `histogram` function creates a plot, and the `@render.plot` attempts to retrieve the created plot by the `histogram` and renders it as `histogram` to the `output` object that can be called by a Shiny `ui` object. The use of the `output` object is similar to R, where reactive output objects such as `histogram` are stored.
-
-Finally, session refers to a connection made by a client to the Shiny application. A new session with a new websocket connection is created every time a web browser connects to the Shiny application. It should be noted that code outside the `server` function runs once per application startup and not per user session.
+Python decorators are a design pattern to modify a function by wrapping a 
+function into another function. For example, the `@render.plot` decorator is a 
+function that wraps the `histogram` function making it a reactive expression. 
+The `histogram` function creates a plot, and the `@render.plot` attempts to 
+retrieve the created plot by the `histogram` and renders it as `histogram` 
+to the `output` object that can be called by a Shiny `ui` object. The use of 
+the `output` object is similar to R, where reactive output objects such as 
+`histogram` are stored.
 
 In short, like R Shiny, `input` and `output` together describe the state of the
-app. When changes are made to an `input`, their corresponding reactive expressions are re-excuted and their results are stored in the `output` object.
+app. When changes are made to an `input`, their corresponding reactive 
+expressions are re-executed and their results are stored in the `output` object.
 
+Finally, `session`\index{Session, Shiny} refers to a connection made by a client to the Shiny 
+application. A new session with a new websocket connection is created every time 
+a web browser connects to the Shiny application. It should be noted that code 
+outside the `server` function runs once per application startup and not per user 
+session.
 
-### Shiny Express
+### Shiny Express {#part2-shiny-express}
 
-Python for Shiny has two different syntax options, Shiny Core that you saw 
-in the previous sections, and [Shiny Express](https://shiny.posit.co/py/docs/express-vs-core.html).
+Python for Shiny has two different syntax options, Shiny Core\index{Shiny Core} that you saw 
+in the previous sections, and [Shiny Express](https://shiny.posit.co/py/docs/express-vs-core.html)\index{Shiny Express}.
 Shiny Core drew inspiration from the original Shiny for R framework, 
 but is _not_ a literal port of Shiny for R.
 Shiny Express was introduced quite recently, and is focused on making it 
@@ -356,12 +384,12 @@ easier for beginners to use Shiny, and might feel more natural to Python users.
 Shiny Core offers the separation between the UI and the server components, 
 making it easier to organize code for larger Shiny apps.
 The server function declaration also helps separating code that should only 
-run at startup vs. for the sessions.
+run at startup vs. for each session.
 In Shiny Express, all of the code in the app file is executed for each session.
 
 There is only one Shiny syntax option in R.
 
-## Organizing Shiny Apps
+## Organizing Shiny Apps {#part2-organizing-shiny-apps}
 
 The previously presented `faithful` app is organized as a single file.
 The file contained all the globally scoped declarations at the top,
@@ -371,7 +399,7 @@ data science projects, the increased complexity will necessitate the
 organization of the code. You can organize the code into multiple files,
 or even as a package. Let's see the most common patterns.
 
-### Single file
+### Single file {#part2-organizing-shiny-single-file}
 
 When Shiny is organized in a single file, the convention is to name it `app.R`.
 This way your IDE (RStudio or VS Code) will recognize that it is a Shiny app.
@@ -400,7 +428,7 @@ shinyApp(ui = app_ui, server = server)
 At the end of the file, we define the Shiny app using `shinyApp()`.
 To run the app in R, we either have to source the `app.R` or provide the
 file name as an argument to the `runApp()` function, e.g.
-`runApp("<app-directory>/app.R")`.
+`runApp("r-shiny/app.R")`.
 
 The Python version takes a very similar form as a single file, usually named 
 as `app.py`.
@@ -425,7 +453,7 @@ app = App(ui = app_ui, server = server)
 ```
 
 You can run the Python Shiny app in your IDE or by using the `shiny run` command
-in the terminal, `shiny run --reload --launch-browser <app-directory>/app.py`.
+in the terminal, `shiny run --reload --launch-browser py-shiny/app.py`.
 This will launch the app in the browser and the server will watch for changes
 in the app source code and rerender.
 
@@ -434,10 +462,10 @@ by sourcing the app file when you start the Shiny app.
 Variables defined inside the server functions will be defined for each
 session. This way, one user's changes of the slider won't affect the other
 user's experience. However, if one user changes the globally defined
-variables (i.e. using the `<<-` assignment operator), those changes will be
+variables (i.e. using the `<<-` assignment operator in R), those changes will be
 visible in every user's session.
 
-### Multiple Files
+### Multiple Files {#part2-organizing-shiny-multiple-files}
 
 If your app is a bit more complex, you might have multiple files in
 the same directory. By convention, the directory contains at least 
@@ -456,8 +484,13 @@ If you prefer, you can use the `source()` function to explicitly source
 files as part of the `global.R` script. Just don't put these files in the
 `R` folder to avoid sourcing them twice.
 
-The `bananas` app is organized into multiple files. Here is how the folder
-structure looks like for the R version of the app:
+The Bananas Shiny app is organized into multiple files. 
+The source code for the different builds of the Bananas app is at
+<https://github.com/h10y/bananas/>. Download or clone the GitHub repository with
+`git clone https://github.com/h10y/bananas.git`. The repository should be 
+inside the `bananas` folder.
+
+Here is how the folder structure looks like for the R version of the Bananas app:
 
 ```bash
 bananas/r-shiny
@@ -487,8 +520,8 @@ m <- readRDS("bananas-svm.rds")
 
 Apart from loading libraries, we read in a CSV file, set factor levels so that
 those print in a meaningful order instead of alphabetical. Finally, we load 
-the model we trained earlier. There is also the file `functions.R` in the `R`
-folder that gets source automatically.
+the model we trained earlier in \@ref(part1-example-bananas-model). 
+There is also the file `functions.R` in the `R` folder that gets sourced automatically.
 
 It is important to note, that functions defined inside the files of the `R` 
 folder, or anything that you `source()` (e.g. `source("R/functions.R")`) will 
@@ -497,20 +530,21 @@ local scope, you can include that for example inside your server function as
 `source("functions.R", local = TRUE)`.
 
 To run this app, you can click the Run App button the the IDE
-or use `runApp("<app-directory>")`. As long as the directory contains
+or use `runApp("<app-directory>")` as long as the directory contains
 the `server.R` and the `ui.R` files.
 
 The choice between single vs. multiple files comes down to personal
 preference and the complexity of the Shiny app. You might start
 with a single file, but as the file gets larger, you might decide to
 save the pieces into their own files.
-However, keeping Shiny apps in their own folder is generally a good idea
+
+Keeping Shiny apps in their own folder is generally a good idea
 irrespective of having single or multiple files in the folder. This way, 
 changing your mind later won't affect how you run the app. You can just
 use the same `runApp("<app-directory>")` command, if you follow these 
 basic naming conventions.
 
-We can also split the Python version of the `bananas` app into multiple files.
+The Python version of the Bananas app is also split into multiple files:
 
 ```bash
 bananas/py-shiny
@@ -521,7 +555,10 @@ bananas/py-shiny
 └── requirements.txt
 ```
 
-Separating files works slightly different in Python. Instead of sourcing scripts inline like you saw for R, you must import the objects and variables from separated files similar to importing from libraries as Python considers a `.py` file as a "module".  
+Separating files works slightly different in Python. Instead of sourcing scripts 
+inline like you saw for R, you must import the objects and variables from 
+separated files similar to importing from libraries as Python considers a `.py` 
+file as a "module".  
 
 These are the first few lines of the `app.py` file:
 
@@ -567,24 +604,25 @@ working directory.
 As Shiny for Python apps become more widespread in the future, we will see
 many different patterns emerge with best practices for organizing files.
 
-### Shiny App with Nested Files Structure
+### Shiny App with Nested File Structure {#part2-organizing-shiny-rhino}
 
-Your app can grow more complex over time, and you might find that the 
-of the multiple-file structure described above to be limiting.
+Your app can grow more complex over time, and you might find
+the multiple-file structure described above to be limiting.
 You might have Shiny modules inside Shiny modules. Such a setup might lend itself
 to a hierarchical file structure.
 
-If this is the case, you can use the [Rhino Shiny framework](https://github.com/Appsilon/rhino) 
+If this is the case, you can use the [Rhino Shiny framework](https://github.com/Appsilon/rhino)\index(Rhino)
 and the `rhino` R package [@R-rhino]. This Shiny framework was inspired by
 importing and scoping conventions of the Python and JavaScript languages.
 Rhino enforces strong conventions using a nested file structure and modularized 
 R code. Rhino also uses the `box` package [@R-box] that defines a hierarchical 
 and composable module system for R.
 
-Here is the directory structure for the Rhino version of the `faithful` app:
+Here is the directory structure for the Rhino version of the Faithful app
+from inside the Faithful GitHub repository's `r-rhino` folder:
 
 ```bash
-faithful/r-rhino
+r-rhino
 ├── app
 │   ├── main.R
 │   └── static
@@ -596,7 +634,7 @@ faithful/r-rhino
 ```
 
 The `app/static` folder serves a similar purpose to the `www` folder.
-The R code itself is ins the `app.R` folder, specifically the `app/main.R` file.
+The R code itself is in the `app.R` folder, specifically the `app/main.R` file.
 You can see how the import statement is structured at the beginning, and how a
 Shiny module is used for the `ui` and `server`:
 
@@ -632,13 +670,13 @@ To run this app, you can call `shiny::runApp()`, the `app.R` file contains a
 single line calling `rhino::app()` which creates the Shiny app object.
 
 The developers of the framework also released a very similar
-Python implementation called [Tapyr](https://github.com/Appsilon/tapyr-template).
+Python implementation called [Tapyr](https://github.com/Appsilon/tapyr-template)\index{Tapyr}.
 
-### Programmatic Cases
+### Programmatic Cases {#part2-organizing-shiny-programmatic-cases}
 
 In R, if you want to run the Shiny app as part of another function, you
 can supply a _list_ with `ui` and `server` components (i.e.
-`runApp(list(ui = ui, server = server))`) or a Shiny _app object_
+`runApp(list(ui = app_ui, server = server))`) or a Shiny _app object_
 created by the `shinyApp()` function (i.e.
 `runApp(shinyApp(ui, server))`).
 
@@ -650,7 +688,7 @@ be passed to the print method and the app will not be run. That is why you have
 to run the app using `runApp()`. For example, we can write the following
 function where `app_ui` and `server` are defined above as part of the
 single-file `faithful` Shiny app. The `...` passes possible other arguments
-to `runApp` such as the `host` or `port`.
+to `runApp` such as the `host` or `port` that we will discuss later.
 
 ```R
 run_app <- function(...) {
@@ -666,7 +704,7 @@ run_app <- function(...) {
 
 Start the app by typing `run_app()` into the console.
 
-### Shiny App as an R Package
+### Shiny App as an R Package {#part2-organizing-shiny-r-package}
 
 Extension packages are the fundamental building blocks of the R ecosystem.
 Apps can be hosted on the Comprehensive R Archive Network (CRAN), on GitHub, etc.
@@ -687,11 +725,13 @@ the contents of the `inst` folder will be copied to the package's root folder.
 Therefore, such an app can be started as e.g. 
 `shiny::runApp(system.file("app", package = "faithful"))`.
 This means that there is a package called `faithful`, and in the `inst/app` folder
-you can find the Shiny app. 
-FIXME: add here link to the r-package version of the faithful example
+you can find the Shiny app.
+
+The `r-package` folder of the Faithful repository contains an R package\index{R package} called
+`faithful`. This is the folder structure of the package:
 
 ```bash
-# faithful
+faithful
 ├── DESCRIPTION
 ├── LICENSE
 ├── NAMESPACE
@@ -746,7 +786,7 @@ definition, which describes how other parameters can be passed to the
 `shiny::runApp` function. The `@export` tag signifies that the `run_app` function
 should be added to the `NAMESPACE` file by the `roxygen2` package [@R-roxygen2].
 
-Calling `R CMD build faithful` will build the `faithful_0.0.1.tar.gz` source file.
+Calling `R CMD build faithful` from inside the `r-package` folder will build the `faithful_0.0.1.tar.gz` source file.
 You can install this package using `install.packages("faithful_0.0.1.tar.gz", repos = NULL)` from R
 or you can use the R command line utility: `R CMD INSTALL faithful_0.0.1.tar.gz`.
 Once the package is installed, you can call `faithful::run_app()` to start the
@@ -757,8 +797,8 @@ package's `R` folder. In this case, `shiny` and all other packages will have to
 be mentioned in the package's `DESCRIPTION` file, that describes the dependencies,
 as packages that the package imports from. 
 
-Best practices can be found out there, both about [writing R packages](https://r-pkgs.org/)
-[@rpkg-book], and about engineering Shiny apps using [@Fay2021].
+Best practices can be found about [writing R packages](https://r-pkgs.org/)
+[@rpkg-book] and about engineering Shiny apps using [@Fay2021].
 You can not only test the underlying functions as part of the package, but you
 can apply Shiny specific testing tools, like `shinytest2` [@R-shinytest2].
 
@@ -768,19 +808,20 @@ is the approach that some of the most widely used Shiny development frameworks
 took. These are the `golem` [@R-golem], and the `leprechaun` [@R-leprechaun]
 packages.
 
-#### Golem
+#### Golem {#part2-organizing-shiny-golem}
 
-The use and benefits of the Golem framework are described in the book
+The use and benefits of the Golem\index{Golem} framework are described in the book
 _Engineering Production-Grade Shiny Apps_ by @Fay2021.
 Golem is an opinionated framework for building a production-ready Shiny 
-apps by providing a series of tools doe developing you app, with an emphasis on
+apps by providing a series of tools for developing you app, with an emphasis on
 writing Shiny modules.
 
 A Golem app is contained inside an R package.
 You'll have to know how to build a package, but this is the price to pay for
-having a mature and trusted tools for testing your package from every aspect.
+having mature and trusted tools for testing your package from every aspect.
 Let's review how the Golem structure compares to the previous setup.
-We will call this app `faithfulGolem`:
+Look for the package inside the `r-golem` folder of the Faithful GitHub repository.
+We will call this R package `faithfulGolem`:
 
 ```bash
 # faithfulGolem
@@ -811,7 +852,7 @@ The most important difference is that we see the UI and server added to the
 `R` folder as functions, instead of plain script files in the `inst` folder.
 The `dev` folder contains development related boilerplate code and 
 functions to use when testing the package without the need to reinstall after
-every tiny change you make to the Shiny app or the R package in general.
+every tiny change you make to the Shiny app or to the R package in general.
 The `inst` folder has the static content for the app with the `www` folder
 inside.
 
@@ -916,11 +957,9 @@ mod_histogram_server <- function(id, x) {
 After building, checking, and installing the `faithfulGolem` R package,
 you'll be able to start the Shiny app by calling `faithfulGolem::run_app()` from R.
 
-FIXME: mention where to find the code for faithfulGolem.
+#### Leprechaun {#part2-organizing-shiny-leprechaun}
 
-#### Leprechaun
-
-The `leprechaun` R package [@R-leprechaun] uses a similar philosophy to 
+The `leprechaun`\index{Leprechaun} R package [@R-leprechaun] uses a similar philosophy to 
 creating  Shiny applications as packages. It comes with a full set of
 functions that help you with modules, custom CSS, and JavaScript files.
 When using this package, you will notice that `leprechaun` does not become
@@ -930,7 +969,8 @@ the workflow provided by them are very similar. Choose that helps you more
 in terms of your app's specific needs.
 
 Say we name the the R package containing the Old Faithful example as
-`faithfulLeprechaun`. The main functions that are defined should be already
+`faithfulLeprechaun`. This folder is inside the `r-leprechaun` folder of the
+Faithful repository. The main functions that are defined should be already
 familiar:
 
 ```R
@@ -961,6 +1001,3 @@ run <- function(...) {
 
 After the package is installed, the way to run the app is to call 
 the `faithfulLeprechaun::run()` function.
-
-FIXME: mention where to find the code for faithfulLeprechaun.
-

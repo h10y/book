@@ -33,11 +33,11 @@ docker run -it --rm --platform linux/amd64 \
 
 ## Overview of Parts & Chapters
 
-- Part I: Getting Started
+- **Part I**: Getting Started
   - Background (DEvOps, Shiny hosting cycle)
   - Hosting Concepts
   - The Tools of the Trade (local setup: why?)
-- Part II: Shiny Apps
+- **Part II**: Shiny Apps
   - Developing Shiny Apps
     - ...
   - Containerizing Shiny Apps
@@ -83,7 +83,10 @@ docker run -it --rm --platform linux/amd64 \
         - Use labels
         - Docker Security Scanning https://github.com/analythium/hosting-shiny-book-dev/tree/main/blog-posts/2023-02-04_insiders-digest-53
     - Summary
-- Part III: Hosting Shiny Apps
+
+WE ARE HERE
+
+- **Part III**: Hosting Shiny Apps
   - A Review of Shiny Hosting Options
     - Cost & complexity
     - 2x2 setup options
@@ -95,9 +98,8 @@ docker run -it --rm --platform linux/amd64 \
       - Containerized apps
     - Heroku
     - Fly.io (& other firecracker based ones)
-    - Fargate-like offerings
+    - Fargate-like offerings, Elastic Beanstalk, ...
     - Multiple apps using containerized Shiny Server
-    - ...???
   - Virtual Private Servers (https://cloud.google.com/learn/what-is-a-virtual-private-server)
     - Setup
       - DO droplet & ssh login
@@ -119,8 +121,7 @@ docker run -it --rm --platform linux/amd64 \
         - File server & dynamic apps example
         - Containerized ShinyProxy
   - Hybrid setups
-    - Embedding onto your website (Iframes)
-    - iframe + Shinyapps ...
+    - Embedding onto your website (Iframes): Shinyapps does not provide HTTPS for custom domains, but uses HTTPS for their own subdomains --> how to serve; or Heroku you can set up costom domain but not a path redirect; or embed in a blog (WP or Ghost), explain iframe and maybe CSS based spinner
   - Considerations for Production
     - Security
       - security groups
@@ -129,18 +130,19 @@ docker run -it --rm --platform linux/amd64 \
     - Reserved IP
     - Configuration
     - Access control
-      - In-app auth
-      - Password protected server (basic auth with Caddy per route)
-      - OIDC OAuth
-    - CICD: 
+      - In-app auth (explain that the app needs to be running, so prob better to catch unwanted visitors before auth) maybe use this with PaaS
+      - Password protected server (basic auth with Caddy per route) use this on VM
+      - OIDC OAuth (ShinyProxy)
+    - CI/CD: 
       - Docker GitHub actions (steps, auto tagging)
       - cron job polling
       - webhooks
-    - Scaling
+    - Scaling: explain single instance multiple sessions vs each session is an instance (ShinyProxy)
+      - Vertical & horizontal scaling
       - Shinyapps & Connect
       - Heroku
       - Load balancing with Docker compose
-- Part IV: What is next?
+- **Part IV**: What is next?
   - Reevaluating your hosting needs
     - Licensing considerations
   - Advanced topics
@@ -256,7 +258,7 @@ Use the R code chunk like this:
         include_graphics("images/part-01/hosting-cycle.png")
         ```
 
-Important: do not use _ in ref names because it is spacial in latex. See <https://bookdown.org/yihui/bookdown/figures.html>.
+Important: do not use _ in ref names because it is special in Latex. See <https://bookdown.org/yihui/bookdown/figures.html>.
 
 When adding code chunks, use tripletick and the language name, otherwise there will be no code chunk background in the PDF.
 
@@ -270,7 +272,7 @@ This \index{Preface}Preface is indexed.
 
 <https://bookdown.org/yihui/bookdown/cross-references.html>
 
-You can also reference sections using the same syntax `\@ref(label)` where label is the sligified title used as the anchor, where label is the section ID or use `[Section header text]`.
+You can also reference sections using the same syntax `\@ref(label)` where label is the slugified title used as the anchor, where label is the section ID or use `[Section header text]`.
 
 Need to test this in HTML & PDF.
 
@@ -282,7 +284,7 @@ FIXME: use it to flag parts that we have to revisit (update a link etc.)
 
 ## Line breaks
 
-Use 70 char width in latex code (we can fit 80 chars but then inline code bacomes too small height)
+Use 70 char width in latex code (we can fit 80 chars but then inline code height becomes too small)
 
 ## Figure placements
 

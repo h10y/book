@@ -18,13 +18,13 @@ rmd_files:
     "02-02-a-containerizing-shiny.Rmd",
     "02-02-b-containerizing-shiny.Rmd",
     "02-02-c-containerizing-shiny.Rmd",
-    "03-01-hosting-shiny.Rmd",
-    "03-02-shiny-in-production.Rmd",
-    "04-01-what-is-next.Rmd",
-    "05-01-appendix-bananas.Rmd",
-    "05-02-appendix-lbtest.Rmd",
-    "05-03-appendix-cheatsheet.Rmd",
-    "05-04-appendix-setup.Rmd",
+    # "03-01-hosting-shiny.Rmd",
+    # "03-02-shiny-in-production.Rmd",
+    # "04-01-what-is-next.Rmd",
+    # "05-01-appendix-bananas.Rmd",
+    # "05-02-appendix-lbtest.Rmd",
+    # "05-03-appendix-cheatsheet.Rmd",
+    # "05-04-appendix-setup.Rmd",
     "05-99-references.Rmd"
     ]
   latex: [
@@ -41,13 +41,13 @@ rmd_files:
     "02-02-a-containerizing-shiny.Rmd",
     "02-02-b-containerizing-shiny.Rmd",
     "02-02-c-containerizing-shiny.Rmd",
-    "03-01-hosting-shiny.Rmd",
-    "03-02-shiny-in-production.Rmd",
-    "04-01-what-is-next.Rmd",
-    "05-01-appendix-bananas.Rmd",
-    "05-02-appendix-lbtest.Rmd",
-    "05-03-appendix-cheatsheet.Rmd",
-    "05-04-appendix-setup.Rmd",
+    # "03-01-hosting-shiny.Rmd",
+    # "03-02-shiny-in-production.Rmd",
+    # "04-01-what-is-next.Rmd",
+    # "05-01-appendix-bananas.Rmd",
+    # "05-02-appendix-lbtest.Rmd",
+    # "05-03-appendix-cheatsheet.Rmd",
+    # "05-04-appendix-setup.Rmd",
     "05-99-references.Rmd"
     ]
 language:

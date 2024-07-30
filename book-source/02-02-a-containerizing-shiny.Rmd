@@ -1,4 +1,4 @@
-# Containerizing Shiny Apps {#containerizing-shiny-apps}
+# Containerizing Shiny Apps {#part2-containerizing-shiny-apps}
 
 Containerization is a topic that is of increasing interest to data 
 scientists and is a key feature for being able to cover the R and Python 
@@ -11,23 +11,22 @@ Containerization enables you to separate your applications from
 your infrastructure so you can deliver software faster.
 Containerization help makes an application platform independent by creating 
 virtual environments in a container. To run a specific application, you will 
-need to develop an _image_ for that platform which is then published on a 
-_container registry_. The developed Image can be pulled from the registry to 
+need to develop an **image** for that platform which is then published on a 
+**container registry**. The developed image can be pulled from the registry to 
 run a virtualized container environment for the application. 
 
 Docker is one of the most popular tools for creating and managing containers 
 for Shiny apps. This chapter will outline the needed concepts for containerizing 
 your shiny application.
 
-
 Learning Docker seems daunting at first, but it is an incredibly
 powerful piece of technology once you get the hang of it. It is also the
 building block of the modern web.
 
-Docker is not the only tooling for containerizing applications. 
+Docker\index{Docker} is not the only tooling for containerizing applications. 
 Docker's licensing model has recently changed and can require a paid license for 
-commercial use. Therefore, there are alternatives of the Docker engine such as 
-using [Podman](https://podman.io/). 
+commercial use. Therefore, there are alternatives of the Docker Engine such as 
+using [Podman](https://podman.io/)\index{Podman}. 
 However, Podman is much more technical to use than Docker.
 
 All the general advantages of containerized applications apply to Shiny
@@ -36,15 +35,15 @@ once build they cannot be changed, and if the app is working, it will
 work the same in the future. Another important consideration is scaling.
 Shiny apps are single-threaded, but running multiple instances of the
 same image can serve many users at the same time. Let's dive into the
-details of how to achieve this.
+details of how to achieve these.
 
-## Docker Concepts
+## Docker Concepts {#part2-docker-concepts}
 
 Containers provide portability, consistency, and are used for packaging,
 deploying, and running cloud-native data science applications.
 [Docker](https://www.docker.com/) is the most
 popular virtualization environment to deliver software in containers.
-DOcker is also well supported for Python and R.
+Docker is also well supported for Python and R.
 Among the many use cases, Docker is most commonly used to deploy
 reproducible workflows and to provide isolation for Shiny apps.
 
@@ -55,7 +54,7 @@ images. Let's review the most important concepts.
 Figure \@ref(fig:part2-docker-architecture) illustrates
 how all the Docker-related concepts all fit together.
 
-```{r part2-docker-architecture, eval=TRUE, echo=FALSE,out.width="80%", fig.cap="The Shiny app life cycle with websocket connection."}
+```{r part2-docker-architecture, eval=TRUE, echo=FALSE,out.width="100%", fig.pos = "bt", fig.cap="Docker architecture. Follow the solid, scattered and dotted lines to see how the Docker command line interface (CLI) interacts with the the Docker daemon and the container registry for various commands."}
 if (is_latex_output()) {
     include_graphics("images/02/docker-architecture.pdf")
 } else {
@@ -63,25 +62,25 @@ if (is_latex_output()) {
 }
 ```
 
-You as the user, will use the command line as the _client_ to the Docker Engine 
-which exists on a _host_ machine. The Docker Engine interfaces with the 
-_container registry_ to pull the necessary _images_ for building a local copy of 
-an image on the host for running an instance of a container.
+You as the user, will use the command line as the **client** to the Docker Engine 
+which exists on a **host** machine. The Docker Engine interfaces with the 
+**container registry** to pull the necessary **images** for building a local copy of 
+an image on the host for running an instance of a **container**.
 
-### Docker Engine
+### Docker Engine {#part2-docker-engine}
 
 The Docker Engine is a client-server application that includes a
-server (a long-running daemon process called `dockerd` that listens to API 
-requests), an _application programming interface_
+**server** (a long-running daemon process\index{Daemon process} called `dockerd` that listens to API 
+requests), an **application programming interface**
 (REST API) that specifies the interface that programs can use to talk to the
-daemon process, and a _command-line interface_ (CLI) that is the client-side
+daemon process, and a **command-line interface** (CLI) that is the client-side
 of Docker.
 
 The CLI uses the REST API to control or interact with the Docker daemon.
 The daemon creates and manages Docker objects, such as images,
 containers, volumes, networks, etc.
 
-### Container Registries
+### Container Registries {#part2-container-registries}
 
 A Docker registry stores Docker images. [Docker Hub](https://hub.docker.com/) 
 is a public registry and Docker is configured to look for images on Docker Hub by
@@ -89,30 +88,30 @@ default. There are many other registries, or users can have their own
 private registries. You will see some examples later.
 Strictly speaking, container registries are for images and not containers.
 
-### Images
+### Images {#part2-docker-images}
 
-An image is a read-only template with instructions for creating a
+An image\index{Image, Docker} is a read-only template with instructions for creating a
 Docker container. You can view an image as a set of compressed files and 
-metadata describing how these files -- also called image layers -- fit together.
+metadata describing how these files -- also called image layers\index{Image layer, Docker} -- fit together.
 
 An image can be based on another image with additional customization on top of 
-this so-called _base_ or a _parent_ image. A base images is an images created 
-from scratch, whereas a parent image is just another image that serves as the 
-foundation for a new image. You might see base image used for both situations 
+this so-called **base* or a **parent** image. A base images is an image created 
+from "scratch", whereas a parent image is just another image that serves as the 
+foundation for a new image. You might see the term base image used for both situations 
 when reading tutorials. Don't get confused, the Docker lingo has a few 
 inconsistencies that we just have to accept and move on.
 
-### The Dockerfile
+### The Dockerfile {#part2-the-dockerfile}
 
 Docker builds images by reading the instructions from a file called
-`Dockerfile`. A Dockerfile is a text document that contains all the
+`Dockerfile`. A Dockerfile\index{Dockerfile} is a text document that contains all the
 commands to assemble an image using the `docker build` CLI command. You
 will learn more about the `Dockerfile` as part of the worked Shiny
 examples later.
 
-### Containers
+### Containers {#part2-docker-containers}
 
-A container is a runnable instance of an image. Users can create,
+A container\index{Container, Docker} is a runnable instance of an image. Users can create,
 start, stop a container using the Docker API or CLI. It is also possible
 to connect a container to networks or attach storage to it.
 
@@ -121,9 +120,9 @@ host machine. The degree of isolation can be controlled by the user and
 depends on whether it is connected to networks, storage, other
 containers, or the host machine.
 
-### The Docker Command Line
+### The Docker Command Line {#part2-docker-cli}
 
-The most common Docker CLI commands are:
+The most common Docker CLI\index{Docker CLI} commands are:
 
 - `docker login`: log into a Docker registry,
 - `docker pull`: pull an image from a registry,
@@ -133,12 +132,12 @@ The most common Docker CLI commands are:
 
 You will learn more about these commands in the subsequent sections.
 
-## Working with Existing Images
+## Working with Existing Images {#part2-existing-images}
 
 Let's learn how to work with an existing image. Such an image is stored
 in a container registry where we can pull it from if we know its name.
 
-### Image Names and Tags
+### Image Names and Tags {#part2-docker-image-names-tags}
 
 Image names follow the pattern `<host>/<path>:<tag>`. 
 The optional `<host>` name specifies where the image is located.
@@ -154,18 +153,19 @@ It is important to note that the `latest` tag only means "latest" in the sense
 of the last image that was tagged as `latest` or was untagged. If you use
 a different tag, like `v1`, the image with the `latest` tag will not get
 updated as well. So don't let this tag fool you. It is strongly recommended
-in production to always explicitly use a tag that is _not_ `latest` but
+in production to always explicitly use a tag that is not `latest` but
 a specific version.
 
 The path is usually more structured and consists of slash-separated components.
 It often looks like `<namespace>/<repository>` where the namespace 
 specifies the user account or organization to which the image belongs to.
 The base R image maintained by the [Rocker](https://rocker-project.org/) project
-is names as `rocker/r-base` where `rocker` is the organization namespace,
+is named as `rocker/r-base` where `rocker` is the organization namespace,
 `r-base` is the repository.
 
 Another example is the R version of the Old Faithful 
-example has the image name `ghcr.io/h10y/faithful/r-shiny:latest` which means:
+example which has the image name `ghcr.io/h10y/faithful/r-shiny:latest`.
+This means:
 
 - `ghcr.io` is the GitHub Container Registry host name,
 - `h10y` is the GitHub organization,
@@ -173,7 +173,7 @@ example has the image name `ghcr.io/h10y/faithful/r-shiny:latest` which means:
 - `r-shiny` is the Shiny app build,
 - `latest` is the version tag.
 
-### Pulling an Image
+### Pulling an Image {#part2-docker-pull}
 
 You can use the `docker pull <image-name>` command to pull an image from
 a public registry. For example `docker pull ubuntu:24.04` will pull the 
@@ -194,7 +194,8 @@ we did not specify the tag. We can also see the SHA256 digest, that is
 a unique and immutable identifier. The name can change, or multiple names can
 refer to the same image (i.e. a set of layers and their manifest). But the
 image digest will be the same. To "pin" the exact version, you can use the 
-`<image-name>@sha256:12e[...]4ea` pattern:
+`<image-name>@sha256:12e[...]4ea` pattern (use the actual digest copied from 
+your screen without the `[...]`):
 
 ```bash
 docker pull ghcr.io/h10y/faithful/r-shiny@sha256:12e[...]4ea
@@ -210,11 +211,11 @@ This will pull not only the `latest`, but also the image tagged as `main`
 named after the Git branch. Use the `docker images` command to list the
 images.
 
-### Docker Login
+### Docker Login {#part2-docker-login}
 
 You don't need to authenticate for public images, but in
 case you are trying to pull a private image from a private repository, you 
-need to log into the container registry. Suck private repositories are common
+need to log into the container registry. Such private repositories are common
 and are available on Docker Hub, the GitHub or GitLab container registries.
 More on the different container registries later.
 
@@ -229,21 +230,22 @@ you can provide your username and password. But it is usually
 recommended to use an access token instead of your
 password because the token can have more restricted scopes, i.e. only used to
 (read) access the container registry which is a lot more secure.
-You can also set expiry dates and can revoke these tokens any time.
+You can also set expiry dates and can revoke these tokens any time without
+having to change login passwords elsewhere.
 
-Let's say that you saved your PAT in a file `~/my_password.txt` in the
-root of your home folder (`~`). You can pass the PAT value to the 
+Let's say that you saved your GitHub token value in a file `~/my_token.txt` in 
+the root of your home folder (`~`). You can pass the PAT value to the 
 `docker login` command via the standard input as:
 
 ```bash
-cat ~/my_password.txt | docker login \
+cat ~/my_token.txt | docker login \
     --username <username> \
     --password-stdin
 ```
 
 where `<username>` is your GitHub username.
 
-### Running a Container
+### Running a Container {#part2-docker-run}
 
 The next command is `docker run` which runs a command in a new container.
 It pulls the image if needed before starting the container.
@@ -255,24 +257,24 @@ of the Old Faithful example app, then it will start a new container:
 docker run -p 8080:3838 ghcr.io/h10y/faithful/py-shiny
 ```
 
-The `-p` is a shorthand for `--publish`, that instructs Docker to
+The `-p` is a shorthand for `--publish` that instructs Docker to
 publish a container's port to the host port. In our example, 3838 is the
 container's port which is mapped to port 8080 of the host machine. As a
 result, you can visit `http://127.0.0.1:8080` in your browser to see the 
-Python Shiny app. Hit CTRL+C to stop the container. We will learn about
-container ports in a bit, but in essence just a channel that the
-information is sent back and forth.
+Python Shiny app. Hit CTRL+C in the terminal to stop the container. We will 
+learn about container ports in a bit, but in essence it is just a channel that 
+is used to send information back and forth.
 
-## Building a New Image
+## Building a New Image {#part2-docker-build}
 
 So far you saw how to use the basic Docker commands to
 pull and run images. Now you'll build a Docker image by recreating the
 Old Faithful Shiny app that we worked with before.
 
 In our examples, we will use the following setup: a file named `Dockerfile` 
-sits next to a folder names `app`, and the Shiny app files like
+sits next to a folder named `app`, and the Shiny app files like
 `app.R` or `app.py` are in this folder. This setup is convenient
-because we can copy all the files from teh `app` folder without
+because we can copy all the files from the `app` folder without
 having to worry about copying files that should not be there.
 
 ```bash
@@ -281,11 +283,16 @@ having to worry about copying files that should not be there.
     └── ...
 ```
 
-### R for Shiny
+You can follow along the examples by downloading or cloning the GitHub repository
+with `git clone https://github.com/h10y/faithful.git`. All the different builds
+of the Old Faithful app from Chapter \@ref(part2-developing-shiny-apps)
+will have a `Dockerfile` and instructions in the `README.md` files within each
+folder.
 
-FIXME: Link here the repo and folder.
+### R for Shiny {#part2-docker-r-shiny}
 
-For our R Shiny example this is what is inside the `Dockerfile`:
+For our R Shiny example within the `r-shiny` folder,
+this is what is inside the `Dockerfile`:
 
 ```dockerfile
 FROM rocker/r2u:24.04
@@ -304,11 +311,11 @@ EXPOSE 3838
 CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]
 ```
 
-We will explain the `Dockerfile` commands in the next section.
+We will explain the `Dockerfile` instructions in the next section.
 For now, you can use the `docker build` command to build the image from the
 `Dockerfile`. You will have to be in the same directory as the `Dockerfile`,
-this place is what we'll call as the build context. This is what the `.` at the
-end of the command stands for:
+this place is what we'll call as the **build context**\index{Build context, Docker}. 
+This is what the `.` at the end of the command stands for:
 
 ```bash
 docker build -t r-shiny:v1 .
@@ -336,16 +343,13 @@ You can apply multiple tags as:
 docker build -t r-shiny:v1 -t r-shiny:latest .
 ```
 
-### Buildx and BuildKit
+### Buildx and BuildKit {#part2-docker-buildx-buildkit}
 
 While the builder is running, you'll see lots of messages printed
 as Docker goes through the instructions from the `Dockerfile`.
-Newer Docker Desktop version use `buildx`, which brings extended build 
-capabilities with BuildKit, such as 
-
-As of Docker Engine 23.0 and Docker Desktop 4.19, Buildx is the default build 
+As of Docker Engine 23.0 and Docker Desktop 4.19, Buildx\index{Buildx} is the default build 
 client and user interface. Buildx brings extended build capabilities with 
-BuildKit. BuildKit is the server that handles the build execution, e.g.
+BuildKit\index{BuildKit}. BuildKit is the server that handles the build execution, e.g.
 it communicates with registries, instructs the Docker Engine and accesses
 the local file system. You can enable the use of BuildKit on older Docker 
 systems by setting the environment variable `DOCKER_BUILDKIT=1`.
@@ -379,19 +383,21 @@ cat(c("[+] Building 32.4s (12/12) FINISHED",
 
 Sometimes you want to inspect the output and do not only want the collapsed 
 output. Add the `--progress=plain` to the build command to see all the 
-output. This comes handy when you want to troubleshoot.
+output. This comes handy when troubleshooting the build.
 
 BuildKit also offers other nice features, for example setting the target 
 platform(s) for the build via the `--platform` option.
 The default value is the platform of the BuildKit daemon where the build runs,
-i.e. your laptop of a server. This can be important for Mac OS X users
+i.e. your laptop or a server. This can be important for Mac OS X users
 on Apple Silicone (M1 and above), because the default ARM64 build will
 have poor performance or might fail on other platforms on AMD64 machines. 
 Use the `--platform=linux/arm64` to build the image for AMD64 architecture.
 You can also build for multiple architectures at once with
 `docker build --platform linux/amd64,linux/arm64 .`.
+See \@ref(part1-installing-docker) for enabling virtualization on Mac OS X
+to enable builds for multiple platforms.
 
-### Inspecting the Image
+### Inspecting the Image {#part2-docker-inspect}
 
 The output of the build is an image that has a SHA256 hash that can be used
 as a unique identifier. The image is made up of image layers. These layers are
@@ -438,7 +444,7 @@ cat(c("IMAGE          CREATED        CREATED BY                                 
 
 The `docker inspect r-shiny:v1` returns a long JSON output that is the 
 metadata of the image. It also has the SHA256 hash of the image.
-Here is the greatly stripped output:
+Here is the greatly simplified output:
 
 ```{r eval=TRUE,echo=FALSE,size='footnotesize'}
 cat(c("[",
@@ -472,10 +478,11 @@ make sure the app is working as expected:
 docker run -p 8080:3838 r-shiny:v1
 ```
 
-### R for Python
+### Python for Shiny {#part2-docker-python-shiny}
 
-FIXME: provide link to this example.
-The `Dockerfile` for the Python version looks like this:
+You can find the Python for Shiny example in the `py-shiny` folder of the 
+Old Faithful example repository. The `Dockerfile` for the Python version looks 
+like this:
 
 ```dockerfile
 FROM python:3.9
@@ -499,7 +506,7 @@ ENV HOME=/home/app
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "3838"]
 ```
 
-Again, we'll explain each line shortly. To build anc check the Docker image,
+We'll explain each line shortly. To build and check the Docker image,
 use the following commands:
 
 ```bash
@@ -511,13 +518,13 @@ docker run -p 8080:3838 py-shiny:v1
 ```
 
 The `DOCKER_DEFAULT_PLATFORM` environment variable is not strictly necessary,
-but it can save you some headaches on Mac OS X when the platform for parent 
-images is not matching the local ARM64 architecture of your Apple Silicone.
+but it can save you some headaches on Mac OS X when the platform for the parent 
+image is not matching the local ARM64 architecture of your Apple Silicone.
 
-## Managing Images
+## Managing Images {#part2-docker-managing-images}
 
 There are a few commands that you need to know to manage your Docker images 
-in the absence of the Docker Desktop interface.
+in the absence of the Docker Desktop graphical user interface.
 This will pay off later when you have no such luxuries on a server.
 
 To list the Docker images, use the `docker images` command. It will give you
@@ -536,7 +543,8 @@ will give you images whose name starts with `py-`, whereas
 `docker images --filter=reference="*:v1"` will list images that are tagged with
 `v1`.
 
-Use the `docker rmi <image-name>` to remove an image.
+Use the `docker rmi <image-name-or-id>` to remove an image based on its name or 
+the image ID.
 
 The `docker system df` command will give you a concise summary of disk usage 
 by the Docker daemon including images, containers, and volumes:
@@ -551,7 +559,7 @@ Build Cache     117       0         3.005GB   3.005GB
 
 If you build images during development while keeping the image name and tag the
 same you will end up with "dangling" images that are untagged and are not used
-any longer. Dangling images can accumulate over time and fill up the
+any longer. Dangling images can accumulate over time and can fill up the
 available space that Docker Desktop is allocating for images.
 Use `docker system prune` to clean up these dangling images.
 The command `docker system prune --all` will remove all unused images and containers.
@@ -562,15 +570,13 @@ should be able to change the virtual disk limit.
 You can check the RAM, CPU, and disk usage by looking at the bottom of the
 Docker Desktop window.
 
-## Sharing Images
+## Sharing Images {#part2-docker-sharing-images}
 
 As we saw, Docker images are just compressed files linked by metadata.
 You should be able to copy these files and move them around.
 The `docker save` command lets you save an image to a compressed tar file:
 
 ```bash
-docker pull r-shiny:v1
-
 docker save -o r-shiny-v1.tar r-shiny:v1
 ```
 
@@ -580,13 +586,15 @@ Next, you take this tar file, copy it to another server and load it with:
 docker load --input r-shiny-v1.tar
 ```
 
+This restores both the image and the tags.
+
 Now imagine that you are managing more than two machines, or you want to share 
 the Docker image with others so that they can use it or to serve as a parent image. 
 The save/copy/load workflow becomes cumbersome quickly.
 In this case, using a registry might be a much better idea. There are 
 many options to choose from, and you can even host your own registry.
 
-### Pushing Images
+### Pushing Images {#part2-docker-push}
 
 Let's tag the `r-shiny` image so that it has a host defined:
 
@@ -602,19 +610,19 @@ docker push ghcr.io/h10y/faithful/r-shiny:latest
 
 Note that this command will not work on your machine because you do not
 have write access to the `ghcr.io/h10y/faithful` repository.
-You need to create an image tag that would let you push for example 
-to your own personal Docker Hub account.
+You need to create an image name that would let you push to your own personal 
+Docker Hub account as an example.
 
 The image tag should start with the registry name unless you are pushing
 to Docker Hub. When the image tag is not specified, Docker will treat
 the new image as `:latest` automatically.
 
-### Docker Registries
+### Docker Registries {#part2-docker-registries}
 
 A Docker registry stores Docker images. This is where we push images to and pull
 images from. [Docker Hub](https://hub.docker.com/) 
 is a public registry and Docker is configured to look for images on Docker Hub by
-default. Docker Hub is a service provided by Docker for finding and sharing
+default. **Docker Hub**\index{Docker Hub} is a service provided by Docker for finding and sharing
 container images. The canonical host name for Docker Hub is `docker.io`. This 
 is the default registry when you don't specify a registry host as part of the 
 image name. 
@@ -622,24 +630,24 @@ image name.
 There are many other registries out there besides Docker Hub. Here is a
 non-exhaustive list of options.
 
-The GitHub Container Registry (GHCR) is available as part of GitHub Packages
+The **GitHub Container Registry**\index{GitHub Container Registry} (GHCR) is available as part of GitHub Packages
 for free and paid plans, even for private repositories under the free
 plan. This registry requires no authentication for public images, otherwise
 you have to authenticate using your GitHub token. The visibility of the
-images inherits the repository visibility but can be change by the owner.
+images inherits the repository visibility but can be changed by the owner.
 The host name for GHCR is `ghcr.io`.
 
 An alternative to GitHub is GitLab (host name `registry.gitlab.com`), 
 that has provided registry support for its free (public and private) repositories 
-long before GitHub. The registry is tightly integrated with GitLab's CICD 
-pipelines. This registry also needs login with a token ofr private images.
+long before GitHub. The registry is tightly integrated with GitLab's CI/CD 
+pipelines. This registry also needs login with a token for private images.
 
 Heroku is a platform provider and it also comes with a Docker
 registry (host name is `registry.heroku.com`) where the Docker-based deployments
 push the images to.
 
-Of course, every major cloud provider offers a Docker container registry
-that is often integrated with their other offerings. Latency should be
+Every major cloud provider offers a Docker container registry
+that is integrated with their other offerings. Latency should be
 minimal due to network proximity to the servers:
 
 - Amazon Elastic Container Registry
@@ -653,7 +661,7 @@ Registry, Harbor, and Scaleway.
 Although these services are called "container registry", but strictly
 speaking they store container images.
 
-### Log In to a Registry
+### Log In to a Registry {#part2-docker-registry-login}
 
 When you work with private registries or private images, you need to log
 in with the `docker login` command. For Docker Hub, just type
@@ -700,7 +708,7 @@ revoked at any time without it impacting other areas of your life.
 
 Note that `docker login` requires users to use `sudo` or be the `root` user.
 
-### Local Registry
+### Local Registry {#part2-docker-registry-local}
 
 You might not want the Docker images to leave your computer because you need an
 air gapped environment, or you are setting up a registry within your
@@ -752,7 +760,7 @@ docker pull localhost:5000/r-shiny:v1
 The next command stops and removes the registry container. It is a daemonized
 (background) process, so CTRL+C won't work. The `-v` option makes sure to remove 
 anonymous volumes associated with the container which is often used to mount a 
-volumes from your hard drive into the container where the images are stored:
+volume from your hard drive into the container where the images are stored:
 
 ```bash
 docker container stop registry && \
@@ -765,7 +773,7 @@ layer security (TLS) for HTTPS and user authentication, which are advanced topic
 and we recommend using a commercial container registry that we listed above
 and use private repositories to control access to your images.
 
-## The Dockerfile
+## The Dockerfile {#part2-dockerfile}
 
 It is time to review the Dockerfiles line by line and learn about each of the
 different types of instructions and their uses.
@@ -773,16 +781,16 @@ We organize the sections according to functional steps based on the Dockerfiles
 for our R and Python apps. The full Dockerfile reference can be found at
 <https://docs.docker.com/reference/dockerfile/>.
 
-### The Parent Image
+### The Parent Image {#part2-dockerfile-parent-image}
 
 The `FROM` instruction initializes a new build stage and sets the base
 (`FROM SCRATCH`) or parent image (e.g. `FROM ubuntu:24.04`).
 For the R version we used the `FROM rocker/r2u:24.04` and for the Python version
 we used `FROM python:3.9`. We will review the different parent images and
-how to use multiple parent images in the same Dockerfil as part of a 
+how to use multiple parent images in the same Dockerfile as part of a 
 multi-stage build later.
 
-### Metadata
+### Metadata {#part2-dockerfile-metadata}
 
 The `LABEL` instruction is optional, it adds metadata to an image, e.g.
 who to contact in case of issues or questions:
@@ -792,9 +800,9 @@ LABEL maintainer="USER <user@example.com>"
 ```
 
 We'll talk more about labels as part of continuous integration and continuous
-delivery (CICD).
+delivery (CI/CD) /FIXME: add ref here/.
 
-### Dependencies
+### Dependencies {#part2-dockerfile-dependencies}
 
 We often use the `RUN` instruction to install dependencies and use other
 shell commands to set permissions to files, etc.
@@ -819,7 +827,7 @@ practice. This is how we created the non-root user:
 RUN groupadd app && useradd -g app app
 ```
 
-### Directories and Files
+### Directories and Files {#part2-dockerfile-files-and-dirs}
 
 Next we changed the working directory to `/home/app` that is he home folder
 of the non-privileged `app` user:
@@ -879,13 +887,13 @@ RUN chown app:app -R /home/app
 
 Similarly, use the `--chmod` flag to define read/write/execute permissions.
 
-### Switching User
+### Switching User {#part2-dockerfile-user}
 
 The `USER` instruction sets the user name to use as the default user for 
 the `ENTRYPOINT` and `CMD` commands. We used `USER app` to switch to the
 non-root `app` user.
 
-### Expose a Port
+### Expose a Port {#part2-dockerfile-port}
 
 The `EXPOSE` instruction defines the port that Docker container listens on 
 at runtime. We chose port 3838 with the `EXPOSE 3838` instruction.
@@ -897,7 +905,7 @@ You can pick any port, but remember that exposing a lower port number, like
 In general, we recommend using port numbers 1024 and above. Using lower
 ports will result in failures with a non-root user, such as our `app` user.
 
-### Variables
+### Variables {#part2-dockerfile-env-and-arg}
 
 The `ENV` instruction sets the default values for environment variables.
 We set two variables for the Python app to allow configs to be written
@@ -908,7 +916,7 @@ ENV MPLCONFIGDIR=/home/app/.config
 ENV HOME=/home/app
 ```
 
-These environment variables will be part of the final image, so do not use it
+These environment variables will be part of the final image, so do not use `ENV`
 to add secrets to the image at build time. Such environment variables should be
 added at runtime, e.g. with `docker run --env TOKEN=<token-value> <image-name>`
 or using a file as `docker run --env-file .env <image-name>` which will
@@ -917,7 +925,7 @@ read the variables from the `.env` file.
 The `ARG` instruction defines a variable that users can pass at build-time.
 For example, adding `ARG GITHUB_PAT` to the Dockerfile
 would allow you to use the `remotes::install_github()` function to install
-R an package from a private GitHub repository. You can provide the toke
+an R package from a private GitHub repository. You can provide the token
 value to `docker build` as:
 
 ```bash
@@ -927,33 +935,33 @@ docker build -t <image-tag> --build-arg="GITHUB_PAT=${GITHUB_PAT}" .
 
 The token value will not be available in the container at runtime.
 
-### Executable and Command
+### Executable and Command {#part2-dockerfile-cmd}
 
 We got to the end of the Dockerfile. This is where we define the 
-_process_ that is executed inside the container at run time via the
+**process** that is executed inside the container at run time via the
 `ENTRYPOINT` instruction. This is often omitted. In that case, the default
 executable is set to `/bin/sh -c` that is the shell executable. 
 Shell is a basic command-line interpreter and the `-c`
 flag indicates that the shell will read the commands to execute from a string.
 This string is provided through the `CMD` instruction.
 For example we can add `CMD uvicorn app:app --host 0.0.0.0 --port 3838`
-is the default set of arguments supplied to the `ENTRYPOINT` process
+as the default set of arguments supplied to the `ENTRYPOINT` process
 to start the Python Shiny app.
 
 The `RUN`, `CMD`, and `ENTRYPOINT` instructions have two possible forms.
 The shell form is used mostly with the `RUN` instruction because it allows
-useful shell features like piping output and chaining commands.
-The shell form is written without square brackets and for the 
-R Shiny app would look like this:
+useful shell features like piping the output and chaining commands.
+The shell form is written without square brackets and it would look like this
+for the R Shiny app:
 
 ```dockerfile
 CMD R -e "shiny::runApp(host='0.0.0.0', port=3838)"
 ```
 
-This command will execute as child processes of the shell, and as such,
+This command will execute as a child processes of the shell, and as such,
 signals like CTRL+C will not be forwarded to the child process by the shell.
-This is why it is recommended to use the so called "exec" form for `CMD` and 
-`ENTRYPOINT` instructions. The "exec" form that is written between square
+This is why it is recommended to use the so called "exec" form for the `CMD` and 
+`ENTRYPOINT` instructions. The "exec" form is written between square
 brackets. Here it is for the R version:
 
 ```dockerfile
@@ -967,16 +975,15 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "3838"]
 ```
 
 When we discussed local hosting of the Shiny apps we did not review all the 
-possible arguments for the R and Python commands.
-Two options here beg for introduction.
+possible arguments for the R and Python commands. Two options here beg for introduction.
 The `host` defines the IP address that the app listens on. The default host
 value is `127.0.0.1` (also known as `localhost` or loopback address). 
 If we leave the host at its default value, we will not be able to access the 
 container from outside because localhost can only be accessed from the same 
-address. This is the reason we need to set it to `0.0.0.0` which can be accessed
-from outside of the container.
+address. This is the reason why we need to set it to `0.0.0.0` which can be 
+accessed from outside of the container.
 
-The other important argument os the TCP port that the application is listening
+The other important argument is the TCP port that the application is listening
 on. If the prot is not provided for the R Shiny command, Shiny will pick a
 random port number. We obviously do not want to guess this port, so we need to
 set it. The 3838 port number is the same as the number we exposed via the
