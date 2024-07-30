@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Examples | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Examples | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="analythium/hosting-shiny-book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Examples | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@analythium" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2024-07-30" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="3-part1-local-setup.html"/>
+<link rel="next" href="5-part2-developing-shiny-apps.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.umd.cjs"></script>
+<link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.4/reactable.js"></script>
+<script src="https://cdn.usefathom.com/script.js" data-site="PASYTARS" defer></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-part1-background.html"><a href="1-part1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-part1-background.html"><a href="1-part1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-web-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-python"><i class="fa fa-check"></i><b>3.1.2</b> Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-quarto"><i class="fa fa-check"></i><b>3.1.4</b> Quarto</a></li>
+<li class="chapter" data-level="3.1.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-docker"><i class="fa fa-check"></i><b>3.1.5</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-super-user"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-scm-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-working-with-servers"><i class="fa fa-check"></i><b>3.4</b> Working with Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#readability-on-the-command-line"><i class="fa fa-check"></i><b>3.5</b> Readability on the Command Line</a></li>
+<li class="chapter" data-level="3.6" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#other-useful-tools"><i class="fa fa-check"></i><b>3.6</b> Other Useful Tools</a></li>
+<li class="chapter" data-level="3.7" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-part1-examples.html"><a href="4-part1-examples.html"><i class="fa fa-check"></i><b>4</b> Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas-data"><i class="fa fa-check"></i><b>4.2.1</b> The Bananas Data Set</a></li>
+<li class="chapter" data-level="4.2.2" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas-model"><i class="fa fa-check"></i><b>4.2.2</b> Model Training</a></li>
+<li class="chapter" data-level="4.2.3" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas-app"><i class="fa fa-check"></i><b>4.2.3</b> The Shiny App</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-lbtest"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-part1-examples.html"><a href="4-part1-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-ui"><i class="fa fa-check"></i><b>5.1.1</b> The User Interface</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-server-function"><i class="fa fa-check"></i><b>5.1.2</b> The Server Function</a></li>
+<li class="chapter" data-level="5.1.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shiny-express"><i class="fa fa-check"></i><b>5.1.3</b> Shiny Express</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-apps"><i class="fa fa-check"></i><b>5.2</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-single-file"><i class="fa fa-check"></i><b>5.2.1</b> Single file</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-multiple-files"><i class="fa fa-check"></i><b>5.2.2</b> Multiple Files</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-rhino"><i class="fa fa-check"></i><b>5.2.3</b> Shiny App with Nested File Structure</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-programmatic-cases"><i class="fa fa-check"></i><b>5.2.4</b> Programmatic Cases</a></li>
+<li class="chapter" data-level="5.2.5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-r-package"><i class="fa fa-check"></i><b>5.2.5</b> Shiny App as an R Package</a></li>
+<li class="chapter" data-level="5.2.6" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-dynamic-documents"><i class="fa fa-check"></i><b>5.2.6</b> Dynamic Documents</a></li>
+<li class="chapter" data-level="5.2.7" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive"><i class="fa fa-check"></i><b>5.2.7</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-run-shiny-locally"><i class="fa fa-check"></i><b>5.3</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+<li class="chapter" data-level="5.3.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shiny-lifecycle"><i class="fa fa-check"></i><b>5.3.3</b> The Shiny App Lifecycle</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-sharing-shiny-code"><i class="fa fa-check"></i><b>5.4</b> Sharing the Shiny App Code</a></li>
+<li class="chapter" data-level="5.5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>6</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-concepts"><i class="fa fa-check"></i><b>6.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-engine"><i class="fa fa-check"></i><b>6.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="6.1.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-container-registries"><i class="fa fa-check"></i><b>6.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="6.1.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-images"><i class="fa fa-check"></i><b>6.1.3</b> Images</a></li>
+<li class="chapter" data-level="6.1.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-the-dockerfile"><i class="fa fa-check"></i><b>6.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="6.1.5" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-containers"><i class="fa fa-check"></i><b>6.1.5</b> Containers</a></li>
+<li class="chapter" data-level="6.1.6" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-cli"><i class="fa fa-check"></i><b>6.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-existing-images"><i class="fa fa-check"></i><b>6.2</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-image-names-tags"><i class="fa fa-check"></i><b>6.2.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="6.2.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-pull"><i class="fa fa-check"></i><b>6.2.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="6.2.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-login"><i class="fa fa-check"></i><b>6.2.3</b> Docker Login</a></li>
+<li class="chapter" data-level="6.2.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-run"><i class="fa fa-check"></i><b>6.2.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-build"><i class="fa fa-check"></i><b>6.3</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-r-shiny"><i class="fa fa-check"></i><b>6.3.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="6.3.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-buildx-buildkit"><i class="fa fa-check"></i><b>6.3.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="6.3.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-inspect"><i class="fa fa-check"></i><b>6.3.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="6.3.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-python-shiny"><i class="fa fa-check"></i><b>6.3.4</b> Python for Shiny</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-managing-images"><i class="fa fa-check"></i><b>6.4</b> Managing Images</a></li>
+<li class="chapter" data-level="6.5" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-sharing-images"><i class="fa fa-check"></i><b>6.5</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-push"><i class="fa fa-check"></i><b>6.5.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="6.5.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-registries"><i class="fa fa-check"></i><b>6.5.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="6.5.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-registry-login"><i class="fa fa-check"></i><b>6.5.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="6.5.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-registry-local"><i class="fa fa-check"></i><b>6.5.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile"><i class="fa fa-check"></i><b>6.6</b> The Dockerfile</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-parent-image"><i class="fa fa-check"></i><b>6.6.1</b> The Parent Image</a></li>
+<li class="chapter" data-level="6.6.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-metadata"><i class="fa fa-check"></i><b>6.6.2</b> Metadata</a></li>
+<li class="chapter" data-level="6.6.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-dependencies"><i class="fa fa-check"></i><b>6.6.3</b> Dependencies</a></li>
+<li class="chapter" data-level="6.6.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-files-and-dirs"><i class="fa fa-check"></i><b>6.6.4</b> Directories and Files</a></li>
+<li class="chapter" data-level="6.6.5" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-user"><i class="fa fa-check"></i><b>6.6.5</b> Switching User</a></li>
+<li class="chapter" data-level="6.6.6" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-port"><i class="fa fa-check"></i><b>6.6.6</b> Expose a Port</a></li>
+<li class="chapter" data-level="6.6.7" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-env-and-arg"><i class="fa fa-check"></i><b>6.6.7</b> Variables</a></li>
+<li class="chapter" data-level="6.6.8" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dockerfile-cmd"><i class="fa fa-check"></i><b>6.6.8</b> Executable and Command</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-parent-images"><i class="fa fa-check"></i><b>6.7</b> Parent Images</a>
+<ul>
+<li class="chapter" data-level="6.7.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-parent-images-r"><i class="fa fa-check"></i><b>6.7.1</b> Popular Parent Images for R</a></li>
+<li class="chapter" data-level="6.7.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-parent-images-python"><i class="fa fa-check"></i><b>6.7.2</b> Popular Parent Images for Python</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-system-libraries"><i class="fa fa-check"></i><b>6.8</b> Installing System Libraries</a>
+<ul>
+<li class="chapter" data-level="6.8.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-system-libraries-manual"><i class="fa fa-check"></i><b>6.8.1</b> Manually Installation</a></li>
+<li class="chapter" data-level="6.8.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-system-libraries-r2u"><i class="fa fa-check"></i><b>6.8.2</b> Automated Dependency Resolution with r2u</a></li>
+<li class="chapter" data-level="6.8.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-system-libraries-alpine"><i class="fa fa-check"></i><b>6.8.3</b> Dependencies on Alpine Linux</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-r-pkg"><i class="fa fa-check"></i><b>6.9</b> Installing R Packages</a>
+<ul>
+<li class="chapter" data-level="6.9.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-r-pkg-explicit"><i class="fa fa-check"></i><b>6.9.1</b> Explicitly Stating Dependencies</a></li>
+<li class="chapter" data-level="6.9.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-r-pkg-description"><i class="fa fa-check"></i><b>6.9.2</b> Using the DESCRIPTION File</a></li>
+<li class="chapter" data-level="6.9.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-r-pkg-renv"><i class="fa fa-check"></i><b>6.9.3</b> Using renv</a></li>
+<li class="chapter" data-level="6.9.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-r-pkg-deps"><i class="fa fa-check"></i><b>6.9.4</b> Using deps</a></li>
+</ul></li>
+<li class="chapter" data-level="6.10" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-install-python"><i class="fa fa-check"></i><b>6.10</b> Python Requirements</a></li>
+<li class="chapter" data-level="6.11" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps"><i class="fa fa-check"></i><b>6.11</b> Dynamic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.11.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-r"><i class="fa fa-check"></i><b>6.11.1</b> R</a></li>
+<li class="chapter" data-level="6.11.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-python"><i class="fa fa-check"></i><b>6.11.2</b> Python</a></li>
+<li class="chapter" data-level="6.11.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-rmd"><i class="fa fa-check"></i><b>6.11.3</b> R Markdown</a></li>
+<li class="chapter" data-level="6.11.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-r"><i class="fa fa-check"></i><b>6.11.4</b> Quarto with R</a></li>
+<li class="chapter" data-level="6.11.5" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-python"><i class="fa fa-check"></i><b>6.11.5</b> Quarto with Python</a></li>
+<li class="chapter" data-level="6.11.6" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-shiny-server"><i class="fa fa-check"></i><b>6.11.6</b> Shiny Server</a></li>
+</ul></li>
+<li class="chapter" data-level="6.12" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-static-shiny-apps"><i class="fa fa-check"></i><b>6.12</b> Static Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="6.12.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-multi-stage-builds"><i class="fa fa-check"></i><b>6.12.1</b> Multi-stage Builds</a></li>
+</ul></li>
+<li class="chapter" data-level="6.13" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-image-analysis"><i class="fa fa-check"></i><b>6.13</b> Image Analysis</a>
+<ul>
+<li class="chapter" data-level="6.13.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-image-analysis-attestations"><i class="fa fa-check"></i><b>6.13.1</b> Attestations</a></li>
+<li class="chapter" data-level="6.13.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-image-analysis-scanning"><i class="fa fa-check"></i><b>6.13.2</b> Vulnerability Scanning</a></li>
+</ul></li>
+<li class="chapter" data-level="6.14" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-containers"><i class="fa fa-check"></i><b>6.14</b> Containers</a>
+<ul>
+<li class="chapter" data-level="6.14.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-containers-run"><i class="fa fa-check"></i><b>6.14.1</b> Docker Run</a></li>
+<li class="chapter" data-level="6.14.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-health-check"><i class="fa fa-check"></i><b>6.14.2</b> Health Check</a></li>
+<li class="chapter" data-level="6.14.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-container-life-cycle"><i class="fa fa-check"></i><b>6.14.3</b> Container Life Cycle</a></li>
+<li class="chapter" data-level="6.14.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-containers-managing"><i class="fa fa-check"></i><b>6.14.4</b> Managing Containers</a></li>
+<li class="chapter" data-level="6.14.5" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-docker-compose"><i class="fa fa-check"></i><b>6.14.5</b> Docker Compose</a></li>
+<li class="chapter" data-level="6.14.6" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-compose-file"><i class="fa fa-check"></i><b>6.14.6</b> The Compose File</a></li>
+<li class="chapter" data-level="6.14.7" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-compose-cli"><i class="fa fa-check"></i><b>6.14.7</b> Compose Command Line</a></li>
+<li class="chapter" data-level="6.14.8" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-container-orchestration"><i class="fa fa-check"></i><b>6.14.8</b> Container Orchestration</a></li>
+</ul></li>
+<li class="chapter" data-level="6.15" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices"><i class="fa fa-check"></i><b>6.15</b> Best Practices</a>
+<ul>
+<li class="chapter" data-level="6.15.1" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-parent-images"><i class="fa fa-check"></i><b>6.15.1</b> Parent Images</a></li>
+<li class="chapter" data-level="6.15.2" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-minimize-deps"><i class="fa fa-check"></i><b>6.15.2</b> Minimize Dependencies</a></li>
+<li class="chapter" data-level="6.15.3" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-cache"><i class="fa fa-check"></i><b>6.15.3</b> Cache and Order Layers</a></li>
+<li class="chapter" data-level="6.15.4" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-user"><i class="fa fa-check"></i><b>6.15.4</b> Switch to Non-root User</a></li>
+<li class="chapter" data-level="6.15.5" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-secrets"><i class="fa fa-check"></i><b>6.15.5</b> No Secrets</a></li>
+<li class="chapter" data-level="6.15.6" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-syntax"><i class="fa fa-check"></i><b>6.15.6</b> Shell vs. Exec Syntax</a></li>
+<li class="chapter" data-level="6.15.7" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-log"><i class="fa fa-check"></i><b>6.15.7</b> Log to STDOUT and STDERR</a></li>
+<li class="chapter" data-level="6.15.8" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-healthcheck"><i class="fa fa-check"></i><b>6.15.8</b> Include HEALTHCHECK</a></li>
+<li class="chapter" data-level="6.15.9" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-version"><i class="fa fa-check"></i><b>6.15.9</b> Version Your Images</a></li>
+<li class="chapter" data-level="6.15.10" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-readability"><i class="fa fa-check"></i><b>6.15.10</b> Readability</a></li>
+<li class="chapter" data-level="6.15.11" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#part2-best-practices-tips"><i class="fa fa-check"></i><b>6.15.11</b> More Tips</a></li>
+</ul></li>
+<li class="chapter" data-level="6.16" data-path="6-part2-containerizing-shiny-apps.html"><a href="6-part2-containerizing-shiny-apps.html#summary-5"><i class="fa fa-check"></i><b>6.16</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='images/logos/banner.png' alt="Hosting Shiny">
+</html>
+<div id="part1-examples" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Examples<a href="4-part1-examples.html#part1-examples" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Shiny apps come in many different shapes and forms. We will not be able to
+represent this vast diversity, but instead we wanted some apps that can be
+used to showcase common patterns, and that can also fit onto the pages of a
+printed book reasonably well.</p>
+<p>We will use 3 Shiny apps as examples, all 3 are implemented in both R and Python:</p>
+<ul>
+<li><code>faithful</code>: a “Hello Shiny!” app displaying the Old Faithful geyser
+waiting times data as a histogram with a slider that allows to adjust
+the number of bins used in the histogram — this app demonstrates the
+very basics of of reactivity, and it is very short.</li>
+<li><code>bananas</code>: an app that classifies the ripeness of banana fruits based on
+the color composition (green, yellow, brown) — this app demonstrates
+a more complex use case with dependencies, and the app also relies on a
+machine learning model, thus it better reflects real world use cases.</li>
+<li><code>lbtest</code>: an app to test load balancing when scaling Shiny apps to
+multiple instances.</li>
+</ul>
+<p>Let’s learn about the example apps.</p>
+<div id="part1-example-faithful" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Old Faithful<a href="4-part1-examples.html#part1-example-faithful" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This is the classic “Hello Shiny!” app that you can see in R by trying
+<code>shiny::runExample("01_hello")</code>. The app displays the Old Faithful geyser
+waiting times data as a histogram with a slider that allows to adjust
+the number of bins used in the histogram (Fig. <a href="4-part1-examples.html#fig:part1-examples-faithful">4.1</a>).
+The R version of the app was originally written by the Shiny package authors
+<span class="citation">(<a href="#ref-R-shiny">Chang et al. 2024</a>)</span>.</p>
+<p>The “Hello Shiny!” in R has no dependencies other than <code>shiny</code>.
+The Old Faithful app in Python has more requirements besides <code>shiny</code>,
+because the Python standard library does not have the geyser data readily
+available, and you need e.g. <code>matplotlib</code> <span class="citation">(<a href="#ref-Hunter2007">Hunter 2007</a>)</span> for the histogram.
+We wrote the Python version as a mirror translation of the R version,
+so that you can see the similarities and the differences.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:part1-examples-faithful"></span>
+<img src="images/01/example-faithful.png" alt="The `faithful` example Shiny app." width="\textwidth" />
+<p class="caption">
+Figure 4.1: The <code>faithful</code> example Shiny app.
+</p>
+</div>
+<p>In R, the data set <code>datasets::faithful</code> <span class="citation">(<a href="#ref-R-base">R Core Team 2024</a>)</span> contains waiting time between eruptions and
+the duration of the eruption for the Old Faithful geyser in Yellowstone National
+Park, Wyoming, USA. We got the Python data set from the Seaborn library
+<code>seaborn.load_dataset("geyser")</code> <span class="citation">(<a href="#ref-Waskom2021">Waskom 2021</a>)</span>.</p>
+<p>The source code for the different builds of the Old Faithful Shiny app is at
+<a href="https://github.com/h10y/faithful" class="uri">https://github.com/h10y/faithful</a>. You can download the GitHub repository
+az a zip file from GitHub, or clone the repository with
+<code>git clone https://github.com/h10y/faithful.git</code>.</p>
+</div>
+<div id="part1-example-bananas" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Bananas<a href="4-part1-examples.html#part1-example-bananas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>bananas</code> app was born out of a “stuck-in-the-house” COVID-19 project when
+one of the authors bought some green bananas at the store and took daily
+photographs of each fruit.
+Later, the data set was used as part of teaching a workshops. The motivation for the app
+is that it follows a workflow that is fairly common in all kinds of data science
+projects:</p>
+<ol style="list-style-type: decimal">
+<li>Have a question to answer: <em>Is my banana ripe?</em></li>
+<li>Collect data: <em>Go to the store, buy bananas, set up a ring light and take pictures every day over 3 weeks.</em></li>
+<li>Compile the training data: <em>Classify colour pixels and calculate the relative proportions, score pictures according to ripeness status.</em></li>
+<li>Run exploratory data analysis: <em>Let’s explore and visualize the data set.</em></li>
+<li>Train a classification model: <em>Estimate the the banana ripeness class and probability given the colour composition.</em></li>
+<li>Build a “scoring engine”: <em>Given some colour inputs for a new fruit, tell me the probability for the ripeness classes.</em></li>
+<li>Build a user interface: <em>Let a non technical user to do the data exploration and classification as part of a web application.</em></li>
+</ol>
+<div id="part1-example-bananas-data" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> The Bananas Data Set<a href="4-part1-examples.html#part1-example-bananas-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The data set tracks the ripening colour composition of banana fruits daily over a
+3-week period. The full data set can be found in the <a href="https://github.com/psolymos/bananas">GitHub repository</a>
+and R package <code>bananas</code> (<code>install.packages("bananas", repos = "https://psolymos.r-universe.dev")</code>).
+The subset used in the book and the Shiny app constitutes the 6 fruits that were kept at room temperature.</p>
+<p>The table has the following fields:</p>
+<ul>
+<li><code>fruit</code>: the identifier of the fruit,</li>
+<li><code>day</code>: number between 0 and 20, the number of days since the first set of photographs,</li>
+<li><code>ripeness</code>: the ripeness class of the fruit based in Péter’s personal judgement (Under, Ripe, Very, Over),</li>
+<li><code>green</code>, <code>yellow</code>, <code>brown</code>: colour composition, these 3 values add up to 1 (100%).</li>
+</ul>
+<p>The colour composition was determined based on colour mapping the pixel values of
+the banana fruits and converting the pixel based 2-dimensional area to proportions.</p>
+<p>The following summary presents the ripeness and the percentage values of
+green, yellow, brown colours.</p>
+<div class="reactable html-widget html-fill-item" id="htmlwidget-6a82b4e93115bd680bd2" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-6a82b4e93115bd680bd2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"fruit":["fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_14","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_15","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_21","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_22","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_23","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26","fruit_26"],"day":[0,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,0,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,0,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,0,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,0,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,0,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"ripeness":["Under","Ripe","Ripe","Ripe","Ripe","Ripe","Very","Very","Very","Very","Very","Over","Over","Over","Over","Over","Over","Over","Over","Over","Under","Under","Ripe","Ripe","Ripe","Ripe","Ripe","Very","Very","Very","Very","Very","Very","Over","Over","Over","Over","Over","Over","Over","Under","Ripe","Ripe","Ripe","Ripe","Ripe","Very","Very","Very","Very","Over","Over","Over","Over","Over","Over","Over","Over","Over","Over","Under","Under","Ripe","Ripe","Ripe","Ripe","Ripe","Ripe","Very","Very","Very","Very","Very","Over","Over","Over","Over","Over","Over","Over","Under","Ripe","Ripe","Ripe","Ripe","Ripe","Ripe","Very","Very","Very","Very","Very","Over","Over","Over","Over","Over","Over","Over","Over","Under","Ripe","Ripe","Ripe","Ripe","Ripe","Very","Very","Very","Over","Over","Over","Over","Over","Over","Over","Over","Over","Over","Over"],"green":[0.387,0.149,0.117,0.09,0.113,0.165,0.144,0.183,0.21,0.108,0.099,0.081,0.097,0.066,0.062,0.056,0.051,0.044,0.043,0.044,0.568,0.295,0.27,0.168,0.157,0.186,0.158,0.176,0.208,0.168,0.135,0.108,0.153,0.104,0.11,0.101,0.083,0.076,0.074,0.072,0.402,0.149,0.095,0.076,0.054,0.064,0.074,0.111,0.154,0.104,0.099,0.087,0.081,0.054,0.052,0.045,0.042,0.038,0.043,0.039,0.837,0.197,0.129,0.108,0.049,0.048,0.054,0.069,0.09,0.063,0.072,0.065,0.078,0.068,0.077,0.073,0.074,0.07,0.081,0.09,0.339,0.156,0.142,0.106,0.061,0.055,0.098,0.111,0.16,0.1,0.119,0.099,0.142,0.107,0.104,0.099,0.087,0.066,0.074,0.066,0.178,0.083,0.05,0.046,0.061,0.095,0.124,0.169,0.216,0.086,0.095,0.069,0.092,0.06,0.052,0.056,0.059,0.048,0.058,0.054],"yellow":[0.592,0.844,0.801,0.771,0.774,0.767,0.646,0.55,0.429,0.319,0.296,0.208,0.168,0.121,0.075,0.044,0.041,0.034,0.033,0.024,0.425,0.691,0.693,0.687,0.704,0.724,0.657,0.626,0.528,0.422,0.451,0.431,0.362,0.373,0.242,0.206,0.172,0.137,0.097,0.061,0.566,0.82,0.887,0.885,0.901,0.886,0.81,0.689,0.598,0.398,0.352,0.269,0.188,0.145,0.107,0.056,0.051,0.038,0.032,0.018,0.145,0.797,0.828,0.863,0.919,0.925,0.894,0.84,0.778,0.666,0.622,0.542,0.488,0.396,0.339,0.26,0.205,0.153,0.115,0.071,0.641,0.836,0.832,0.861,0.908,0.915,0.83,0.783,0.683,0.499,0.385,0.33,0.262,0.209,0.159,0.113,0.083,0.075,0.068,0.037,0.813,0.909,0.924,0.9,0.885,0.845,0.695,0.577,0.463,0.345,0.317,0.26,0.199,0.182,0.143,0.084,0.071,0.051,0.037,0.023],"brown":[0.021,0.007,0.082,0.139,0.113,0.068,0.21,0.267,0.361,0.573,0.605,0.711,0.735,0.813,0.863,0.9,0.908,0.922,0.924,0.932,0.007,0.014,0.037,0.145,0.139,0.09,0.185,0.198,0.264,0.41,0.414,0.461,0.485,0.523,0.648,0.693,0.745,0.787,0.829,0.867,0.032,0.031,0.018,0.039,0.045,0.05,0.116,0.2,0.248,0.498,0.549,0.644,0.731,0.801,0.841,0.899,0.907,0.924,0.925,0.943,0.018,0.006,0.043,0.029,0.032,0.027,0.052,0.091,0.132,0.271,0.306,0.393,0.434,0.536,0.584,0.667,0.721,0.777,0.804,0.839,0.02,0.008,0.026,0.033,0.031,0.03,0.072,0.106,0.157,0.401,0.496,0.571,0.596,0.684,0.737,0.788,0.83,0.859,0.858,0.897,0.009,0.008,0.026,0.054,0.054,0.06,0.181,0.254,0.321,0.569,0.588,0.671,0.709,0.758,0.805,0.86,0.87,0.901,0.905,0.923]},"columns":[{"id":"fruit","name":"fruit","type":"character"},{"id":"day","name":"day","type":"numeric"},{"id":"ripeness","name":"ripeness","type":"character"},{"id":"green","name":"green","type":"numeric"},{"id":"yellow","name":"yellow","type":"numeric"},{"id":"brown","name":"brown","type":"numeric"}],"searchable":true,"defaultPageSize":10,"showPageSizeOptions":true,"pageSizeOptions":[10,30,60,120],"highlight":true,"striped":true,"dataKey":"0cb66fa55a4dbe90208a7357e8872f2a"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<p>Figure <a href="4-part1-examples.html#fig:part1-bananas-time">4.2</a> shows the change in colour composition over
+the 3 weeks of the experiment. You can see that the proportion of green colour
+went down, parallel to that the yellow colour proportion peaked around day 5.
+Yellow started decreasing after that while the proportion of brown started
+increasing.</p>
+<p>We can also present the same information according to the ripeness classes
+(Fig. <a href="4-part1-examples.html#fig:part1-bananas-classes">4.3</a>). You can see that the under-ripe
+class is characterized by high green proportion and the absence of brown.
+The ripe class is characterized by the highest proportion of yellow.
+Very ripe bananas have higher proportion of brown while yellow colour is still
+the most common. Over ripe bananas are mostly brown.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:part1-bananas-time"></span>
+<img src="figures/part1-bananas-time-1.png" alt="Colour composition of the bananas over time." width="\textwidth" />
+<p class="caption">
+Figure 4.2: Colour composition of the bananas over time.
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:part1-bananas-classes"></span>
+<img src="figures/part1-bananas-classes-1.png" alt="Colour composition of the bananas by ripeness class." width="\textwidth" />
+<p class="caption">
+Figure 4.3: Colour composition of the bananas by ripeness class.
+</p>
+</div>
+</div>
+<div id="part1-example-bananas-model" class="section level3 hasAnchor" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Model Training<a href="4-part1-examples.html#part1-example-bananas-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We chose Support Vector Machines (SVM) to model a multi-level response variable
+(Under, Ripe, Very, Over) as a function of the green, yellow, and brown colours.</p>
+<p>We used the <code>e1071</code> package <span class="citation">(<a href="#ref-R-e107">Meyer et al. 2023</a>)</span> in R, and the SVM model’s prediction accuracy was 90.8%.
+We saved the trained model object as an R binary <code>.rds</code> file:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="4-part1-examples.html#cb6-1" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb6-2"><a href="4-part1-examples.html#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="4-part1-examples.html#cb6-3" tabindex="-1"></a><span class="co"># Read the bananas data</span></span>
+<span id="cb6-4"><a href="4-part1-examples.html#cb6-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;bananas.csv&quot;</span>)</span>
+<span id="cb6-5"><a href="4-part1-examples.html#cb6-5" tabindex="-1"></a>x<span class="sc">$</span>ripeness <span class="ot">&lt;-</span> <span class="fu">factor</span>(x<span class="sc">$</span>ripeness, <span class="fu">c</span>(<span class="st">&quot;Under&quot;</span>, <span class="st">&quot;Ripe&quot;</span>, <span class="st">&quot;Very&quot;</span>, <span class="st">&quot;Over&quot;</span>))</span>
+<span id="cb6-6"><a href="4-part1-examples.html#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="4-part1-examples.html#cb6-7" tabindex="-1"></a><span class="co"># Multinomial classification with Support Vector Machines</span></span>
+<span id="cb6-8"><a href="4-part1-examples.html#cb6-8" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">svm</span>(ripeness <span class="sc">~</span> green <span class="sc">+</span> yellow <span class="sc">+</span> brown,</span>
+<span id="cb6-9"><a href="4-part1-examples.html#cb6-9" tabindex="-1"></a>  <span class="at">data =</span> x,</span>
+<span id="cb6-10"><a href="4-part1-examples.html#cb6-10" tabindex="-1"></a>  <span class="at">probability =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-11"><a href="4-part1-examples.html#cb6-11" tabindex="-1"></a>)</span>
+<span id="cb6-12"><a href="4-part1-examples.html#cb6-12" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="4-part1-examples.html#cb6-13" tabindex="-1"></a><span class="co"># Two-way table to test prediction accuracy</span></span>
+<span id="cb6-14"><a href="4-part1-examples.html#cb6-14" tabindex="-1"></a><span class="fu">table</span>(x<span class="sc">$</span>ripeness, <span class="fu">predict</span>(m))</span>
+<span id="cb6-15"><a href="4-part1-examples.html#cb6-15" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">table</span>(x<span class="sc">$</span>ripeness, <span class="fu">predict</span>(m)))) <span class="sc">/</span> <span class="fu">nrow</span>(x)</span>
+<span id="cb6-16"><a href="4-part1-examples.html#cb6-16" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="4-part1-examples.html#cb6-17" tabindex="-1"></a><span class="co"># Predict ripeness class</span></span>
+<span id="cb6-18"><a href="4-part1-examples.html#cb6-18" tabindex="-1"></a><span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">green =</span> <span class="dv">1</span>, <span class="at">yellow =</span> <span class="dv">0</span>, <span class="at">brown =</span> <span class="dv">0</span>), </span>
+<span id="cb6-19"><a href="4-part1-examples.html#cb6-19" tabindex="-1"></a>  <span class="at">probability =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-20"><a href="4-part1-examples.html#cb6-20" tabindex="-1"></a><span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">green =</span> <span class="dv">0</span>, <span class="at">yellow =</span> <span class="dv">1</span>, <span class="at">brown =</span> <span class="dv">0</span>), </span>
+<span id="cb6-21"><a href="4-part1-examples.html#cb6-21" tabindex="-1"></a>  <span class="at">probability =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-22"><a href="4-part1-examples.html#cb6-22" tabindex="-1"></a><span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">green =</span> <span class="dv">0</span>, <span class="at">yellow =</span> <span class="dv">0</span>, <span class="at">brown =</span> <span class="dv">1</span>), </span>
+<span id="cb6-23"><a href="4-part1-examples.html#cb6-23" tabindex="-1"></a>  <span class="at">probability =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-24"><a href="4-part1-examples.html#cb6-24" tabindex="-1"></a><span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">green =</span> <span class="fl">0.1</span>, <span class="at">yellow =</span> <span class="fl">0.2</span>, <span class="at">brown =</span> <span class="fl">0.7</span>), </span>
+<span id="cb6-25"><a href="4-part1-examples.html#cb6-25" tabindex="-1"></a>  <span class="at">probability =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-26"><a href="4-part1-examples.html#cb6-26" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="4-part1-examples.html#cb6-27" tabindex="-1"></a><span class="co"># Save the model object</span></span>
+<span id="cb6-28"><a href="4-part1-examples.html#cb6-28" tabindex="-1"></a><span class="fu">saveRDS</span>(m, <span class="st">&quot;bananas-svm.rds&quot;</span>)</span></code></pre></div>
+<p>We can fit a similar SVM model in Python using scikit-learn (<code>sklearn</code>) <span class="citation">(<a href="#ref-scikit-learn">Pedregosa et al. 2011</a>)</span>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="4-part1-examples.html#cb7-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-2"><a href="4-part1-examples.html#cb7-2" tabindex="-1"></a><span class="im">from</span> joblib <span class="im">import</span> dump</span>
+<span id="cb7-3"><a href="4-part1-examples.html#cb7-3" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> svm</span>
+<span id="cb7-4"><a href="4-part1-examples.html#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="4-part1-examples.html#cb7-5" tabindex="-1"></a><span class="co"># Global</span></span>
+<span id="cb7-6"><a href="4-part1-examples.html#cb7-6" tabindex="-1"></a>x <span class="op">=</span> pd.read_csv(<span class="st">&#39;bananas.csv&#39;</span>)</span>
+<span id="cb7-7"><a href="4-part1-examples.html#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="4-part1-examples.html#cb7-8" tabindex="-1"></a><span class="co"># Train SVM</span></span>
+<span id="cb7-9"><a href="4-part1-examples.html#cb7-9" tabindex="-1"></a>x.loc[x.ripeness <span class="op">==</span> <span class="st">&#39;Under&#39;</span>, <span class="st">&#39;target&#39;</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-10"><a href="4-part1-examples.html#cb7-10" tabindex="-1"></a>x.loc[x.ripeness <span class="op">==</span> <span class="st">&#39;Ripe&#39;</span>, <span class="st">&#39;target&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb7-11"><a href="4-part1-examples.html#cb7-11" tabindex="-1"></a>x.loc[x.ripeness <span class="op">==</span> <span class="st">&#39;Very&#39;</span>, <span class="st">&#39;target&#39;</span>] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb7-12"><a href="4-part1-examples.html#cb7-12" tabindex="-1"></a>x.loc[x.ripeness <span class="op">==</span> <span class="st">&#39;Over&#39;</span>, <span class="st">&#39;target&#39;</span>] <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb7-13"><a href="4-part1-examples.html#cb7-13" tabindex="-1"></a>data_X <span class="op">=</span> x[[<span class="st">&#39;green&#39;</span>, <span class="st">&#39;yellow&#39;</span>, <span class="st">&#39;brown&#39;</span>]].to_numpy()</span>
+<span id="cb7-14"><a href="4-part1-examples.html#cb7-14" tabindex="-1"></a>data_y <span class="op">=</span> x.target.values</span>
+<span id="cb7-15"><a href="4-part1-examples.html#cb7-15" tabindex="-1"></a>svm_model <span class="op">=</span> svm.SVC(probability <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb7-16"><a href="4-part1-examples.html#cb7-16" tabindex="-1"></a>svm_model.fit(data_X, data_y)</span>
+<span id="cb7-17"><a href="4-part1-examples.html#cb7-17" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="4-part1-examples.html#cb7-18" tabindex="-1"></a><span class="co">#&#39; Predict ripeness class</span></span>
+<span id="cb7-19"><a href="4-part1-examples.html#cb7-19" tabindex="-1"></a>svm_model.predict_proba([[<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>]])</span>
+<span id="cb7-20"><a href="4-part1-examples.html#cb7-20" tabindex="-1"></a>svm_model.predict_proba([[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>]])</span>
+<span id="cb7-21"><a href="4-part1-examples.html#cb7-21" tabindex="-1"></a>svm_model.predict_proba([[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>]])</span>
+<span id="cb7-22"><a href="4-part1-examples.html#cb7-22" tabindex="-1"></a>svm_model.predict_proba([[<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.7</span>]])</span>
+<span id="cb7-23"><a href="4-part1-examples.html#cb7-23" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="4-part1-examples.html#cb7-24" tabindex="-1"></a><span class="co"># Write model object to file</span></span>
+<span id="cb7-25"><a href="4-part1-examples.html#cb7-25" tabindex="-1"></a>dump(svm_model, <span class="st">&#39;bananas-svm.joblib&#39;</span>)</span></code></pre></div>
+</div>
+<div id="part1-example-bananas-app" class="section level3 hasAnchor" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> The Shiny App<a href="4-part1-examples.html#part1-example-bananas-app" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Shiny app consists of a ternary plot showing the daily colour composition
+of each banana fruit, alongside the new point to be classified (in red),
+as shown in Figure <a href="4-part1-examples.html#fig:part1-examples-bananas">4.4</a>. The three numeric inputs
+on the left hand side of the plot control the position of the red dot.
+The classification results based on these inputs are shown on the right hand side
+of the ternary plot. You can see probabilities of under-ripe, ripe, very ripe, and
+over-ripe classes, and the class with highest probability is assigned as a label.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:part1-examples-bananas"></span>
+<img src="images/01/example-bananas.png" alt="The `bananas` example Shiny app." width="\textwidth" />
+<p class="caption">
+Figure 4.4: The <code>bananas</code> example Shiny app.
+</p>
+</div>
+<p>The source code for the different builds of the Bananas Shiny app is at
+<a href="https://github.com/h10y/bananas" class="uri">https://github.com/h10y/bananas</a>. You can download the GitHub repository
+az a zip file from GitHub, or clone the repository with
+<code>git clone https://github.com/h10y/bananas.git</code>.</p>
+</div>
+</div>
+<div id="part1-example-lbtest" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Load Balancing Test<a href="4-part1-examples.html#part1-example-lbtest" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Shiny apps can run multiple sessions in the same app instance.
+A common problem when scaling the number of replicas for Shiny apps is that
+traffic might not be sent to the same session and thus the app might randomly fail.
+This app is used to determine if the HTTP requests made by the client are correctly
+routed back to the same R or Python process for the session.</p>
+<p>Both the Python and the R version of the app registers a <a href="https://shiny.posit.co/r/reference/shiny/latest/session.html">dynamic route</a>
+for the client to try to connect to. The JavaScript code on the client side will repeatedly hit the
+dynamic route. The server will send a 200 OK status code only if the client reached
+the correct Shiny session, where it originally came from (Fig. <a href="4-part1-examples.html#fig:part1-examples-lbtest">4.5</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:part1-examples-lbtest"></span>
+<img src="images/01/example-lbtest.png" alt="The `lbtest` example Shiny app." width="\textwidth" />
+<p class="caption">
+Figure 4.5: The <code>lbtest</code> example Shiny app.
+</p>
+</div>
+<p>The original Python app was written by Joe Cheng and is from the <code>rstudio/py-shiny</code>
+<a href="https://github.com/rstudio/py-shiny/blob/7ba8f90a44ee25f41aa8c258eceeba6807e0017a/examples/load_balance/app.py">GitHub repository</a>. We wrote the R version to mirror the Python
+version.</p>
+<p>This app will be useful when the deployment includes load balancing between
+multiple replicas. For such deployments, session affinity (or sticky sessions) needs to
+be available. This app can be used to test such setups.
+If the test fails, it will stop before the counter reaches 100 and will say <em>Failure!</em>
+If the app succeeds 100 times, you’ll see <em>Test complete</em>.
+The app is not useful for testing a single instance deployment, or with Shinylive,
+because these setups won’t fail, but you can still try it.</p>
+<p>The source code for the different builds of the load balancing test Shiny app is at
+<a href="https://github.com/h10y/lbtest" class="uri">https://github.com/h10y/lbtest</a>. You can download the GitHub repository
+az a zip file from GitHub, or clone the repository with
+<code>git clone https://github.com/h10y/lbtest.git</code>.</p>
+</div>
+<div id="summary-3" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Summary<a href="4-part1-examples.html#summary-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This is the end of Part I. We covered all the fundamentals that the rest of the
+book builds upon. In the next part, we’ll cover all the technical details of
+Shiny hosting that happens on your local machine.</p>
+<p>We recommend getting the example repositories mentioned in this chapter
+available on your computer. This way you will be able to follow all the examples
+from the following chapters and won’t have to copy paste the text from the
+book to files. Visit the GitHub organization <code>h10y</code> which stands for
+<em>hostingshiny</em> (there are 10 letters between the first <em>h</em> and the last <em>y</em>):
+<a href="https://github.com/h10y/" class="uri">https://github.com/h10y/</a>.</p>
+
+</div>
+</div>
+
+
+
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-R-shiny" class="csl-entry">
+Chang, Winston, Joe Cheng, JJ Allaire, Carson Sievert, Barret Schloerke, Yihui Xie, Jeff Allen, Jonathan McPherson, Alan Dipert, and Barbara Borges. 2024. <em>Shiny: Web Application Framework for r</em>. <a href="https://CRAN.R-project.org/package=shiny">https://CRAN.R-project.org/package=shiny</a>.
+</div>
+<div id="ref-Hunter2007" class="csl-entry">
+Hunter, J. D. 2007. <span>“Matplotlib: A 2D Graphics Environment.”</span> <em>Computing in Science &amp; Engineering</em> 9 (3): 90–95. <a href="https://doi.org/10.1109/MCSE.2007.55">https://doi.org/10.1109/MCSE.2007.55</a>.
+</div>
+<div id="ref-R-e107" class="csl-entry">
+Meyer, David, Evgenia Dimitriadou, Kurt Hornik, Andreas Weingessel, and Friedrich Leisch. 2023. <em>E1071: Misc Functions of the Department of Statistics, Probability Theory Group (Formerly: E1071), TU Wien</em>. <a href="https://CRAN.R-project.org/package=e1071">https://CRAN.R-project.org/package=e1071</a>.
+</div>
+<div id="ref-scikit-learn" class="csl-entry">
+Pedregosa, F., G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, et al. 2011. <span>“Scikit-Learn: Machine Learning in <span>P</span>ython.”</span> <em>Journal of Machine Learning Research</em> 12: 2825–30.
+</div>
+<div id="ref-R-base" class="csl-entry">
+R Core Team. 2024. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-Waskom2021" class="csl-entry">
+Waskom, Michael L. 2021. <span>“Seaborn: Statistical Data Visualization.”</span> <em>Journal of Open Source Software</em> 6 (60): 3021. <a href="https://doi.org/10.21105/joss.03021">https://doi.org/10.21105/joss.03021</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="3-part1-local-setup.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5-part2-developing-shiny-apps.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/analythium/hosting-shiny-book/edit/main/01-04-examples.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>
