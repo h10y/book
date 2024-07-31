@@ -77,8 +77,8 @@ if (is_latex_output()) {
 }
 
 # variables
-book_website_link <- "https://hostingshiny.dev"
-book_code_link <- "https://github.com/analythium/hosting-shiny-book-dev"
+book_website_link <- "https://h10y.github.io/book/"
+book_code_link <- "https://github.com/h10y/"
 ```
 
 `r if (knitr::is_latex_output()) '<!--'`
@@ -89,7 +89,7 @@ This is the online version of _Hosting Shiny Applications for R and Python_, a b
 
 Visit the [GitHub repository for this site](`r book_code_link`).
 
-<img src="images/logos/book_cover.jpg" class="cover" width="250" height="328"/>
+<img src="images/logos/book_cover.jpg" class="cover" width="600" height="400"/>
 
 ## License {-}
 
