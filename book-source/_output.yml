@@ -26,13 +26,13 @@ bookdown::gitbook:
       collapse: section
       scroll_highlight: true
     edit:
-      link: https://github.com/analythium/hosting-shiny-book/edit/main/%s
+      link: https://github.com/h10y/book/edit/main/%s
   includes:
     in_header: _includes/analytics.html
     before_body: _includes/logo.html
 # bookdown::bs4_book:
 #   css: [css/style.css, css/style_gitbook.css]
-#   repo: https://github.com/analythium/hosting-shiny-book
+#   repo: https://github.com/h10y/book
 #   includes:
 #     in_header: _includes/analytics.html
 #     before_body: _includes/logo.html

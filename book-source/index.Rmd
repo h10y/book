@@ -15,8 +15,8 @@ colorlinks: yes
 lot: false
 lof: false
 always_allow_html: yes
-github-repo: analythium/hosting-shiny-book
-twitter-handle: analythium
+github-repo: h10y/book
+twitter-handle: psolymos
 graphics: yes
 description: "Everything you wanted to know about hosting Shiny apps."
 cover-image: "images/logos/book_cover.jpg"
