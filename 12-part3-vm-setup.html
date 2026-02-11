@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 12 Hosting on Virtual Machines | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 12 Hosting on Virtual Machines | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="h10y/book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 12 Hosting on Virtual Machines | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@psolymos" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2026-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="11-embedding-shiny-apps.html"/>
+<link rel="next" href="13-shiny-server.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.js"></script>
+<link href="libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.5/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.5/reactable.js"></script>
+<script src="https://cdn.usefathom.com/script.js" data-site="PASYTARS" defer></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-part1-background.html"><a href="1-part1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-part1-background.html"><a href="1-part1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-web-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-python"><i class="fa fa-check"></i><b>3.1.2</b> Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-docker"><i class="fa fa-check"></i><b>3.1.4</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-super-user"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-scm-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+<li class="chapter" data-level="3.3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-in-practice"><i class="fa fa-check"></i><b>3.3.5</b> Git in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-working-with-servers"><i class="fa fa-check"></i><b>3.4</b> Working with Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#readability-and-other-useful-tools"><i class="fa fa-check"></i><b>3.5</b> Readability and Other Useful Tools</a></li>
+<li class="chapter" data-level="3.6" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-part1-examples.html"><a href="4-part1-examples.html"><i class="fa fa-check"></i><b>4</b> Shiny Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a></li>
+<li class="chapter" data-level="4.3" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-lbtest"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-part1-examples.html"><a href="4-part1-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r"><i class="fa fa-check"></i><b>5.1.1</b> R</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.1.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shiny-lifecycle"><i class="fa fa-check"></i><b>5.2</b> The Shiny App Lifecycle</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections"><i class="fa fa-check"></i><b>5.2.1</b> Connections</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#sessions"><i class="fa fa-check"></i><b>5.2.2</b> Sessions</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections-sessions"><i class="fa fa-check"></i><b>5.2.3</b> Connections + Sessions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.4</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-apps"><i class="fa fa-check"></i><b>5.3</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python-1"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive"><i class="fa fa-check"></i><b>5.4</b> Shinylive</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-python"><i class="fa fa-check"></i><b>5.4.1</b> Python Shinylive</a></li>
+<li class="chapter" data-level="5.4.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-r"><i class="fa fa-check"></i><b>5.4.2</b> R Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-dynamic-documents"><i class="fa fa-check"></i><b>5.5</b> Dynamic Documents</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-r-markdown"><i class="fa fa-check"></i><b>5.5.1</b> R Markdown</a></li>
+<li class="chapter" data-level="5.5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-quarto-with-python"><i class="fa fa-check"></i><b>5.5.2</b> Quarto with Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html"><i class="fa fa-check"></i><b>6</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#r-2"><i class="fa fa-check"></i><b>6.1</b> R</a></li>
+<li class="chapter" data-level="6.2" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#python-2"><i class="fa fa-check"></i><b>6.2</b> Python</a></li>
+<li class="chapter" data-level="6.3" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#summary-5"><i class="fa fa-check"></i><b>6.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html"><i class="fa fa-check"></i><b>7</b> Sharing Your Shiny App</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-distributing-code"><i class="fa fa-check"></i><b>7.1</b> Distributing Code</a></li>
+<li class="chapter" data-level="7.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploying-shiny-apps"><i class="fa fa-check"></i><b>7.2</b> Deploying Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploy-to-shinyapps-io"><i class="fa fa-check"></i><b>7.2.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="7.2.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-sharing-shinylive"><i class="fa fa-check"></i><b>7.2.2</b> Sharing Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#summary-6"><i class="fa fa-check"></i><b>7.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="8" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html"><i class="fa fa-check"></i><b>8</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-hosting-patterns"><i class="fa fa-check"></i><b>8.1</b> Hosting Patterns for Shiny Apps</a></li>
+<li class="chapter" data-level="8.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-decision-framework"><i class="fa fa-check"></i><b>8.2</b> The Decision Framework</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>8.2.1</b> Start with the Why</a></li>
+<li class="chapter" data-level="8.2.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#requirements"><i class="fa fa-check"></i><b>8.2.2</b> Requirements</a></li>
+<li class="chapter" data-level="8.2.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#constraints"><i class="fa fa-check"></i><b>8.2.3</b> Constraints</a></li>
+<li class="chapter" data-level="8.2.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#picking-an-option"><i class="fa fa-check"></i><b>8.2.4</b> Picking an Option</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-important-prerequisites"><i class="fa fa-check"></i><b>8.3</b> Important Prerequisites</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-custom-domains"><i class="fa fa-check"></i><b>8.3.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="8.3.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-https"><i class="fa fa-check"></i><b>8.3.2</b> HTTPS Access to Your App</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#summary-7"><i class="fa fa-check"></i><b>8.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html"><i class="fa fa-check"></i><b>9</b> Platforms for Shiny Hosting</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io"><i class="fa fa-check"></i><b>9.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="9.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io-alternatives"><i class="fa fa-check"></i><b>9.2</b> shinyapps.io Alternatives</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-posit-connect-cloud"><i class="fa fa-check"></i><b>9.2.1</b> Posit Connect Cloud</a></li>
+<li class="chapter" data-level="9.2.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-ploomber"><i class="fa fa-check"></i><b>9.2.2</b> Ploomber</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#summary-8"><i class="fa fa-check"></i><b>9.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html"><i class="fa fa-check"></i><b>10</b> Static Hosting for Shinylive</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#building-shinylive"><i class="fa fa-check"></i><b>10.1</b> Building Shinylive</a></li>
+<li class="chapter" data-level="10.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#github-pages"><i class="fa fa-check"></i><b>10.2</b> GitHub Pages</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#enabling-pages"><i class="fa fa-check"></i><b>10.2.1</b> Enabling Pages</a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#accessing-the-published-site"><i class="fa fa-check"></i><b>10.2.2</b> Accessing the Published Site</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#other-static-site-hosting"><i class="fa fa-check"></i><b>10.3</b> Other Static Site Hosting Providers</a></li>
+<li class="chapter" data-level="10.4" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#summary-9"><i class="fa fa-check"></i><b>10.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html"><i class="fa fa-check"></i><b>11</b> Embedding Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#understanding-iframes"><i class="fa fa-check"></i><b>11.1</b> Understanding Iframes</a></li>
+<li class="chapter" data-level="11.2" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#styling-iframes"><i class="fa fa-check"></i><b>11.2</b> Styling Iframes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#summary-10"><i class="fa fa-check"></i><b>11.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html"><i class="fa fa-check"></i><b>12</b> Hosting on Virtual Machines</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-custom-domains"><i class="fa fa-check"></i><b>12.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="12.2" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-servers"><i class="fa fa-check"></i><b>12.2</b> Server Setup</a></li>
+<li class="chapter" data-level="12.3" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-install"><i class="fa fa-check"></i><b>12.3</b> Installing Software for Shiny Hosting</a></li>
+<li class="chapter" data-level="12.4" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#reverse-proxies"><i class="fa fa-check"></i><b>12.4</b> Reverse Proxies</a></li>
+<li class="chapter" data-level="12.5" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#set-firewall"><i class="fa fa-check"></i><b>12.5</b> Setting the Firewall</a></li>
+<li class="chapter" data-level="12.6" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#monitoring-processes"><i class="fa fa-check"></i><b>12.6</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="12.7" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>12.7</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="12.8" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#summary-11"><i class="fa fa-check"></i><b>12.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-shiny-server.html"><a href="13-shiny-server.html"><i class="fa fa-check"></i><b>13</b> Shiny Server</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#provisioning-a-server"><i class="fa fa-check"></i><b>13.1</b> Provisioning a Server</a></li>
+<li class="chapter" data-level="13.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#using-systemd"><i class="fa fa-check"></i><b>13.2</b> Using Systemd</a></li>
+<li class="chapter" data-level="13.3" data-path="13-shiny-server.html"><a href="13-shiny-server.html#configuring-shiny-server"><i class="fa fa-check"></i><b>13.3</b> Configuring Shiny Server</a></li>
+<li class="chapter" data-level="13.4" data-path="13-shiny-server.html"><a href="13-shiny-server.html#file-transfer-based-publishing"><i class="fa fa-check"></i><b>13.4</b> File Transfer Based Publishing</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#editing-files-on-the-server"><i class="fa fa-check"></i><b>13.4.1</b> Editing Files on the Server</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#secure-copy-files-to-the-server"><i class="fa fa-check"></i><b>13.4.2</b> Secure Copy Files to the Server</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-shiny-server.html"><a href="13-shiny-server.html#git-based-deployment"><i class="fa fa-check"></i><b>13.5</b> Git-based Deployment</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#apps-with-multiple-linux-users"><i class="fa fa-check"></i><b>13.5.1</b> Apps with Multiple Linux Users</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-shiny-server.html"><a href="13-shiny-server.html#licensing-considerations"><i class="fa fa-check"></i><b>13.6</b> Licensing Considerations</a></li>
+<li class="chapter" data-level="13.7" data-path="13-shiny-server.html"><a href="13-shiny-server.html#summary-12"><i class="fa fa-check"></i><b>13.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="14-posit-connect.html"><a href="14-posit-connect.html"><i class="fa fa-check"></i><b>14</b> Posit Connect</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="14-posit-connect.html"><a href="14-posit-connect.html#summary-13"><i class="fa fa-check"></i><b>14.1</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>IV Containerized Shiny Apps</b></span></li>
+<li class="chapter" data-level="15" data-path="15-part4-containers.html"><a href="15-part4-containers.html"><i class="fa fa-check"></i><b>15</b> Introduction to Containers</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-concepts"><i class="fa fa-check"></i><b>15.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="15.1.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-engine"><i class="fa fa-check"></i><b>15.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-container-registries"><i class="fa fa-check"></i><b>15.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-images"><i class="fa fa-check"></i><b>15.1.3</b> Images</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-the-dockerfile"><i class="fa fa-check"></i><b>15.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-containers"><i class="fa fa-check"></i><b>15.1.5</b> Containers</a></li>
+<li class="chapter" data-level="15.1.6" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-cli"><i class="fa fa-check"></i><b>15.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#summary-14"><i class="fa fa-check"></i><b>15.2</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-part2-images.html"><a href="16-part2-images.html"><i class="fa fa-check"></i><b>16</b> Container Images</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-existing-images"><i class="fa fa-check"></i><b>16.1</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-image-names-tags"><i class="fa fa-check"></i><b>16.1.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-pull"><i class="fa fa-check"></i><b>16.1.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-login"><i class="fa fa-check"></i><b>16.1.3</b> Docker Login</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-run"><i class="fa fa-check"></i><b>16.1.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-build"><i class="fa fa-check"></i><b>16.2</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-r-shiny"><i class="fa fa-check"></i><b>16.2.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-buildx-buildkit"><i class="fa fa-check"></i><b>16.2.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-inspect"><i class="fa fa-check"></i><b>16.2.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-python-shiny"><i class="fa fa-check"></i><b>16.2.4</b> Python for Shiny</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-managing-images"><i class="fa fa-check"></i><b>16.3</b> Managing Images</a></li>
+<li class="chapter" data-level="16.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-sharing-images"><i class="fa fa-check"></i><b>16.4</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-push"><i class="fa fa-check"></i><b>16.4.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registries"><i class="fa fa-check"></i><b>16.4.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-login"><i class="fa fa-check"></i><b>16.4.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="16.4.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-local"><i class="fa fa-check"></i><b>16.4.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-part2-images.html"><a href="16-part2-images.html#summary-15"><i class="fa fa-check"></i><b>16.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>17</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile"><i class="fa fa-check"></i><b>17.1</b> The Dockerfile</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-parent-image"><i class="fa fa-check"></i><b>17.1.1</b> The Parent Image</a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-metadata"><i class="fa fa-check"></i><b>17.1.2</b> Metadata</a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-dependencies"><i class="fa fa-check"></i><b>17.1.3</b> Dependencies</a></li>
+<li class="chapter" data-level="17.1.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-files-and-dirs"><i class="fa fa-check"></i><b>17.1.4</b> Directories and Files</a></li>
+<li class="chapter" data-level="17.1.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-user"><i class="fa fa-check"></i><b>17.1.5</b> Switching User</a></li>
+<li class="chapter" data-level="17.1.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-port"><i class="fa fa-check"></i><b>17.1.6</b> Expose a Port</a></li>
+<li class="chapter" data-level="17.1.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-env-and-arg"><i class="fa fa-check"></i><b>17.1.7</b> Variables</a></li>
+<li class="chapter" data-level="17.1.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-cmd"><i class="fa fa-check"></i><b>17.1.8</b> Executable and Command</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images"><i class="fa fa-check"></i><b>17.2</b> Parent Images</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-r"><i class="fa fa-check"></i><b>17.2.1</b> R Parent Images</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-python"><i class="fa fa-check"></i><b>17.2.2</b> Python Parent Images</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries"><i class="fa fa-check"></i><b>17.3</b> Installing System Libraries</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-manual"><i class="fa fa-check"></i><b>17.3.1</b> Manual Installation</a></li>
+<li class="chapter" data-level="17.3.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-r2u"><i class="fa fa-check"></i><b>17.3.2</b> Automated Dependency Resolution with r2u</a></li>
+<li class="chapter" data-level="17.3.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-alpine"><i class="fa fa-check"></i><b>17.3.3</b> Dependencies on Alpine Linux</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg"><i class="fa fa-check"></i><b>17.4</b> Installing R Packages</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-explicit"><i class="fa fa-check"></i><b>17.4.1</b> Explicitly Stating Dependencies</a></li>
+<li class="chapter" data-level="17.4.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-description"><i class="fa fa-check"></i><b>17.4.2</b> Using the DESCRIPTION File</a></li>
+<li class="chapter" data-level="17.4.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-renv"><i class="fa fa-check"></i><b>17.4.3</b> Using renv</a></li>
+<li class="chapter" data-level="17.4.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-deps"><i class="fa fa-check"></i><b>17.4.4</b> Using deps</a></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-python"><i class="fa fa-check"></i><b>17.5</b> Python Requirements</a></li>
+<li class="chapter" data-level="17.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps"><i class="fa fa-check"></i><b>17.6</b> Classic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.6.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-r"><i class="fa fa-check"></i><b>17.6.1</b> R</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-python"><i class="fa fa-check"></i><b>17.6.2</b> Python</a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-rmd"><i class="fa fa-check"></i><b>17.6.3</b> R Markdown</a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-r"><i class="fa fa-check"></i><b>17.6.4</b> Quarto with R</a></li>
+<li class="chapter" data-level="17.6.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-python"><i class="fa fa-check"></i><b>17.6.5</b> Quarto with Python</a></li>
+<li class="chapter" data-level="17.6.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-shiny-server"><i class="fa fa-check"></i><b>17.6.6</b> Shiny Server</a></li>
+</ul></li>
+<li class="chapter" data-level="17.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-static-shiny-apps"><i class="fa fa-check"></i><b>17.7</b> Containerizing Shinylive</a></li>
+<li class="chapter" data-level="17.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#summary-16"><i class="fa fa-check"></i><b>17.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html"><i class="fa fa-check"></i><b>18</b> Working with Containers</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-run"><i class="fa fa-check"></i><b>18.1</b> Docker Run</a></li>
+<li class="chapter" data-level="18.2" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-managing"><i class="fa fa-check"></i><b>18.2</b> Managing Containers</a></li>
+<li class="chapter" data-level="18.3" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#summary-17"><i class="fa fa-check"></i><b>18.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>V Hosting Shiny with Containers</b></span></li>
+<li class="chapter" data-level="19" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html"><i class="fa fa-check"></i><b>19</b> Hosting Platforms</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-heroku"><i class="fa fa-check"></i><b>19.1</b> Heroku</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-from-the-command-line"><i class="fa fa-check"></i><b>19.1.1</b> Deployment from the Command Line</a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-using-the-web-dashboard"><i class="fa fa-check"></i><b>19.1.2</b> Deployment using the Web Dashboard</a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domain-and-https"><i class="fa fa-check"></i><b>19.1.3</b> Custom Domain and HTTPS</a></li>
+<li class="chapter" data-level="19.1.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#scaling"><i class="fa fa-check"></i><b>19.1.4</b> Scaling</a></li>
+<li class="chapter" data-level="19.1.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-18"><i class="fa fa-check"></i><b>19.1.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-doap"><i class="fa fa-check"></i><b>19.2</b> DigitalOcean App Platform</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites"><i class="fa fa-check"></i><b>19.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#docker-hub-deployment"><i class="fa fa-check"></i><b>19.2.2</b> Docker Hub Deployment</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#github-deployment"><i class="fa fa-check"></i><b>19.2.3</b> GitHub Deployment</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#programmatic-deployment"><i class="fa fa-check"></i><b>19.2.4</b> Programmatic Deployment</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#logs"><i class="fa fa-check"></i><b>19.2.5</b> Logs</a></li>
+<li class="chapter" data-level="19.2.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domains"><i class="fa fa-check"></i><b>19.2.6</b> Custom Domains</a></li>
+<li class="chapter" data-level="19.2.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-19"><i class="fa fa-check"></i><b>19.2.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-flyio"><i class="fa fa-check"></i><b>19.3</b> Fly.io</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites-1"><i class="fa fa-check"></i><b>19.3.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#creating-a-fly.io-app"><i class="fa fa-check"></i><b>19.3.2</b> Creating a Fly.io App</a></li>
+<li class="chapter" data-level="19.3.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deploying-to-fly.io"><i class="fa fa-check"></i><b>19.3.3</b> Deploying to Fly.io</a></li>
+<li class="chapter" data-level="19.3.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#metrics-and-logs"><i class="fa fa-check"></i><b>19.3.4</b> Metrics and Logs</a></li>
+<li class="chapter" data-level="19.3.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#setting-up-a-custom-domain"><i class="fa fa-check"></i><b>19.3.5</b> Setting up a Custom Domain</a></li>
+<li class="chapter" data-level="19.3.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#adding-tlsssl-certificate"><i class="fa fa-check"></i><b>19.3.6</b> Adding TLS/SSL certificate</a></li>
+<li class="chapter" data-level="19.3.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#autoscaling-in-multiple-regions"><i class="fa fa-check"></i><b>19.3.7</b> Autoscaling in Multiple-Regions</a></li>
+<li class="chapter" data-level="19.3.8" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-20"><i class="fa fa-check"></i><b>19.3.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#other-general-paas"><i class="fa fa-check"></i><b>19.4</b> Other Providers</a></li>
+<li class="chapter" data-level="19.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-21"><i class="fa fa-check"></i><b>19.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html"><i class="fa fa-check"></i><b>20</b> Docker Compose</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-file"><i class="fa fa-check"></i><b>20.1</b> The Compose File</a></li>
+<li class="chapter" data-level="20.2" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-cli"><i class="fa fa-check"></i><b>20.2</b> Compose Command Line</a></li>
+<li class="chapter" data-level="20.3" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-vm"><i class="fa fa-check"></i><b>20.3</b> Docker Compose on a Virtual Machine</a></li>
+<li class="chapter" data-level="20.4" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-up-and-down"><i class="fa fa-check"></i><b>20.4</b> Docker Compose Up and Down</a></li>
+<li class="chapter" data-level="20.5" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#compose-scaling"><i class="fa fa-check"></i><b>20.5</b> Scaling with Docker Compose</a></li>
+<li class="chapter" data-level="20.6" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#server-maintenance"><i class="fa fa-check"></i><b>20.6</b> Server Maintenance</a></li>
+<li class="chapter" data-level="20.7" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#summary-22"><i class="fa fa-check"></i><b>20.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html"><i class="fa fa-check"></i><b>21</b> ShinyProxy</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#setting-up-shinyproxy-using-docker"><i class="fa fa-check"></i><b>21.1</b> Setting up ShinyProxy Using Docker</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#docker-compose-for-shinyproxy"><i class="fa fa-check"></i><b>21.1.1</b> Docker Compose for ShinyProxy</a></li>
+<li class="chapter" data-level="21.1.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config"><i class="fa fa-check"></i><b>21.1.2</b> ShinyProxy Configuration</a></li>
+<li class="chapter" data-level="21.1.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-general"><i class="fa fa-check"></i><b>21.1.3</b> General</a></li>
+<li class="chapter" data-level="21.1.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-authentication"><i class="fa fa-check"></i><b>21.1.4</b> Authentication</a></li>
+<li class="chapter" data-level="21.1.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config-applications"><i class="fa fa-check"></i><b>21.1.5</b> Applications</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#deploying-tls-with-shinyproxy-operator"><i class="fa fa-check"></i><b>21.2</b> Deploying TLS with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#user-interface"><i class="fa fa-check"></i><b>21.3</b> User Interface</a></li>
+<li class="chapter" data-level="21.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#spo-monitoring"><i class="fa fa-check"></i><b>21.4</b> Deploying Monitoring with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#benchmarking-shinyproxy-applications"><i class="fa fa-check"></i><b>21.5</b> Benchmarking ShinyProxy Applications</a>
+<ul>
+<li class="chapter" data-level="21.5.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-docker-stats"><i class="fa fa-check"></i><b>21.5.1</b> Docker Stats</a></li>
+<li class="chapter" data-level="21.5.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#grafana-dashboard"><i class="fa fa-check"></i><b>21.5.2</b> Grafana Dashboard</a></li>
+</ul></li>
+<li class="chapter" data-level="21.6" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-adding-apps"><i class="fa fa-check"></i><b>21.6</b> Adding and Removing Shiny Applications</a></li>
+<li class="chapter" data-level="21.7" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#other-considerations"><i class="fa fa-check"></i><b>21.7</b> Other Considerations</a></li>
+<li class="chapter" data-level="21.8" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#summary-23"><i class="fa fa-check"></i><b>21.8</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VI Production Shiny Apps</b></span></li>
+<li class="chapter" data-level="22" data-path="22-shiny-production.html"><a href="22-shiny-production.html"><i class="fa fa-check"></i><b>22</b> Considerations for Production</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#security"><i class="fa fa-check"></i><b>22.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#ssl-certificates"><i class="fa fa-check"></i><b>22.1.1</b> SSL Certificates</a></li>
+<li class="chapter" data-level="22.1.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#storing-secrets"><i class="fa fa-check"></i><b>22.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="22.1.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#firewalls"><i class="fa fa-check"></i><b>22.1.3</b> Firewalls</a></li>
+<li class="chapter" data-level="22.1.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#private-networking"><i class="fa fa-check"></i><b>22.1.4</b> Private Networking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#authentication"><i class="fa fa-check"></i><b>22.2</b> Authentication</a>
+<ul>
+<li class="chapter" data-level="22.2.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#http-basic-auth"><i class="fa fa-check"></i><b>22.2.1</b> HTTP Basic Auth</a></li>
+<li class="chapter" data-level="22.2.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#third-party-auth"><i class="fa fa-check"></i><b>22.2.2</b> Third Party Auth</a></li>
+<li class="chapter" data-level="22.2.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#native-authentication"><i class="fa fa-check"></i><b>22.2.3</b> Native Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reliability"><i class="fa fa-check"></i><b>22.3</b> Reliability</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#backups"><i class="fa fa-check"></i><b>22.3.1</b> Backups</a></li>
+<li class="chapter" data-level="22.3.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reserved-ip-addresses"><i class="fa fa-check"></i><b>22.3.2</b> Reserved IP Addresses</a></li>
+<li class="chapter" data-level="22.3.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#monitoring"><i class="fa fa-check"></i><b>22.3.3</b> Monitoring</a></li>
+<li class="chapter" data-level="22.3.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#benchmarking"><i class="fa fa-check"></i><b>22.3.4</b> Benchmarking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#scaling-1"><i class="fa fa-check"></i><b>22.4</b> Scaling</a>
+<ul>
+<li class="chapter" data-level="22.4.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#options-for-scaling"><i class="fa fa-check"></i><b>22.4.1</b> Options for Scaling</a></li>
+<li class="chapter" data-level="22.4.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#part2-container-orchestration"><i class="fa fa-check"></i><b>22.4.2</b> Container Orchestration</a></li>
+</ul></li>
+<li class="chapter" data-level="22.5" data-path="22-shiny-production.html"><a href="22-shiny-production.html#operations-and-maintenance"><i class="fa fa-check"></i><b>22.5</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="22.5.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#continuous-integration-and-deployment"><i class="fa fa-check"></i><b>22.5.1</b> Continuous Integration and Deployment</a></li>
+<li class="chapter" data-level="22.5.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#logging"><i class="fa fa-check"></i><b>22.5.2</b> Logging</a></li>
+</ul></li>
+<li class="chapter" data-level="22.6" data-path="22-shiny-production.html"><a href="22-shiny-production.html#summary-24"><i class="fa fa-check"></i><b>22.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="23-what-is-next.html"><a href="23-what-is-next.html"><i class="fa fa-check"></i><b>23</b> What is Next</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='images/logos/banner.png' alt="Hosting Shiny">
+</html>
+<div id="part3-vm-setup" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">Chapter 12</span> Hosting on Virtual Machines<a href="12-part3-vm-setup.html#part3-vm-setup" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="noteblock">
+<p>This chapter covers the concepts of setting up a virtual machine
+so that you can host your Shiny app on it. Using a virtual machine
+is much more involved than using a platform to deploy your Shiny app,
+but it can be more cost effective and gives more control.
+A dedicated server requires maintenance and thinking about security.</p>
+</div>
+<!-- 
+In this chapter we dive into reverse proxies, static Shiny apps, dynamic Shiny apps,
+and custom domain names.
+
+To connect to a server hosted application, a reverse proxy is required. 
+A reverse proxy sits in front of your web application and forwards browser 
+requests to your web application. It is used to create a secure connection to 
+your web application and to distribute the load of user requests to your web 
+application. A reverse proxy also helps to route requests to a domain sent by a 
+client to the server to the appropriate web application. -->
+<p>The cloud refers to remote servers that are available for rent at a cost.
+Often the costs of these remote servers are charged by the hour.
+The cloud is part of Infrastructure as a Service (IaaS) where server
+infrastructure can be provided on demand (Fig. <a href="8-part3-hosting-options.html#fig:vm-and-paas">8.1</a>).</p>
+<p>A virtual machine, or VM for short, refers to a “part” of a server park
+maintained by a cloud service provider. It is a part of a larger
+hardware infrastructure, and the way the part is defined is in terms
+of CPUs and memory. These resources are allocated using virtualization
+technology, that’s why these “servers” are called virtual machines.</p>
+<p>The CPUs can be shared among many instances, which makes such shared
+instances more affordable. Shared CPUs can be considerably slower,
+so for critical production workloads, it is advised to pay for
+dedicated CPUs, which will not be used by other instances.</p>
+<p>Some of the post popular cloud service providers include:</p>
+<ul>
+<li>AWS EC2</li>
+<li>MicroSoft Azure</li>
+<li>Google Cloud Platform</li>
+<li>DigitalOcean</li>
+<li>Akamai (formerly Linode)</li>
+<li>Vultr</li>
+<li>Hetzner</li>
+<li>OVH Cloud</li>
+</ul>
+<p>These cloud services allow you to quickly set up a server for remote access,
+often within minutes. The servers can be hosted in various physical locations
+where the service provider has data centers. Choosing a specific location can
+be important for meeting data compliance regulations for your Shiny app.
+Additionally, selecting a data center closer to your geographical area can
+enhance the loading speed of your Shiny app by reducing latency.</p>
+<p>It’s important to note that operating costs can vary significantly between
+different regions, which may lead to considerable differences in pricing.
+Therefore, if cost is a concern, it is best to consider a few cloud providers
+before making a decision of where to host your Shiny app.</p>
+<!-- This remote connection can be done via the command line as we have described in Section \@ref(part1-ssh). -->
+<!-- Cost estimator: <https://www.linode.com/estimator/> -->
+<div id="part3-vm-setup-custom-domains" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> Custom Domain Names<a href="12-part3-vm-setup.html#part3-vm-setup-custom-domains" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Custom domain names are important for giving an easy to access URL for your
+Shiny application. It is important for branding memorability too.
+Most people can remember a few letters or a phrase (<code>example.com</code>)
+better than a series of random digits (e.g. <code>147.182.151.103</code>).</p>
+<p>To obtain a custom domain, you must register a domain with a registrar.
+Some common domain name registrars are NameCheap, NameSilo,
+Squarespace (former Google Domains), AWS Route 53, and Porkbun.
+The registrar leases you a domain name from the domain registry annually
+for a nominal fee. You must renew your domain name every year, e.g. using
+auto renewal.
+<!-- Each top level domain (e.g. `com` or `ca`) has its own registry. --></p>
+<p>Note that the registrar information is publicly searchable from the
+WHOIS database. You can search this database to find information about the
+owner of a domain name and find their contact information in case of disputes
+or if you want to buy that domain name.
+Most registrars allow you to hide your contact information (email and address)
+by enabling privacy protection. Sometimes this privacy protection service
+might be available for an additional fee.</p>
+<p>Domain names are linked to a name server that helps resolve to an
+internet protocol (IP) address of a server that returns content to a client.
+On the domain name server (DNS), the <code>A</code> record entry helps resolve a name to an
+IPv4 address that looks like <code>147.182.151.103</code>.
+The <code>AAAA</code> record entry helps resolve a name to an IPv6 address that is
+a series of numbers and letters separated by colons, e.g.
+<code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code>.
+Lots of websites have shifted to using IPv4 in addition to IPv6.
+It is recommended that you at least have an IPv4 record as not everybody has an
+IPv6 connection.</p>
+<p>Another common record type is <code>CNAME</code> that contains information about a domain’s
+alternative name. For example, it is common to set up a <code>CNAME</code> entry for
+GitHub Pages so that the canonical <code>&lt;username&gt;.github.io</code> subdomain
+is replaced by a custom domain, <code>&lt;yourdomain&gt;.com</code>.
+There are other records that we won’t need in this book (e.g. ones related to
+sending out emails, like MX Mail exchange or TXT Text notes).</p>
+<p>A fully registered domain name is also one of the requirements for an HTTPS
+certificate. Therefore, if you would like your server to encrypt
+communication between the server and the client, you must have a
+domain name. If you are part of an organization, ask for the person
+managing the company domain name to help with adding new DNS records.</p>
+<p>The <code>dig</code> and nslookup<code>command line utilities are used to look up information about DNS entries. E.g.</code>nslookup google.com<code>will print the following information revealing the IPv4 address registered for the</code>A` record:</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode txt"><code class="sourceCode default"><span id="cb94-1"><a href="12-part3-vm-setup.html#cb94-1" tabindex="-1"></a>Server:   192.168.0.1</span>
+<span id="cb94-2"><a href="12-part3-vm-setup.html#cb94-2" tabindex="-1"></a>Address:  192.168.0.1#53</span>
+<span id="cb94-3"><a href="12-part3-vm-setup.html#cb94-3" tabindex="-1"></a></span>
+<span id="cb94-4"><a href="12-part3-vm-setup.html#cb94-4" tabindex="-1"></a>Non-authoritative answer:</span>
+<span id="cb94-5"><a href="12-part3-vm-setup.html#cb94-5" tabindex="-1"></a>Name: google.com</span>
+<span id="cb94-6"><a href="12-part3-vm-setup.html#cb94-6" tabindex="-1"></a>Address: 142.250.73.110</span></code></pre></div>
+</div>
+<div id="part3-vm-setup-servers" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> Server Setup<a href="12-part3-vm-setup.html#part3-vm-setup-servers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You might be wondering, <em>What plan do I choose?</em> or <em>How do I get started?</em>
+In this section, we want to highlight the general intuition behind getting
+started with a cloud provider. We will outline the concepts of the different
+options when choosing a server plan for a cloud provider.</p>
+<p>For our examples, we will be using DigitalOcean. However, the same principles
+apply to different cloud providers.
+Later we will also talk about securing your server instance.</p>
+<p>You will need to sign up for DigitalOcean using your email address
+by visiting <a href="https://digitalocean.com" class="uri">https://digitalocean.com</a>. To start using their resources,
+you will have to provide a payment method, e.g. valid credit card, under the
+Billing tab in the dashboard after sign-up and login.
+This is not unique to DigitalOcean, all cloud providers will require
+payment, but some, like AWS, will provide a free tier for new customers,
+including some compute options for a limited time.</p>
+<p>Figure <a href="12-part3-vm-setup.html#fig:do-04">12.1</a> shows the dashboard with the services listed on the
+left hand side, e.g. Droplets (virtual machines in DigitalOcean terminology),
+App Platform, Databases, etc. We will focus on Droplets now.
+Navigate to the Droplet creation by clicking the Create button and selecting
+Droplets.
+<!-- ref to app platform here --></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:do-04"></span>
+<img src="images/vm-setup/do-04.png" alt="The DigitalOcean dashboard." width="100%" />
+<p class="caption">
+Figure 12.1: The DigitalOcean dashboard.
+</p>
+</div>
+<p>The next page will take you to the Droplet settings, as shown in Figure <a href="12-part3-vm-setup.html#fig:do-05">12.2</a>.
+We choose Toronto as the data center. The next setting is to choose the
+operating system and the version for the machine (Fig. <a href="12-part3-vm-setup.html#fig:do-06">12.3</a>).
+We select Ubuntu Linux version 24.04.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:do-05"></span>
+<img src="images/vm-setup/do-05.png" alt="Choosing data center for the DigitalOcean virtual machine." width="100%" />
+<p class="caption">
+Figure 12.2: Choosing data center for the DigitalOcean virtual machine.
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:do-06"></span>
+<img src="images/vm-setup/do-06.png" alt="Selecting the operating system and VM type for the DigitalOcean droplet." width="100%" />
+<p class="caption">
+Figure 12.3: Selecting the operating system and VM type for the DigitalOcean droplet.
+</p>
+</div>
+<p>The next setting will determine the resources, like CPUs, memory, disk size,
+assigned to our machine. We select the basic droplet type with shared
+CPUs using 2 virtual CPUs, 2 GB of memory, and 60 GB of disk space
+(Fig. <a href="12-part3-vm-setup.html#fig:do-07">12.4</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:do-07"></span>
+<img src="images/vm-setup/do-07.png" alt="Selecting machine types and CPU/memory settings." width="100%" />
+<p class="caption">
+Figure 12.4: Selecting machine types and CPU/memory settings.
+</p>
+</div>
+<p>These are specifications that might be sufficient and cheaper for testing.
+Specifications for production might be different. In general,
+we recommend at least 2 CPUs and 4 GB of memory so that you won’t get stuck.
+The memory is needed for compiling packages, and being able to run the
+required system services, and handling users connecting to the server.</p>
+<p>Instances used for testing purposes need to be removed after they are no longer
+needed. The slightly higher than necessary cost will not matter if you are only
+charged for a few hours. But when you forget about these instances, the
+costs will accumulate over time.</p>
+<p>Longer term deployments and resourcing requires a better understanding of the
+requirements and more testing and monitoring might be required before finding the most
+optimal setup. This is one of the advantages of using virtual machines as
+opposed to buying your own hardware. It is easier to experiment with
+different settings and make changes on demand.
+<!-- FIXME: reference scaling chapter here --></p>
+<!-- 
+- CPU
+- RAM
+- OS
+- IP Address (IPv4 vs IPv6)
+- SSH Key 
+-->
+<p>Next, you will have to select the SSH keys to be added to the server during setup.
+This way, you can connect to the server using <code>ssh</code> secure shell.
+You can choose to connect using a password, but we recommend using SSH.</p>
+<p>For using SSH, you will first have to generate an SSH key pair.
+SSH key pairs are two cryptographically secure keys that is used to
+authenticate a client (i.e. your laptop) to an SSH server (i.e. the
+service running on your virtual machine).
+The key pair has a public and a private key. The private key stays on your
+local machine, while the public key is used on the servers.
+The same key can be used on multiple servers.</p>
+<p>On Windows, you will be able to use <code>ssh</code> from command prompt or powershell.
+Note that when in the SSH session paste is right click.
+On Unix/Linux machines, you can generate a key pair using the <code>ssh-keygen</code>
+command. On Windows, the <code>git-bash.exe</code> has the <code>ssh-keygen</code> utility.</p>
+<p>You will be prompted to select a location for the keys.
+The default location for the keys is in the <code>~/.ssh</code> directory of the user’s
+home directory. The private key is named <code>id_rsa</code> and the public key is
+names <code>id_rsa.pub</code>. We recommend to use the default file names and location,
+so that the SSH client will find these automatically without having to
+specify the key every time using the <code>ssh</code> command to connect to the server.</p>
+<p>In the DigitalOcean dashboard, add your public SSH key by copying the file’s
+contents by clicking the Add SSH key button under Settings and Security.
+Such SSH keys will show up under the list of selectable options when
+creating your Droplet (Fig. <a href="12-part3-vm-setup.html#fig:do-08">12.5</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:do-08"></span>
+<img src="images/vm-setup/do-08.png" alt="Authentication method selection." width="100%" />
+<p class="caption">
+Figure 12.5: Authentication method selection.
+</p>
+</div>
+<p>After setting all these for the Droplet, there is only one more thing is left to
+do, clicking the Create Droplet button. This will launch a progress bar and
+after a little bit of waiting, a notification will let you know that the
+virtual machine is ready to be used. Once it is ready, you can click
+the Droplet’s name in the dashboard. The link will take you to the
+Droplet’s page (Fig. <a href="12-part3-vm-setup.html#fig:do-14">12.6</a>) where you can see your CPU and other
+usage statistics. One important piece of information here is the IPv4 address.
+Clicking the value will copy the IP address to the clipboard.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:do-14"></span>
+<img src="images/vm-setup/do-14.png" alt="The Droplet dashboard with resource usage metrics." width="100%" />
+<p class="caption">
+Figure 12.6: The Droplet dashboard with resource usage metrics.
+</p>
+</div>
+<p>You can power the Droplet down or turn it back on. Add volumes (extra disk space),
+resize (change the CPU and memory settings), turn on backups or make snapshots
+so that you can restore the server in case something unexpected happens.</p>
+<p>The Networking tab can be used to set firewall rules for the Droplet and to
+assign reserved IP address to the Droplet. A reserved IP address is useful
+for production servers. You can assign the DNS A record to the reserved IP
+address instead of the Droplet’s own IP address. In case you have to set up
+a new server, you’ll get a new IP address with it, therefore you will have
+to update the A record with your registrar. This can lead to some downtime
+of the server during the time the new IP address propagates through the
+name servers. If you want to avoid this downtime (during which the IP address
+might still resolve to the old server address), use the reserved IP.
+You won’t have to update the A record, you will only have to assign the
+reserved IP address to the new server.</p>
+<p>You will also find a tab where you can destroy the Droplet, meaning, the
+allocated resources will be freed up and you won’t be charged for the Droplet
+any more.</p>
+</div>
+<div id="part3-vm-setup-install" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Installing Software for Shiny Hosting<a href="12-part3-vm-setup.html#part3-vm-setup-install" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before you can install software on the newly created virtual machine,
+you have to log in to the server, change the IP address to your Droplet’s
+address:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb95-1"><a href="12-part3-vm-setup.html#cb95-1" tabindex="-1"></a><span class="fu">ssh</span> root@<span class="va">$1</span>47.182.151.103</span></code></pre></div>
+<p>You will see a warning that the authenticity of the host can’t be established.
+This is normal on the first connection. Type <code>yes</code> when prompted to continue.
+After this, the 147.182.151.103 address will be permanently added to
+the list of known hosts.</p>
+<p>You logged in as the <code>root</code> user, this user is an admin or super user.
+As a result, you will not have to use the <code>sudo</code> prefix before commands to
+act as an admin. Logging in as the root user is not universal practice
+across cloud providers. When the user used to log in via SSH is not a privileged
+user, you will have to elevate permissions by using <code>sudo -i</code>.
+For example, AWS cloud instances will use the non root <code>ubuntu</code> user for SSH login.</p>
+<p>Once on the server, you’ll see a welcome message listing some details of the
+operating system:</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb96-1"><a href="12-part3-vm-setup.html#cb96-1" tabindex="-1"></a><span class="ex">Welcome</span> to Ubuntu 24.04.1 LTS <span class="er">(</span><span class="ex">GNU/Linux</span> 6.8.0-51-generic x86_64<span class="kw">)</span></span>
+<span id="cb96-2"><a href="12-part3-vm-setup.html#cb96-2" tabindex="-1"></a></span>
+<span id="cb96-3"><a href="12-part3-vm-setup.html#cb96-3" tabindex="-1"></a> <span class="ex">*</span> Documentation:  https://help.ubuntu.com</span>
+<span id="cb96-4"><a href="12-part3-vm-setup.html#cb96-4" tabindex="-1"></a> <span class="ex">*</span> Management:     https://landscape.canonical.com</span>
+<span id="cb96-5"><a href="12-part3-vm-setup.html#cb96-5" tabindex="-1"></a> <span class="ex">*</span> Support:        https://ubuntu.com/pro</span>
+<span id="cb96-6"><a href="12-part3-vm-setup.html#cb96-6" tabindex="-1"></a></span>
+<span id="cb96-7"><a href="12-part3-vm-setup.html#cb96-7" tabindex="-1"></a> <span class="ex">System</span> information as of Sun Aug  3 03:09:30 UTC 2025</span>
+<span id="cb96-8"><a href="12-part3-vm-setup.html#cb96-8" tabindex="-1"></a></span>
+<span id="cb96-9"><a href="12-part3-vm-setup.html#cb96-9" tabindex="-1"></a>  <span class="ex">System</span> load:  0.0               Processes:             114</span>
+<span id="cb96-10"><a href="12-part3-vm-setup.html#cb96-10" tabindex="-1"></a>  <span class="ex">Usage</span> of /:   3.2% of 57.08GB   Users logged in:       0</span>
+<span id="cb96-11"><a href="12-part3-vm-setup.html#cb96-11" tabindex="-1"></a>  <span class="ex">Memory</span> usage: 10%               IPv4 address for eth0: 147.182.151.103</span>
+<span id="cb96-12"><a href="12-part3-vm-setup.html#cb96-12" tabindex="-1"></a>  <span class="ex">Swap</span> usage:   0%                IPv4 address for eth0: 10.20.0.5</span>
+<span id="cb96-13"><a href="12-part3-vm-setup.html#cb96-13" tabindex="-1"></a></span>
+<span id="cb96-14"><a href="12-part3-vm-setup.html#cb96-14" tabindex="-1"></a><span class="ex">[...]</span></span>
+<span id="cb96-15"><a href="12-part3-vm-setup.html#cb96-15" tabindex="-1"></a></span>
+<span id="cb96-16"><a href="12-part3-vm-setup.html#cb96-16" tabindex="-1"></a><span class="ex">Ubuntu</span> comes with ABSOLUTELY NO WARRANTY, to the extent permitted by</span>
+<span id="cb96-17"><a href="12-part3-vm-setup.html#cb96-17" tabindex="-1"></a><span class="ex">applicable</span> law.</span>
+<span id="cb96-18"><a href="12-part3-vm-setup.html#cb96-18" tabindex="-1"></a></span>
+<span id="cb96-19"><a href="12-part3-vm-setup.html#cb96-19" tabindex="-1"></a><span class="ex">root@ubuntu-s-2vcpu-2gb-tor1-01:~#</span> </span></code></pre></div>
+<p>Once on the server, update the operating system as:</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb97-1"><a href="12-part3-vm-setup.html#cb97-1" tabindex="-1"></a><span class="ex">apt</span> update</span>
+<span id="cb97-2"><a href="12-part3-vm-setup.html#cb97-2" tabindex="-1"></a><span class="ex">apt</span> upgrade</span></code></pre></div>
+<p>This will first update the list of available packages and their versions,
+then install newer versions of the packages.</p>
+<p>In your Droplet page, the default performance metrics include Bandwidth, CPU,
+and Disk I/O metrics. Installing the DigitalOcean Metrics Agent will provide you
+with Memory, Load (1/5/15 minutes aggregates) and Disk Usage information.
+You can use these metrics to visualize performance and to set up and receive
+alerts via email to proactively manage your server. E.g. you can set an
+alert for the CPU or memory running high (above 80%), etc.
+You can install the agent it via:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb98-1"><a href="12-part3-vm-setup.html#cb98-1" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-sSL</span> https://repos.insights.digitalocean.com/install.sh <span class="kw">|</span> <span class="fu">sudo</span> bash</span></code></pre></div>
+<p>Note that this metrics agent is DigitalOcean specific. Other cloud providers
+will have other mechanisms for providing these types of metrics.</p>
+<!--
+  - Reverse proxy setup with Caddy
+    - Static hosting on file server
+    - systemd
+    - Posit Connect
+    - Shiny Server
+      - multiple apps / linux users
+-->
+</div>
+<div id="reverse-proxies" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> Reverse Proxies<a href="12-part3-vm-setup.html#reverse-proxies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Reverse proxies are useful tools to send incoming traffic to the final destination.
+For example when someone accesses the server through the HTTPS port (443),
+the server will need to know where to send that request.
+There are different options of reverse proxies such as: Nginx, Apache, and Caddy.
+One of the easiest to use and configure is Caddy.
+Caddy is a powerful open-source web server with automatic HTTPS. Follow
+the <a href="https://caddyserver.com">Caddy server docs</a>
+and install the software:</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb99-1"><a href="12-part3-vm-setup.html#cb99-1" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> <span class="dt">\</span></span>
+<span id="cb99-2"><a href="12-part3-vm-setup.html#cb99-2" tabindex="-1"></a>  debian-keyring debian-archive-keyring apt-transport-https curl</span>
+<span id="cb99-3"><a href="12-part3-vm-setup.html#cb99-3" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-1sLf</span> <span class="st">&#39;https://dl.cloudsmith.io/public/caddy/stable/gpg.key&#39;</span> <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb99-4"><a href="12-part3-vm-setup.html#cb99-4" tabindex="-1"></a>  <span class="fu">sudo</span> gpg <span class="at">--dearmor</span> <span class="at">-o</span> /usr/share/keyrings/caddy-stable-archive-keyring.gpg</span>
+<span id="cb99-5"><a href="12-part3-vm-setup.html#cb99-5" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-1sLf</span> <span class="st">&#39;https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt&#39;</span> <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb99-6"><a href="12-part3-vm-setup.html#cb99-6" tabindex="-1"></a>  <span class="fu">sudo</span> tee /etc/apt/sources.list.d/caddy-stable.list</span>
+<span id="cb99-7"><a href="12-part3-vm-setup.html#cb99-7" tabindex="-1"></a><span class="fu">chmod</span> o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg</span>
+<span id="cb99-8"><a href="12-part3-vm-setup.html#cb99-8" tabindex="-1"></a><span class="fu">chmod</span> o+r /etc/apt/sources.list.d/caddy-stable.list</span>
+<span id="cb99-9"><a href="12-part3-vm-setup.html#cb99-9" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb99-10"><a href="12-part3-vm-setup.html#cb99-10" tabindex="-1"></a><span class="fu">sudo</span> apt install caddy</span></code></pre></div>
+<p>Now visit <code>http://147.182.151.103</code> (use your IP address) to see the Caddy
+greetings page (Fig. <a href="12-part3-vm-setup.html#fig:caddy-01">12.7</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:caddy-01"></span>
+<img src="images/caddy-server/caddy-01.png" alt="Caddy server greetings page." width="100%" />
+<p class="caption">
+Figure 12.7: Caddy server greetings page.
+</p>
+</div>
+<p>Figure <a href="12-part3-vm-setup.html#fig:dns-a-record">12.8</a> shows how to add an A record for IPv4 147.182.151.103
+(use your IP address here).
+Visit the address <code>http://test.h10y.com/</code> (use your domain name). You will
+see the same unsecured page (i.e. no lock icon in the browser address bar)
+as we saw when we used the plain IP address.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:dns-a-record"></span>
+<img src="images/caddy-server/dns-a-record.png" alt="Adding A record to your domain name settings." width="100%" />
+<p class="caption">
+Figure 12.8: Adding A record to your domain name settings.
+</p>
+</div>
+<p>To turn HTTPS on, we have to edit the Caddyfile, which is the easiest way for
+managing Caddy. Open the Caddyfile with nano: <code>nano /etc/caddy/Caddyfile</code>.
+You should see this (with comments):</p>
+<pre class="text"><code>:80 {
+        root * /usr/share/caddy
+        file_server
+}</code></pre>
+<p>This block between the curly braces in the Caddyfile is called the site block.
+It defines a so-called static file server. The <code>/usr/share/caddy</code> folder contains an
+<code>index.html</code> file that is responsible for the default Caddy welcome page we saw.
+You can host static files inside the folder specified by the <code>root</code> directive of
+the Caddyfile, i.e. <code>/usr/share/caddy</code>. Put there any HTML files, create
+subfolders, etc. You can even copy Shinylive apps that we mention in
+Chapter <a href="10-part3-static-hosting.html#part3-static-hosting">10</a> into the folder.
+<!-- link to static shinylive hosting --></p>
+<p>Change the <code>:80</code> (which stands for the HTTP port on the server)
+to your domain name <code>test.h10y.com</code>, leave everything else as is for now:</p>
+<pre class="text"><code>test.h10y.com {
+        root * /usr/share/caddy
+        file_server
+}</code></pre>
+<p>Restart Caddy with <code>systemctl reload caddy</code> for the changes to take
+effect. You can check the Caddy logs using <code>journalctl -u caddy --no-pager | less</code>.</p>
+<p>Go back to the browser, you should see <code>https://test.h10y.com/</code>.
+You’ll see the browser now lists the page as secure.</p>
+<!-- FIXME: link to chapter explaining how to copy files with rsync or scp -->
+<p>HTTPS is important because it encrypts the traffic between the client and server.
+It ensures that the data sent to the client from the server is not tampered
+with and vice-versa.
+If you are unsure if your site needs HTTPS, read about it here: <a href="https://doesmysiteneedhttps.com" class="uri">https://doesmysiteneedhttps.com</a>.
+Caddy uses HTTPS automatically and by default. It obtains
+and renews TLS certificates for your sites automatically.
+For a <a href="https://letsencrypt.org/">Let’s Encrypt certificate</a>, you
+need a fully registered domain name. You can add other TLS certificates
+to Caddy, but we won’t cover those cases here.</p>
+</div>
+<div id="set-firewall" class="section level2 hasAnchor" number="12.5">
+<h2><span class="header-section-number">12.5</span> Setting the Firewall<a href="12-part3-vm-setup.html#set-firewall" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The firewall restricts incoming or outgoing traffic on different ports.
+If you disable all ports, you won’t be able to access the server or
+the server won’t be able to download software from the Internet.</p>
+<p>Cloud providers generally allow to set firewall rules as part of their
+dashboard. Here we’ll show how to use the <code>ufw</code> (Uncomplicated Firewall)
+command line utility to manage the firewall settings.
+On DigitalOcean, <code>ufw</code> is pre-installed. On other providers, you might have
+to install it with <code>sudo apt install ufw</code>.</p>
+<p>As general practice, we want to allow outgoing traffic
+but restrict incoming traffic except for certain ports,
+such as port 22 (ssh), 80 (http), and 443 (https):</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb102-1"><a href="12-part3-vm-setup.html#cb102-1" tabindex="-1"></a><span class="ex">ufw</span> default allow outgoing</span>
+<span id="cb102-2"><a href="12-part3-vm-setup.html#cb102-2" tabindex="-1"></a><span class="ex">ufw</span> default deny incoming</span>
+<span id="cb102-3"><a href="12-part3-vm-setup.html#cb102-3" tabindex="-1"></a><span class="ex">ufw</span> allow ssh</span>
+<span id="cb102-4"><a href="12-part3-vm-setup.html#cb102-4" tabindex="-1"></a><span class="ex">ufw</span> allow http</span>
+<span id="cb102-5"><a href="12-part3-vm-setup.html#cb102-5" tabindex="-1"></a><span class="ex">ufw</span> allow https</span>
+<span id="cb102-6"><a href="12-part3-vm-setup.html#cb102-6" tabindex="-1"></a><span class="ex">ufw</span> enable</span></code></pre></div>
+<p>The last line will enable the firewall, i.e. the settings will be applied.</p>
+</div>
+<div id="monitoring-processes" class="section level2 hasAnchor" number="12.6">
+<h2><span class="header-section-number">12.6</span> Monitoring Processes<a href="12-part3-vm-setup.html#monitoring-processes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Often times, you might need to check if a specific program is running on your
+remote computer, or you would like to know the memory or CPU that is currently
+being used.</p>
+<p>By typing the <code>top</code> command you can get a live view of the processes currently
+running on your computer.</p>
+<p>At the top you can see the total time your computer has been running for.</p>
+<p>The <code>%cpu</code> row shows how much of the CPU is being used. The <code>us</code> stands for user
+time of the cpu, while the <code>sy</code> stands for the system of the CPU.</p>
+<p>Below the <code>%cpu</code> row is the <code>MiB Mem</code> row which shows the amount of memory that
+is consumed in megabytes. And the <code>MiB Swap</code> which is the hard disk space used
+for RAM.</p>
+<p>Finally, there are the live processes in a table below the top heading. You can
+see the command that has been executed and the amount of CPU and memory it has
+been using.</p>
+<p>To quit <code>top</code>, simply press the <code>q</code> character on your keyboard.</p>
+<!-- FIXME: add used/free disk space commands. -->
+</div>
+<div id="shutdown-and-reboot" class="section level2 hasAnchor" number="12.7">
+<h2><span class="header-section-number">12.7</span> Shutdown and Reboot<a href="12-part3-vm-setup.html#shutdown-and-reboot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You may need to reboot or shutoff your server at times. These commands will
+require super user access as you may be interrupting the operations of other
+users on the server.</p>
+<p>Therefore to reboot the server, you would run: <code>sudo reboot</code>.</p>
+<p>To shut off the server, you would run: <code>sudo poweroff</code>.</p>
+<p>If you do shut off the server, you will have to turn it back on in your cloud
+hosting provider panel. Or if it is a physical server, you can also physically
+press the power button.</p>
+<!-- 
+- VMs
+  - Setup
+    - DO droplet & ssh login
+    - Navigation & commands
+    - Reverse proxy / Caddy (mention Apache & Nginx)
+    - Custom domain & TLS
+    - Firewall
+
+ Check:
+
+- https://www.youtube.com/watch?v=F-9KWQByeU0
+- mention nginx apache traefik
+-->
+</div>
+<div id="summary-11" class="section level2 hasAnchor" number="12.8">
+<h2><span class="header-section-number">12.8</span> Summary<a href="12-part3-vm-setup.html#summary-11" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We have reviewed the basics of setting up a virtual machine
+and the basic operations to manage it.</p>
+<p>With a virtual machine setup, you will be able to run Shiny
+hosting softare like Shiny Server and Posit Connect explained
+in the next 2 chapters. Having your own virtual machine, also
+enables you to run containerized Shiny applications explained in
+Chapter <a href="15-part4-containers.html#part4-containers">15</a> with ShinyProxy (Chapter <a href="21-shinyproxy-deployment.html#shinyproxy-deployment">21</a>).</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="11-embedding-shiny-apps.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="13-shiny-server.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/h10y/book/edit/main/book-source/03-05-vm-setup.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

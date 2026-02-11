@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 19 Hosting Platforms | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 19 Hosting Platforms | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="h10y/book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 19 Hosting Platforms | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@psolymos" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2026-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="18-part2-working-with-containers.html"/>
+<link rel="next" href="20-part2-docker-compose.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.js"></script>
+<link href="libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.5/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.5/reactable.js"></script>
+<script src="https://cdn.usefathom.com/script.js" data-site="PASYTARS" defer></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-part1-background.html"><a href="1-part1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-part1-background.html"><a href="1-part1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-web-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-python"><i class="fa fa-check"></i><b>3.1.2</b> Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-docker"><i class="fa fa-check"></i><b>3.1.4</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-super-user"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-scm-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+<li class="chapter" data-level="3.3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-in-practice"><i class="fa fa-check"></i><b>3.3.5</b> Git in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-working-with-servers"><i class="fa fa-check"></i><b>3.4</b> Working with Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#readability-and-other-useful-tools"><i class="fa fa-check"></i><b>3.5</b> Readability and Other Useful Tools</a></li>
+<li class="chapter" data-level="3.6" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-part1-examples.html"><a href="4-part1-examples.html"><i class="fa fa-check"></i><b>4</b> Shiny Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a></li>
+<li class="chapter" data-level="4.3" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-lbtest"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-part1-examples.html"><a href="4-part1-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r"><i class="fa fa-check"></i><b>5.1.1</b> R</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.1.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shiny-lifecycle"><i class="fa fa-check"></i><b>5.2</b> The Shiny App Lifecycle</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections"><i class="fa fa-check"></i><b>5.2.1</b> Connections</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#sessions"><i class="fa fa-check"></i><b>5.2.2</b> Sessions</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections-sessions"><i class="fa fa-check"></i><b>5.2.3</b> Connections + Sessions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.4</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-apps"><i class="fa fa-check"></i><b>5.3</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python-1"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive"><i class="fa fa-check"></i><b>5.4</b> Shinylive</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-python"><i class="fa fa-check"></i><b>5.4.1</b> Python Shinylive</a></li>
+<li class="chapter" data-level="5.4.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-r"><i class="fa fa-check"></i><b>5.4.2</b> R Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-dynamic-documents"><i class="fa fa-check"></i><b>5.5</b> Dynamic Documents</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-r-markdown"><i class="fa fa-check"></i><b>5.5.1</b> R Markdown</a></li>
+<li class="chapter" data-level="5.5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-quarto-with-python"><i class="fa fa-check"></i><b>5.5.2</b> Quarto with Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html"><i class="fa fa-check"></i><b>6</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#r-2"><i class="fa fa-check"></i><b>6.1</b> R</a></li>
+<li class="chapter" data-level="6.2" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#python-2"><i class="fa fa-check"></i><b>6.2</b> Python</a></li>
+<li class="chapter" data-level="6.3" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#summary-5"><i class="fa fa-check"></i><b>6.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html"><i class="fa fa-check"></i><b>7</b> Sharing Your Shiny App</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-distributing-code"><i class="fa fa-check"></i><b>7.1</b> Distributing Code</a></li>
+<li class="chapter" data-level="7.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploying-shiny-apps"><i class="fa fa-check"></i><b>7.2</b> Deploying Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploy-to-shinyapps-io"><i class="fa fa-check"></i><b>7.2.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="7.2.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-sharing-shinylive"><i class="fa fa-check"></i><b>7.2.2</b> Sharing Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#summary-6"><i class="fa fa-check"></i><b>7.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="8" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html"><i class="fa fa-check"></i><b>8</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-hosting-patterns"><i class="fa fa-check"></i><b>8.1</b> Hosting Patterns for Shiny Apps</a></li>
+<li class="chapter" data-level="8.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-decision-framework"><i class="fa fa-check"></i><b>8.2</b> The Decision Framework</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>8.2.1</b> Start with the Why</a></li>
+<li class="chapter" data-level="8.2.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#requirements"><i class="fa fa-check"></i><b>8.2.2</b> Requirements</a></li>
+<li class="chapter" data-level="8.2.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#constraints"><i class="fa fa-check"></i><b>8.2.3</b> Constraints</a></li>
+<li class="chapter" data-level="8.2.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#picking-an-option"><i class="fa fa-check"></i><b>8.2.4</b> Picking an Option</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-important-prerequisites"><i class="fa fa-check"></i><b>8.3</b> Important Prerequisites</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-custom-domains"><i class="fa fa-check"></i><b>8.3.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="8.3.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-https"><i class="fa fa-check"></i><b>8.3.2</b> HTTPS Access to Your App</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#summary-7"><i class="fa fa-check"></i><b>8.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html"><i class="fa fa-check"></i><b>9</b> Platforms for Shiny Hosting</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io"><i class="fa fa-check"></i><b>9.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="9.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io-alternatives"><i class="fa fa-check"></i><b>9.2</b> shinyapps.io Alternatives</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-posit-connect-cloud"><i class="fa fa-check"></i><b>9.2.1</b> Posit Connect Cloud</a></li>
+<li class="chapter" data-level="9.2.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-ploomber"><i class="fa fa-check"></i><b>9.2.2</b> Ploomber</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#summary-8"><i class="fa fa-check"></i><b>9.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html"><i class="fa fa-check"></i><b>10</b> Static Hosting for Shinylive</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#building-shinylive"><i class="fa fa-check"></i><b>10.1</b> Building Shinylive</a></li>
+<li class="chapter" data-level="10.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#github-pages"><i class="fa fa-check"></i><b>10.2</b> GitHub Pages</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#enabling-pages"><i class="fa fa-check"></i><b>10.2.1</b> Enabling Pages</a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#accessing-the-published-site"><i class="fa fa-check"></i><b>10.2.2</b> Accessing the Published Site</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#other-static-site-hosting"><i class="fa fa-check"></i><b>10.3</b> Other Static Site Hosting Providers</a></li>
+<li class="chapter" data-level="10.4" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#summary-9"><i class="fa fa-check"></i><b>10.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html"><i class="fa fa-check"></i><b>11</b> Embedding Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#understanding-iframes"><i class="fa fa-check"></i><b>11.1</b> Understanding Iframes</a></li>
+<li class="chapter" data-level="11.2" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#styling-iframes"><i class="fa fa-check"></i><b>11.2</b> Styling Iframes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#summary-10"><i class="fa fa-check"></i><b>11.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html"><i class="fa fa-check"></i><b>12</b> Hosting on Virtual Machines</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-custom-domains"><i class="fa fa-check"></i><b>12.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="12.2" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-servers"><i class="fa fa-check"></i><b>12.2</b> Server Setup</a></li>
+<li class="chapter" data-level="12.3" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-install"><i class="fa fa-check"></i><b>12.3</b> Installing Software for Shiny Hosting</a></li>
+<li class="chapter" data-level="12.4" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#reverse-proxies"><i class="fa fa-check"></i><b>12.4</b> Reverse Proxies</a></li>
+<li class="chapter" data-level="12.5" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#set-firewall"><i class="fa fa-check"></i><b>12.5</b> Setting the Firewall</a></li>
+<li class="chapter" data-level="12.6" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#monitoring-processes"><i class="fa fa-check"></i><b>12.6</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="12.7" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>12.7</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="12.8" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#summary-11"><i class="fa fa-check"></i><b>12.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-shiny-server.html"><a href="13-shiny-server.html"><i class="fa fa-check"></i><b>13</b> Shiny Server</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#provisioning-a-server"><i class="fa fa-check"></i><b>13.1</b> Provisioning a Server</a></li>
+<li class="chapter" data-level="13.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#using-systemd"><i class="fa fa-check"></i><b>13.2</b> Using Systemd</a></li>
+<li class="chapter" data-level="13.3" data-path="13-shiny-server.html"><a href="13-shiny-server.html#configuring-shiny-server"><i class="fa fa-check"></i><b>13.3</b> Configuring Shiny Server</a></li>
+<li class="chapter" data-level="13.4" data-path="13-shiny-server.html"><a href="13-shiny-server.html#file-transfer-based-publishing"><i class="fa fa-check"></i><b>13.4</b> File Transfer Based Publishing</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#editing-files-on-the-server"><i class="fa fa-check"></i><b>13.4.1</b> Editing Files on the Server</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#secure-copy-files-to-the-server"><i class="fa fa-check"></i><b>13.4.2</b> Secure Copy Files to the Server</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-shiny-server.html"><a href="13-shiny-server.html#git-based-deployment"><i class="fa fa-check"></i><b>13.5</b> Git-based Deployment</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#apps-with-multiple-linux-users"><i class="fa fa-check"></i><b>13.5.1</b> Apps with Multiple Linux Users</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-shiny-server.html"><a href="13-shiny-server.html#licensing-considerations"><i class="fa fa-check"></i><b>13.6</b> Licensing Considerations</a></li>
+<li class="chapter" data-level="13.7" data-path="13-shiny-server.html"><a href="13-shiny-server.html#summary-12"><i class="fa fa-check"></i><b>13.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="14-posit-connect.html"><a href="14-posit-connect.html"><i class="fa fa-check"></i><b>14</b> Posit Connect</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="14-posit-connect.html"><a href="14-posit-connect.html#summary-13"><i class="fa fa-check"></i><b>14.1</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>IV Containerized Shiny Apps</b></span></li>
+<li class="chapter" data-level="15" data-path="15-part4-containers.html"><a href="15-part4-containers.html"><i class="fa fa-check"></i><b>15</b> Introduction to Containers</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-concepts"><i class="fa fa-check"></i><b>15.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="15.1.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-engine"><i class="fa fa-check"></i><b>15.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-container-registries"><i class="fa fa-check"></i><b>15.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-images"><i class="fa fa-check"></i><b>15.1.3</b> Images</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-the-dockerfile"><i class="fa fa-check"></i><b>15.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-containers"><i class="fa fa-check"></i><b>15.1.5</b> Containers</a></li>
+<li class="chapter" data-level="15.1.6" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-cli"><i class="fa fa-check"></i><b>15.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#summary-14"><i class="fa fa-check"></i><b>15.2</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-part2-images.html"><a href="16-part2-images.html"><i class="fa fa-check"></i><b>16</b> Container Images</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-existing-images"><i class="fa fa-check"></i><b>16.1</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-image-names-tags"><i class="fa fa-check"></i><b>16.1.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-pull"><i class="fa fa-check"></i><b>16.1.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-login"><i class="fa fa-check"></i><b>16.1.3</b> Docker Login</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-run"><i class="fa fa-check"></i><b>16.1.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-build"><i class="fa fa-check"></i><b>16.2</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-r-shiny"><i class="fa fa-check"></i><b>16.2.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-buildx-buildkit"><i class="fa fa-check"></i><b>16.2.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-inspect"><i class="fa fa-check"></i><b>16.2.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-python-shiny"><i class="fa fa-check"></i><b>16.2.4</b> Python for Shiny</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-managing-images"><i class="fa fa-check"></i><b>16.3</b> Managing Images</a></li>
+<li class="chapter" data-level="16.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-sharing-images"><i class="fa fa-check"></i><b>16.4</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-push"><i class="fa fa-check"></i><b>16.4.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registries"><i class="fa fa-check"></i><b>16.4.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-login"><i class="fa fa-check"></i><b>16.4.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="16.4.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-local"><i class="fa fa-check"></i><b>16.4.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-part2-images.html"><a href="16-part2-images.html#summary-15"><i class="fa fa-check"></i><b>16.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>17</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile"><i class="fa fa-check"></i><b>17.1</b> The Dockerfile</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-parent-image"><i class="fa fa-check"></i><b>17.1.1</b> The Parent Image</a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-metadata"><i class="fa fa-check"></i><b>17.1.2</b> Metadata</a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-dependencies"><i class="fa fa-check"></i><b>17.1.3</b> Dependencies</a></li>
+<li class="chapter" data-level="17.1.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-files-and-dirs"><i class="fa fa-check"></i><b>17.1.4</b> Directories and Files</a></li>
+<li class="chapter" data-level="17.1.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-user"><i class="fa fa-check"></i><b>17.1.5</b> Switching User</a></li>
+<li class="chapter" data-level="17.1.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-port"><i class="fa fa-check"></i><b>17.1.6</b> Expose a Port</a></li>
+<li class="chapter" data-level="17.1.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-env-and-arg"><i class="fa fa-check"></i><b>17.1.7</b> Variables</a></li>
+<li class="chapter" data-level="17.1.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-cmd"><i class="fa fa-check"></i><b>17.1.8</b> Executable and Command</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images"><i class="fa fa-check"></i><b>17.2</b> Parent Images</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-r"><i class="fa fa-check"></i><b>17.2.1</b> R Parent Images</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-python"><i class="fa fa-check"></i><b>17.2.2</b> Python Parent Images</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries"><i class="fa fa-check"></i><b>17.3</b> Installing System Libraries</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-manual"><i class="fa fa-check"></i><b>17.3.1</b> Manual Installation</a></li>
+<li class="chapter" data-level="17.3.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-r2u"><i class="fa fa-check"></i><b>17.3.2</b> Automated Dependency Resolution with r2u</a></li>
+<li class="chapter" data-level="17.3.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-alpine"><i class="fa fa-check"></i><b>17.3.3</b> Dependencies on Alpine Linux</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg"><i class="fa fa-check"></i><b>17.4</b> Installing R Packages</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-explicit"><i class="fa fa-check"></i><b>17.4.1</b> Explicitly Stating Dependencies</a></li>
+<li class="chapter" data-level="17.4.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-description"><i class="fa fa-check"></i><b>17.4.2</b> Using the DESCRIPTION File</a></li>
+<li class="chapter" data-level="17.4.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-renv"><i class="fa fa-check"></i><b>17.4.3</b> Using renv</a></li>
+<li class="chapter" data-level="17.4.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-deps"><i class="fa fa-check"></i><b>17.4.4</b> Using deps</a></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-python"><i class="fa fa-check"></i><b>17.5</b> Python Requirements</a></li>
+<li class="chapter" data-level="17.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps"><i class="fa fa-check"></i><b>17.6</b> Classic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.6.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-r"><i class="fa fa-check"></i><b>17.6.1</b> R</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-python"><i class="fa fa-check"></i><b>17.6.2</b> Python</a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-rmd"><i class="fa fa-check"></i><b>17.6.3</b> R Markdown</a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-r"><i class="fa fa-check"></i><b>17.6.4</b> Quarto with R</a></li>
+<li class="chapter" data-level="17.6.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-python"><i class="fa fa-check"></i><b>17.6.5</b> Quarto with Python</a></li>
+<li class="chapter" data-level="17.6.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-shiny-server"><i class="fa fa-check"></i><b>17.6.6</b> Shiny Server</a></li>
+</ul></li>
+<li class="chapter" data-level="17.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-static-shiny-apps"><i class="fa fa-check"></i><b>17.7</b> Containerizing Shinylive</a></li>
+<li class="chapter" data-level="17.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#summary-16"><i class="fa fa-check"></i><b>17.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html"><i class="fa fa-check"></i><b>18</b> Working with Containers</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-run"><i class="fa fa-check"></i><b>18.1</b> Docker Run</a></li>
+<li class="chapter" data-level="18.2" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-managing"><i class="fa fa-check"></i><b>18.2</b> Managing Containers</a></li>
+<li class="chapter" data-level="18.3" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#summary-17"><i class="fa fa-check"></i><b>18.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>V Hosting Shiny with Containers</b></span></li>
+<li class="chapter" data-level="19" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html"><i class="fa fa-check"></i><b>19</b> Hosting Platforms</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-heroku"><i class="fa fa-check"></i><b>19.1</b> Heroku</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-from-the-command-line"><i class="fa fa-check"></i><b>19.1.1</b> Deployment from the Command Line</a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-using-the-web-dashboard"><i class="fa fa-check"></i><b>19.1.2</b> Deployment using the Web Dashboard</a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domain-and-https"><i class="fa fa-check"></i><b>19.1.3</b> Custom Domain and HTTPS</a></li>
+<li class="chapter" data-level="19.1.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#scaling"><i class="fa fa-check"></i><b>19.1.4</b> Scaling</a></li>
+<li class="chapter" data-level="19.1.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-18"><i class="fa fa-check"></i><b>19.1.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-doap"><i class="fa fa-check"></i><b>19.2</b> DigitalOcean App Platform</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites"><i class="fa fa-check"></i><b>19.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#docker-hub-deployment"><i class="fa fa-check"></i><b>19.2.2</b> Docker Hub Deployment</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#github-deployment"><i class="fa fa-check"></i><b>19.2.3</b> GitHub Deployment</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#programmatic-deployment"><i class="fa fa-check"></i><b>19.2.4</b> Programmatic Deployment</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#logs"><i class="fa fa-check"></i><b>19.2.5</b> Logs</a></li>
+<li class="chapter" data-level="19.2.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domains"><i class="fa fa-check"></i><b>19.2.6</b> Custom Domains</a></li>
+<li class="chapter" data-level="19.2.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-19"><i class="fa fa-check"></i><b>19.2.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-flyio"><i class="fa fa-check"></i><b>19.3</b> Fly.io</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites-1"><i class="fa fa-check"></i><b>19.3.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#creating-a-fly.io-app"><i class="fa fa-check"></i><b>19.3.2</b> Creating a Fly.io App</a></li>
+<li class="chapter" data-level="19.3.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deploying-to-fly.io"><i class="fa fa-check"></i><b>19.3.3</b> Deploying to Fly.io</a></li>
+<li class="chapter" data-level="19.3.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#metrics-and-logs"><i class="fa fa-check"></i><b>19.3.4</b> Metrics and Logs</a></li>
+<li class="chapter" data-level="19.3.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#setting-up-a-custom-domain"><i class="fa fa-check"></i><b>19.3.5</b> Setting up a Custom Domain</a></li>
+<li class="chapter" data-level="19.3.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#adding-tlsssl-certificate"><i class="fa fa-check"></i><b>19.3.6</b> Adding TLS/SSL certificate</a></li>
+<li class="chapter" data-level="19.3.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#autoscaling-in-multiple-regions"><i class="fa fa-check"></i><b>19.3.7</b> Autoscaling in Multiple-Regions</a></li>
+<li class="chapter" data-level="19.3.8" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-20"><i class="fa fa-check"></i><b>19.3.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#other-general-paas"><i class="fa fa-check"></i><b>19.4</b> Other Providers</a></li>
+<li class="chapter" data-level="19.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-21"><i class="fa fa-check"></i><b>19.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html"><i class="fa fa-check"></i><b>20</b> Docker Compose</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-file"><i class="fa fa-check"></i><b>20.1</b> The Compose File</a></li>
+<li class="chapter" data-level="20.2" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-cli"><i class="fa fa-check"></i><b>20.2</b> Compose Command Line</a></li>
+<li class="chapter" data-level="20.3" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-vm"><i class="fa fa-check"></i><b>20.3</b> Docker Compose on a Virtual Machine</a></li>
+<li class="chapter" data-level="20.4" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-up-and-down"><i class="fa fa-check"></i><b>20.4</b> Docker Compose Up and Down</a></li>
+<li class="chapter" data-level="20.5" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#compose-scaling"><i class="fa fa-check"></i><b>20.5</b> Scaling with Docker Compose</a></li>
+<li class="chapter" data-level="20.6" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#server-maintenance"><i class="fa fa-check"></i><b>20.6</b> Server Maintenance</a></li>
+<li class="chapter" data-level="20.7" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#summary-22"><i class="fa fa-check"></i><b>20.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html"><i class="fa fa-check"></i><b>21</b> ShinyProxy</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#setting-up-shinyproxy-using-docker"><i class="fa fa-check"></i><b>21.1</b> Setting up ShinyProxy Using Docker</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#docker-compose-for-shinyproxy"><i class="fa fa-check"></i><b>21.1.1</b> Docker Compose for ShinyProxy</a></li>
+<li class="chapter" data-level="21.1.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config"><i class="fa fa-check"></i><b>21.1.2</b> ShinyProxy Configuration</a></li>
+<li class="chapter" data-level="21.1.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-general"><i class="fa fa-check"></i><b>21.1.3</b> General</a></li>
+<li class="chapter" data-level="21.1.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-authentication"><i class="fa fa-check"></i><b>21.1.4</b> Authentication</a></li>
+<li class="chapter" data-level="21.1.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config-applications"><i class="fa fa-check"></i><b>21.1.5</b> Applications</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#deploying-tls-with-shinyproxy-operator"><i class="fa fa-check"></i><b>21.2</b> Deploying TLS with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#user-interface"><i class="fa fa-check"></i><b>21.3</b> User Interface</a></li>
+<li class="chapter" data-level="21.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#spo-monitoring"><i class="fa fa-check"></i><b>21.4</b> Deploying Monitoring with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#benchmarking-shinyproxy-applications"><i class="fa fa-check"></i><b>21.5</b> Benchmarking ShinyProxy Applications</a>
+<ul>
+<li class="chapter" data-level="21.5.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-docker-stats"><i class="fa fa-check"></i><b>21.5.1</b> Docker Stats</a></li>
+<li class="chapter" data-level="21.5.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#grafana-dashboard"><i class="fa fa-check"></i><b>21.5.2</b> Grafana Dashboard</a></li>
+</ul></li>
+<li class="chapter" data-level="21.6" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-adding-apps"><i class="fa fa-check"></i><b>21.6</b> Adding and Removing Shiny Applications</a></li>
+<li class="chapter" data-level="21.7" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#other-considerations"><i class="fa fa-check"></i><b>21.7</b> Other Considerations</a></li>
+<li class="chapter" data-level="21.8" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#summary-23"><i class="fa fa-check"></i><b>21.8</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VI Production Shiny Apps</b></span></li>
+<li class="chapter" data-level="22" data-path="22-shiny-production.html"><a href="22-shiny-production.html"><i class="fa fa-check"></i><b>22</b> Considerations for Production</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#security"><i class="fa fa-check"></i><b>22.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#ssl-certificates"><i class="fa fa-check"></i><b>22.1.1</b> SSL Certificates</a></li>
+<li class="chapter" data-level="22.1.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#storing-secrets"><i class="fa fa-check"></i><b>22.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="22.1.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#firewalls"><i class="fa fa-check"></i><b>22.1.3</b> Firewalls</a></li>
+<li class="chapter" data-level="22.1.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#private-networking"><i class="fa fa-check"></i><b>22.1.4</b> Private Networking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#authentication"><i class="fa fa-check"></i><b>22.2</b> Authentication</a>
+<ul>
+<li class="chapter" data-level="22.2.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#http-basic-auth"><i class="fa fa-check"></i><b>22.2.1</b> HTTP Basic Auth</a></li>
+<li class="chapter" data-level="22.2.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#third-party-auth"><i class="fa fa-check"></i><b>22.2.2</b> Third Party Auth</a></li>
+<li class="chapter" data-level="22.2.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#native-authentication"><i class="fa fa-check"></i><b>22.2.3</b> Native Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reliability"><i class="fa fa-check"></i><b>22.3</b> Reliability</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#backups"><i class="fa fa-check"></i><b>22.3.1</b> Backups</a></li>
+<li class="chapter" data-level="22.3.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reserved-ip-addresses"><i class="fa fa-check"></i><b>22.3.2</b> Reserved IP Addresses</a></li>
+<li class="chapter" data-level="22.3.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#monitoring"><i class="fa fa-check"></i><b>22.3.3</b> Monitoring</a></li>
+<li class="chapter" data-level="22.3.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#benchmarking"><i class="fa fa-check"></i><b>22.3.4</b> Benchmarking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#scaling-1"><i class="fa fa-check"></i><b>22.4</b> Scaling</a>
+<ul>
+<li class="chapter" data-level="22.4.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#options-for-scaling"><i class="fa fa-check"></i><b>22.4.1</b> Options for Scaling</a></li>
+<li class="chapter" data-level="22.4.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#part2-container-orchestration"><i class="fa fa-check"></i><b>22.4.2</b> Container Orchestration</a></li>
+</ul></li>
+<li class="chapter" data-level="22.5" data-path="22-shiny-production.html"><a href="22-shiny-production.html#operations-and-maintenance"><i class="fa fa-check"></i><b>22.5</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="22.5.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#continuous-integration-and-deployment"><i class="fa fa-check"></i><b>22.5.1</b> Continuous Integration and Deployment</a></li>
+<li class="chapter" data-level="22.5.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#logging"><i class="fa fa-check"></i><b>22.5.2</b> Logging</a></li>
+</ul></li>
+<li class="chapter" data-level="22.6" data-path="22-shiny-production.html"><a href="22-shiny-production.html#summary-24"><i class="fa fa-check"></i><b>22.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="23-what-is-next.html"><a href="23-what-is-next.html"><i class="fa fa-check"></i><b>23</b> What is Next</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='images/logos/banner.png' alt="Hosting Shiny">
+</html>
+<div id="hosting-platforms" class="section level1 hasAnchor" number="19">
+<h1><span class="header-section-number">Chapter 19</span> Hosting Platforms<a href="19-hosting-platforms.html#hosting-platforms" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="noteblock">
+<p>This chapter covers how to run your
+containerized Shiny application on a hosting platform.
+A hosting platform enables you to deploy your application
+without worrying about managing a server.</p>
+<p>If you are unfamiliar with containers, please refer to Chapter <a href="15-part4-containers.html#part4-containers">15</a>.</p>
+</div>
+<p>Hosting platforms are services that provide the infrastructure and environment needed
+to deploy, manage, and serve applications over the Internet. They offer a range of
+solutions to meet different needs, from hosting static sites to running dynamic web applications
+without worrying about the underlying infrastructure. These platforms typically provide features such as
+automated deployment, scalability, performance optimization, and security measures.</p>
+<p>By abstracting the complexities of server management, hosting platforms allow developers to focus on
+building and improving their applications. In this section, we
+explain how to get started on different PaaS’s while highlighting the
+costs and maintenance/support efforts.</p>
+<p>Previously, we mentioned Shiny Shiny-Specific PaaS in Sections <a href="7-part2-sharing-shiny-code.html#part2-deploy-to-shinyapps-io">7.2.1</a>
+and <a href="9-platforms-shiny-hosting.html#platforms-shiny-hosting">9</a>. This section focuses on more general PaaS that rely on the
+use of containerization technology to deploy Shiny applications.</p>
+<p>General PaaS (Platform as a Service) refers to cloud providers that provide a managed
+solution for deploying applications that are not necessarily Shiny such as javascript
+web applications. General PaaS are often cheaper due to competition among different providers.
+Most providers provide a core set of features which includes deployment using command line tools,
+routing traffic to your application with custom domains, and analytics of your application’s usage.</p>
+<p>As General PaaS need to support a multitude of applications, the recommended way to deploy
+applications on these cloud providers is to containerize your Shiny application. With containerization,
+all the required dependencies for your Shiny application are installed in a separate container.
+This allows you to deploy your application on different computers and platforms without worrying
+about compatibility issues related to dependencies. We outline how to containerize your Shiny
+application in Chapter <a href="17-part2-containerizing-shiny-apps.html#part2-containerizing-shiny-apps">17</a>.</p>
+<p>Most of the services presented in this section will require familiarity with the command line,
+as many of the deployment platforms require deployment to their platform with their own
+command line tools. We recommend reviewing at least Chapter <a href="3-part1-local-setup.html#part1-command-line">3.2</a> if you
+need a refresher on using the command line.</p>
+<p>In this section, we outline how to deploy containerized Shiny applications for
+Heroku (Section <a href="19-hosting-platforms.html#general-paas-heroku">19.1</a>), DigitalOcean App Platform
+(Section <a href="19-hosting-platforms.html#general-paas-doap">19.2</a>), and Fly.io (Section <a href="19-hosting-platforms.html#general-paas-flyio">19.3</a>). The services that we introduce
+requires a nominal hosting fee for getting setup, as these platforms manage all the backend infrastructure for you.
+Our introduction to General PaaS is non-exhaustive, and there are
+many other platforms that support the deployment of containerized Shiny applications that we mention in
+Section <a href="19-hosting-platforms.html#other-general-paas">19.4</a>.</p>
+<p>In each of the sections we outline in a box at the beginning some of the considerations you might make
+before choosing the hosting platforms including: costs, skill level, support, and scale and performance.
+<!--costs, dependencies, scale and performance,
+user management, security, and branding.--></p>
+
+<div id="general-paas-heroku" class="section level2 hasAnchor" number="19.1">
+<h2><span class="header-section-number">19.1</span> Heroku<a href="19-hosting-platforms.html#general-paas-heroku" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Heroku was one of the first cloud platforms developed for deploying web applications
+and has been in development since 2007.
+Originally developed for Ruby on Rails applications, it has evolved to be programming
+language agnostic through the development of buildpacks for programming languages,
+and the support of containers for application deployment. Heroku applications run
+in a collection of lightweight Linux containers called <strong>dynos</strong>.</p>
+<p>A Heroku buildpack is a set of scripts to build application source code for deployment on the
+Heroku platform. Buildpacks are developed both by the Heroku team and the wider community.
+However, a drawback to the buildpacks is that not all system dependencies might be available for
+your Shiny application when deploying on Heroku and will require modifications to a
+buildpack. Therefore, it is recommended to use a Docker-based stack that uses a
+containerized version (learn more in Chapter <a href="17-part2-containerizing-shiny-apps.html#part2-containerizing-shiny-apps">17</a>)
+of your application to handle all the system dependencies.</p>
+<p>Prerequisites for deploying on Heroku include familiarity with git and the
+command line (see Chapters <a href="3-part1-local-setup.html#part1-command-line">3.2</a> and <a href="3-part1-local-setup.html#part1-scm-git">3.3</a>).
+The Heroku dashboard can also be used to define app deployments.</p>
+<div id="deployment-from-the-command-line" class="section level3 hasAnchor" number="19.1.1">
+<h3><span class="header-section-number">19.1.1</span> Deployment from the Command Line<a href="19-hosting-platforms.html#deployment-from-the-command-line" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Heroku provides a command line tool for deploying to their platform.
+To install the Heroku command line, follow the instructions here:
+<a href="https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli" class="uri">https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli</a>.
+Use <code>heroku --version</code> to test if the CLI is ready to be used. Then type
+<code>heroku login</code> which will prompt you to type in credentials. Next time
+the CLI will log you in automatically.</p>
+<p>In this step, we assume that you have containerized your Shiny application.
+That means your Shiny application can be run using specifications in a
+<code>Dockerfile</code>.</p>
+<p>The <code>heroku.yml</code> in your application’s root directory is required
+to deploy to Heroku. The following example <code>heroku.yml</code> specifies the
+Dockerfile to be used to build the image for the app’s web process:</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb205-1"><a href="19-hosting-platforms.html#cb205-1" tabindex="-1"></a><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb205-2"><a href="19-hosting-platforms.html#cb205-2" tabindex="-1"></a><span class="at">  </span><span class="fu">docker</span><span class="kw">:</span></span>
+<span id="cb205-3"><a href="19-hosting-platforms.html#cb205-3" tabindex="-1"></a><span class="at">    </span><span class="fu">web</span><span class="kw">:</span><span class="at"> Dockerfile</span></span>
+<span id="cb205-4"><a href="19-hosting-platforms.html#cb205-4" tabindex="-1"></a><span class="fu">run</span><span class="kw">:</span></span>
+<span id="cb205-5"><a href="19-hosting-platforms.html#cb205-5" tabindex="-1"></a><span class="at">  </span><span class="fu">web</span><span class="kw">:</span><span class="at"> uvicorn app:app --host 0.0.0.0 --port $PORT</span></span></code></pre></div>
+<p>The <code>build</code> section specifies the build process for the application. The <code>docker</code> key specifies that you are
+using Docker to build the application. The <code>web</code> key indicates that it is a web process. The <code>Dockerfile</code>
+specifies the location of the Dockerfile relative to your root directory that is used for building a container
+image.</p>
+<p>The run section indicates how your Shiny application will be run. Under the <code>web</code> key it specifies how
+to run the web process for your Shiny application. In Python it would be along the lines of:</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb206-1"><a href="19-hosting-platforms.html#cb206-1" tabindex="-1"></a><span class="fu">run</span><span class="kw">:</span></span>
+<span id="cb206-2"><a href="19-hosting-platforms.html#cb206-2" tabindex="-1"></a><span class="at">  </span><span class="fu">web</span><span class="kw">:</span><span class="at"> uvicorn app:app --host 0.0.0.0 --port $PORT</span></span></code></pre></div>
+<p>While in R, it would be along the lines of:</p>
+<div class="sourceCode" id="cb207"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb207-1"><a href="19-hosting-platforms.html#cb207-1" tabindex="-1"></a><span class="fu">run</span><span class="kw">:</span></span>
+<span id="cb207-2"><a href="19-hosting-platforms.html#cb207-2" tabindex="-1"></a><span class="at">  </span><span class="fu">web</span><span class="kw">:</span><span class="at"> R -e &quot;shiny::runApp(&#39;/home/app&#39;, host = &#39;0.0.0.0&#39;, port=as.numeric(Sys.getenv(&#39;PORT&#39;)))&quot;</span></span></code></pre></div>
+<p>To deploy with your Dockerfile, you will have to specify the <code>PORT</code> environment
+variable and to modify the <code>CMD</code> line of your Dockerfile to take in the <code>PORT</code> environment
+variable. This is Heroku specifies the a port for the container when deploying
+your application.</p>
+<p>You will now need to initialize a git repository in the root of your Shiny app directory if you
+haven’t done so already. Only repositories with new commits will deploy once the app is already on
+Heroku:</p>
+<div class="sourceCode" id="cb208"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb208-1"><a href="19-hosting-platforms.html#cb208-1" tabindex="-1"></a><span class="co"># Initialize the local directory as a Git repository</span></span>
+<span id="cb208-2"><a href="19-hosting-platforms.html#cb208-2" tabindex="-1"></a><span class="fu">git</span> init <span class="at">-b</span> main</span>
+<span id="cb208-3"><a href="19-hosting-platforms.html#cb208-3" tabindex="-1"></a></span>
+<span id="cb208-4"><a href="19-hosting-platforms.html#cb208-4" tabindex="-1"></a><span class="co"># Add the files and stage them for commit</span></span>
+<span id="cb208-5"><a href="19-hosting-platforms.html#cb208-5" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb208-6"><a href="19-hosting-platforms.html#cb208-6" tabindex="-1"></a></span>
+<span id="cb208-7"><a href="19-hosting-platforms.html#cb208-7" tabindex="-1"></a><span class="co"># Commit tracked changes and sign-off the message</span></span>
+<span id="cb208-8"><a href="19-hosting-platforms.html#cb208-8" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-s</span> <span class="at">-m</span> <span class="st">&quot;First commit&quot;</span></span></code></pre></div>
+<p>Create the Heroku application with the container stack.
+The command will give you the application URL:</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb209-1"><a href="19-hosting-platforms.html#cb209-1" tabindex="-1"></a><span class="ex">heroku</span> create <span class="at">--stack</span><span class="op">=</span>container</span>
+<span id="cb209-2"><a href="19-hosting-platforms.html#cb209-2" tabindex="-1"></a></span>
+<span id="cb209-3"><a href="19-hosting-platforms.html#cb209-3" tabindex="-1"></a><span class="co"># Creating app... done, ⬢ morning-plateau-34336, stack is container</span></span>
+<span id="cb209-4"><a href="19-hosting-platforms.html#cb209-4" tabindex="-1"></a><span class="co"># https://morning-plateau-34336.herokuapp.com/ | https://git.heroku.com/morning-plateau-34336.git</span></span></code></pre></div>
+<p>A Heroku git remote is also added for the application to track changes.
+This means that changes will be sent to not just your Git service of choice,
+i.e. GitHub, but also to Heroku.</p>
+<p>You can configure an existing application to use the container stack
+using <code>heroku stack:set container</code>.</p>
+<p>Finally, you can deploy your application to Heroku, replace <code>main</code> with your branch name
+if it is different. This will trigger a git push and a docker build on a remote Heroku
+server and docker push to the Heroku container registry:</p>
+<div class="sourceCode" id="cb210"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb210-1"><a href="19-hosting-platforms.html#cb210-1" tabindex="-1"></a><span class="fu">git</span> push heroku main</span>
+<span id="cb210-2"><a href="19-hosting-platforms.html#cb210-2" tabindex="-1"></a><span class="co"># Enumerating objects: 4, done.</span></span>
+<span id="cb210-3"><a href="19-hosting-platforms.html#cb210-3" tabindex="-1"></a><span class="co"># Counting objects: 100% (4/4), done.</span></span>
+<span id="cb210-4"><a href="19-hosting-platforms.html#cb210-4" tabindex="-1"></a><span class="co"># Delta compression using up to 4 threads</span></span>
+<span id="cb210-5"><a href="19-hosting-platforms.html#cb210-5" tabindex="-1"></a><span class="co"># Compressing objects: 100% (3/3), done.</span></span>
+<span id="cb210-6"><a href="19-hosting-platforms.html#cb210-6" tabindex="-1"></a><span class="co"># Writing objects: 100% (4/4), 1.09 KiB | 1.09 MiB/s, done.</span></span>
+<span id="cb210-7"><a href="19-hosting-platforms.html#cb210-7" tabindex="-1"></a><span class="co"># Total 4 (delta 0), reused 0 (delta 0), pack-reused 0</span></span>
+<span id="cb210-8"><a href="19-hosting-platforms.html#cb210-8" tabindex="-1"></a><span class="co"># remote: Compressing source files... done.</span></span>
+<span id="cb210-9"><a href="19-hosting-platforms.html#cb210-9" tabindex="-1"></a><span class="co"># remote: Building source:</span></span>
+<span id="cb210-10"><a href="19-hosting-platforms.html#cb210-10" tabindex="-1"></a><span class="co"># remote: === Fetching app code</span></span>
+<span id="cb210-11"><a href="19-hosting-platforms.html#cb210-11" tabindex="-1"></a><span class="co"># remote:</span></span>
+<span id="cb210-12"><a href="19-hosting-platforms.html#cb210-12" tabindex="-1"></a><span class="co"># remote: === Building web (Dockerfile)</span></span>
+<span id="cb210-13"><a href="19-hosting-platforms.html#cb210-13" tabindex="-1"></a><span class="co"># remote: Sending build context to Docker daemon  3.072kB</span></span>
+<span id="cb210-14"><a href="19-hosting-platforms.html#cb210-14" tabindex="-1"></a><span class="co"># remote: Step 1/3 : FROM registry.gitlab.com/analythium/shinyproxy-hello/hello</span></span>
+<span id="cb210-15"><a href="19-hosting-platforms.html#cb210-15" tabindex="-1"></a><span class="co"># remote: latest: Pulling from analythium/shinyproxy-hello/hello</span></span>
+<span id="cb210-16"><a href="19-hosting-platforms.html#cb210-16" tabindex="-1"></a><span class="co"># remote: 4363cc522034: Pulling fs layer</span></span>
+<span id="cb210-17"><a href="19-hosting-platforms.html#cb210-17" tabindex="-1"></a><span class="co"># ...</span></span>
+<span id="cb210-18"><a href="19-hosting-platforms.html#cb210-18" tabindex="-1"></a><span class="co"># remote: Successfully built 8b891983b438</span></span>
+<span id="cb210-19"><a href="19-hosting-platforms.html#cb210-19" tabindex="-1"></a><span class="co"># remote: Successfully tagged 6dc2e345582f143cd104cf98fec788c65e9a72a6:latest</span></span>
+<span id="cb210-20"><a href="19-hosting-platforms.html#cb210-20" tabindex="-1"></a><span class="co"># remote:</span></span>
+<span id="cb210-21"><a href="19-hosting-platforms.html#cb210-21" tabindex="-1"></a><span class="co"># remote: === Pushing web (Dockerfile)</span></span>
+<span id="cb210-22"><a href="19-hosting-platforms.html#cb210-22" tabindex="-1"></a><span class="co"># remote: Tagged image &quot;6dc2e345582f143cd104cf98fec788c65e9a72a6&quot; as &quot;registry.heroku.com/morning-plateau-34336/web&quot;</span></span>
+<span id="cb210-23"><a href="19-hosting-platforms.html#cb210-23" tabindex="-1"></a><span class="co"># remote: Using default tag: latest</span></span>
+<span id="cb210-24"><a href="19-hosting-platforms.html#cb210-24" tabindex="-1"></a><span class="co"># remote: The push refers to repository [registry.heroku.com/morning-plateau-34336/web]</span></span>
+<span id="cb210-25"><a href="19-hosting-platforms.html#cb210-25" tabindex="-1"></a><span class="co"># remote: cec4817fd20b: Preparing</span></span>
+<span id="cb210-26"><a href="19-hosting-platforms.html#cb210-26" tabindex="-1"></a><span class="co"># ...</span></span>
+<span id="cb210-27"><a href="19-hosting-platforms.html#cb210-27" tabindex="-1"></a><span class="co"># remote: Verifying deploy... done.</span></span>
+<span id="cb210-28"><a href="19-hosting-platforms.html#cb210-28" tabindex="-1"></a><span class="co"># To https://git.heroku.com/morning-plateau-34336.git</span></span>
+<span id="cb210-29"><a href="19-hosting-platforms.html#cb210-29" tabindex="-1"></a><span class="co">#     * [new branch]      main -&gt; main</span></span></code></pre></div>
+<p>Open the app in your browser using the <code>heroku open</code> command.</p>
+</div>
+<div id="deployment-using-the-web-dashboard" class="section level3 hasAnchor" number="19.1.2">
+<h3><span class="header-section-number">19.1.2</span> Deployment using the Web Dashboard<a href="19-hosting-platforms.html#deployment-using-the-web-dashboard" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Sign up for Heroku and log in. You might have to provide a valid credit card
+to be able to use the resources. You will also need the heroku command line tool.</p>
+<p>Find a Create New App button, click it.
+You can give the app a name, e.g. <code>heroku-faithful</code> and select a region where
+the app will be deployed.</p>
+<p>Choose the GitHub based deployment. Heroku has a GitHub application that can be
+used to grant access to your account, so it can pull changes and update the apps
+accordingly.
+You’ll need the <code>heroku.yml</code> file in the root of the repository as explained
+in the previous section.
+Log in to the heroku account then set the stack to <code>container</code>:</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb211-1"><a href="19-hosting-platforms.html#cb211-1" tabindex="-1"></a><span class="ex">heroku</span> login</span>
+<span id="cb211-2"><a href="19-hosting-platforms.html#cb211-2" tabindex="-1"></a><span class="co"># Logging in... done</span></span>
+<span id="cb211-3"><a href="19-hosting-platforms.html#cb211-3" tabindex="-1"></a><span class="co"># Logged in as &lt;your_heroku_email&gt;</span></span>
+<span id="cb211-4"><a href="19-hosting-platforms.html#cb211-4" tabindex="-1"></a></span>
+<span id="cb211-5"><a href="19-hosting-platforms.html#cb211-5" tabindex="-1"></a><span class="ex">heroku</span> stack:set container <span class="at">--app</span><span class="op">=</span>heroku-faithful</span>
+<span id="cb211-6"><a href="19-hosting-platforms.html#cb211-6" tabindex="-1"></a><span class="co"># Setting stack to container... done</span></span></code></pre></div>
+<p>Figure <a href="19-hosting-platforms.html#fig:paas-heroku-04">19.1</a> show the Heroku dashboard where you can connect
+to the GitHub repository and can enable automatic deploys from a given git branch.
+You can trigger the deployment manually, this will result in Heroku
+building the container image and deploying it. Click the Open app button
+to see the app deployed with a Heroku provided URL, e.g.
+<a href="https://heroku-faithful-45457b65a2b8.herokuapp.com/" class="uri">https://heroku-faithful-45457b65a2b8.herokuapp.com/</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:paas-heroku-04"></span>
+<img src="images/paas-heroku/paas-heroku-04.png" alt="GitHub based deployment in Heroku." width="100%" />
+<p class="caption">
+Figure 19.1: GitHub based deployment in Heroku.
+</p>
+</div>
+<p>You can view the build logs and check the metrics for the app in the dashboard (Fig. <a href="19-hosting-platforms.html#fig:paas-heroku-10">19.2</a>).
+Application logs are also available after clicking the More button and selecting
+it from the drop-down menu.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:paas-heroku-10"></span>
+<img src="images/paas-heroku/paas-heroku-10.png" alt="Monitoring metrics in Heroku." width="100%" />
+<p class="caption">
+Figure 19.2: Monitoring metrics in Heroku.
+</p>
+</div>
+</div>
+<div id="custom-domain-and-https" class="section level3 hasAnchor" number="19.1.3">
+<h3><span class="header-section-number">19.1.3</span> Custom Domain and HTTPS<a href="19-hosting-platforms.html#custom-domain-and-https" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Adding custom domain and setting TLS certificates for HTTPS access can be done
+in the app dashboard after the app is successfully deployed (Fig. <a href="19-hosting-platforms.html#fig:paas-heroku-07">19.3</a>).
+Navigate to Settings and configure the SSL Certificate using your own
+certificate or by selecting Let’s Encrypt for Automated Certificate Management.
+Next, click the Add domain button. Provide the domain name here and click Next.
+The next page will reveal the URL target that you can copy, that will look like
+<code>sheltered-meadowlark-i66adwh7uy89vnhycaw2inzo.herokudns.com</code>.
+Use this value in your DNS settings to add a <code>CNAME</code> record pointing to this
+URL.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:paas-heroku-07"></span>
+<img src="images/paas-heroku/paas-heroku-07.png" alt="Managing custom domains and TLS certificates in Heroku." width="100%" />
+<p class="caption">
+Figure 19.3: Managing custom domains and TLS certificates in Heroku.
+</p>
+</div>
+</div>
+<div id="scaling" class="section level3 hasAnchor" number="19.1.4">
+<h3><span class="header-section-number">19.1.4</span> Scaling<a href="19-hosting-platforms.html#scaling" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will use the <em>Heroku CLI</em> to scale the app and enable
+<a href="https://devcenter.heroku.com/articles/session-affinity">session affinity</a>:</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb212-1"><a href="19-hosting-platforms.html#cb212-1" tabindex="-1"></a><span class="ex">heroku</span> features:enable http-session-affinity <span class="at">--app</span><span class="op">=</span>heroku-faithful</span>
+<span id="cb212-2"><a href="19-hosting-platforms.html#cb212-2" tabindex="-1"></a><span class="co"># Enabling http-session-affinity for ⬢ heroku-faithful... done</span></span></code></pre></div>
+<p>Session affinity uses a cookie to maintain
+information about a user’s session. Once the feature is enabled,
+the Heroku router will start adding an HTTP cookie named <code>heroku-session-affinity</code>
+to every new request and response. This cookie contains no private application information.
+Based on this cookie value, the Heroku router will be able to determine the appropriate dyno for each request.</p>
+<p>The least expensive dyno type that we can use with automatic certificate management
+is the <code>basic</code> (with 500 MB RAM). This, however, does not allow horizontal scaling.
+Change <a href="https://devcenter.heroku.com/articles/dyno-types">dyno type</a> to allow
+scaling to &gt;1 replicas, for this you need at least the Standard-1X
+(with 500 MB RAM, <code>web=standard-1x</code>) or Standard-2X (1 GB RAM, <code>web=standard-2x</code>) dyno type:</p>
+<div class="sourceCode" id="cb213"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb213-1"><a href="19-hosting-platforms.html#cb213-1" tabindex="-1"></a><span class="ex">heroku</span> ps:type web=standard-1x <span class="at">--app</span><span class="op">=</span>heroku-faithful</span>
+<span id="cb213-2"><a href="19-hosting-platforms.html#cb213-2" tabindex="-1"></a><span class="co"># Scaling dynos on ⬢ hello-shiny... done</span></span>
+<span id="cb213-3"><a href="19-hosting-platforms.html#cb213-3" tabindex="-1"></a><span class="co"># === Dyno Types</span></span>
+<span id="cb213-4"><a href="19-hosting-platforms.html#cb213-4" tabindex="-1"></a><span class="co"># type  size         qty  cost/hour  max cost/month</span></span>
+<span id="cb213-5"><a href="19-hosting-platforms.html#cb213-5" tabindex="-1"></a><span class="co"># ────  ───────────  ───  ─────────  ──────────────</span></span>
+<span id="cb213-6"><a href="19-hosting-platforms.html#cb213-6" tabindex="-1"></a><span class="co"># web   Standard-1X  1    ~$0.035    $25</span></span>
+<span id="cb213-7"><a href="19-hosting-platforms.html#cb213-7" tabindex="-1"></a><span class="co"># === Dyno Totals</span></span>
+<span id="cb213-8"><a href="19-hosting-platforms.html#cb213-8" tabindex="-1"></a><span class="co"># type         total</span></span>
+<span id="cb213-9"><a href="19-hosting-platforms.html#cb213-9" tabindex="-1"></a><span class="co"># ───────────  ─────</span></span>
+<span id="cb213-10"><a href="19-hosting-platforms.html#cb213-10" tabindex="-1"></a><span class="co"># Standard-1X  1</span></span></code></pre></div>
+<p><a href="https://devcenter.heroku.com/articles/scaling">Scale</a> the number of web dynos to 2 or more:</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb214-1"><a href="19-hosting-platforms.html#cb214-1" tabindex="-1"></a><span class="ex">heroku</span> ps:scale web=2 <span class="at">--app</span><span class="op">=</span>heroku-faithful</span>
+<span id="cb214-2"><a href="19-hosting-platforms.html#cb214-2" tabindex="-1"></a><span class="co"># Scaling dynos... done, now running web at 2:Standard-1X</span></span></code></pre></div>
+<p>You can now refresh your browser, and open a new incognito window to see how a new user would connect.
+Go to the logs in the dashboard (under the <em>More</em> button). You’ll see the <code>web.1</code> and the <code>web.2</code>
+replicas listed. Trying this with the load balancing app should pass the sticky session test.
+You can see how the app failing if you remove session affinity with
+<code>heroku features:disable http-session-affinity --app=heroku-faithful</code> and run the tests again.</p>
+<p>The dyno type and replication can be changed according to demand. The standard dyno types (1X and 2X) also
+allow <a href="https://devcenter.heroku.com/articles/preboot">preboot</a> to be turned on
+(<code>heroku features:enable preboot --app=heroku-faithful</code>). This old instances are not shut
+down before new instances can receive traffic, this eliminates cold start
+behavior when deploying new versions of the web app.</p>
+<p>You can destroy the app with <code>heroku apps:destroy --confirm=heroku-faithful --app=heroku-faithful</code>.</p>
+<div id="multiple-apps-in-the-same-heroku-instance" class="section level4 unnumbered hasAnchor">
+<h4>Multiple Apps in the Same Heroku Instance<a href="19-hosting-platforms.html#multiple-apps-in-the-same-heroku-instance" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>One can use the <code>rocker/shiny</code> image that has Shiny Served Open Source included,
+and add multiple apps under different paths as explained in Section <a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-shiny-server">17.6.6</a>.
+This way you can host multiple apps using a single instance (dyno).</p>
+<!--
+### Considerations and Limitations
+#### Costs
+Cost ranges from **$0 to $6000 per year per app** depending on the plan:
+
+-   Free: $0/year, 0.5 GB RAM, sleeps after 30 mins of inactivity
+-   Hobby: $84/year, 0.5 GB RAM, always on
+-   Standard: $300–600/year, 0.5–1 GB RAM, always on
+-   Performance: $3000–6000/year, 2.5–14 GB RAM, always on
+-   Private & Shield: no publicly available pricing info
+
+On top of this, there might be **additional fees** for managed databases
+and other services.
+
+#### Skill Level and Support
+Heroku is a **fully managed** platform-as-a-service (PaaS), **no DevOps
+skills** (setting up and running infrastructure) are required to get
+started.
+
+You only have to worry about your application. Hosting **dockerized
+apps** will provide lots of benefits when it comes to [managing
+dependencies](https://hosting.analythium.io/dockerized-shiny-apps-with-dependencies/).
+
+Shiny apps can be deployed locally with the Heroku **[Command Line
+Interface](https://hosting.analythium.io/deploying-shiny-apps-to-heroku-with-docker-from-the-command-line/)**
+(CLI) or with **[GitHub
+Actions](https://hosting.analythium.io/deploying-shiny-apps-to-heroku-with-docker-and-github-actions/)**.
+
+All plans come with **community support**. [**Paid
+support**](https://www.heroku.com/support) is available too for
+business-critical applications.
+
+#### Scale and Performance
+The [Free plan](https://www.heroku.com/free) gives your 550 dyno hours
+per month and 5 free apps. If you verify your Heroku account with a
+credit card (you will not be charged, unless you use a paid service),
+you get **1000 [free dyno
+hours](https://devcenter.heroku.com/articles/free-dyno-hours), 100 free
+apps**.
+
+Apps on the Free plan will **sleep after 30 mins** of inactivity. The
+Hobby plan and up offer dynos that are **always on** (no sleep after 30
+mins).
+
+[**Horizontal scaling**](https://devcenter.heroku.com/articles/scaling)
+(increase replicas for the app) and
+[**preboot**](https://devcenter.heroku.com/articles/preboot) (new web
+dynos are started before the existing ones are terminated) for the
+professional plans (Standard & Performance).
+
+[**Autoscaling**](https://devcenter.heroku.com/articles/scaling#autoscaling)
+and **dedicated resources** are available in the Performance tier.
+
+#### User Management
+**Authentication needs to be added manually**. E.g. as simple
+authentication via a reverse proxy server in front of the Shiny app on
+the Docker container, or third-party integrations as part of the Shiny
+app.
+
+Apps are managed independently, so authorization needs to be handled
+using groups, labels, or something similar with your authentication
+provider.
+
+The Free plan has no team access but you can give **access to your
+collaborators**. **Paid plans come with 1–5 free team members**, 6–25
+members for an additional $10/month. Role-based team access for
+unlimited members under the enterprise plans.
+
+#### Security
+Never forget that it is **your responsibility** to ensure that the Shiny
+code does not expose anything sensitive!
+
+Heroku apps are deployed to randomly named or available user-defined
+subdomains ( `app-name.herokuapp.com`). All these subdomains are served
+over HTTPS
+
+All **paid plans** (starting with Hobby and up) have **SSL for custom
+domains** and automated certificate management. There is **no SSL for
+custom domains on the Free plan**.
+
+Dynos and databases reside physically in the **region where you create**
+them. There might be [exceptions to
+this](https://devcenter.heroku.com/articles/regions#data-residency) for
+3rd party integrations, some APIs, and managed databases.
+
+Apps are by default **deployed to the US** unless EU is specified when
+creating the app. The US and EU are considered the Common Runtime
+regions. Enterprise plans (Private & Shield) allow you to deploy apps in
+**6 different regions** (Dublin, Frankfurt, Oregon, Sydney, Tokyo,
+Virginia).
+
+The Shield plan is <a href="https://www.hhs.gov/hipaa/index.html"
+rel="noreferrer noopener"><strong>HIPAA-compliant</strong></a>.
+
+Note that there is no free SSL on custom domains, these will be served
+via HTTP and not HTTPS for apps that are using free resources.
+
+If you want extra security, you have 3 options:
+
+-   upgrade to a paid Heroku tier;
+-   use
+    [Cloudflare](https://support.cloudflare.com/hc/en-us/articles/205893698-Configure-Cloudflare-and-Heroku-over-HTTPS?ref=hosting.analythium.io);
+-   serve the app via the original secure app URL and an iframe.
+
+#### Branding
+Log into your Heroku account and see the application listed in your
+dashboard. You can set up a [custom domain for the
+app](https://devcenter.heroku.com/articles/custom-domains?ref=hosting.analythium.io)
+under the applications settings.
+
+
+[**Custom
+domains**](https://devcenter.heroku.com/articles/custom-domains) are
+available on all tiers with a verified account. There is no custom
+domain option for unverified accounts and there is no SSL for custom
+domains on the Free plan. However, free apps can be served in iframes
+using the secure Heroku subdomain, as explained
+[here](https://github.com/mayamathur/evalue_website#website).
+
+#### Other Considerations
+-   [Heroku
+    reference](https://devcenter.heroku.com/categories/reference?ref=hosting.analythium.io)
+-   [Heroku container registry and
+    runtime](https://devcenter.heroku.com/articles/container-registry-and-runtime?ref=hosting.analythium.io)
+-   [Heroku deployment with
+    Git](https://devcenter.heroku.com/articles/git?ref=hosting.analythium.io)
+-   [Heroku + Docker + R
+    example](https://github.com/virtualstaticvoid/heroku-docker-r?ref=hosting.analythium.io)
+-   [Shiny on Heroku using
+    Buildpack](https://steve-condylios.medium.com/how-to-move-your-r-shiny-app-on-to-the-web-using-heroku-fd54b7d2ad88?ref=hosting.analythium.io)
+
+-   Docker is versatile so you can easily host **any containerized
+    applications**, e.g.
+    <a href="https://www.rplumber.io/articles/hosting.html#docker"
+    rel="noreferrer noopener">Plumber APIs</a>, <a
+    href="https://towardsdatascience.com/docker-for-python-dash-r-shiny-6097c8998506"
+    rel="noreferrer noopener">Python/Dash apps</a> etc., not just Shiny
+    apps
+-   No **metrics** for Free, 24 hrs for Hobby, 7-day retention
+    professional tiers
+-   **Data persistence** needs database connections -->
+</div>
+</div>
+<div id="summary-18" class="section level3 hasAnchor" number="19.1.5">
+<h3><span class="header-section-number">19.1.5</span> Summary<a href="19-hosting-platforms.html#summary-18" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Heroku is a popular platform to host apps of any kind at scale without
+managing infrastructure. Shiny apps are best hosted through Docker
+images. Heroku can be seen as the containerized version of
+shinyapps.io. However, the free tier appears to include more apps
+and free hours. Once on the paid tier, payment applies to each app
+separately. Upgrade as demand dictates, you can also switch back to the
+free tier once a predictable surge is over.</p>
+<!-- https://www.youtube.com/watch?v=-bCtShSHsfA
+
+Heroku costs money, DOAP costs moeny
+Fly.io is not free
+
+Buildpacks are outdated -->
+<!--
+### Prerequisites
+
+- [Docker Desktop](https://docs.docker.com/engine/install/) for local testing
+- A [Heroku account](https://www.heroku.com/), after signup, you might also want to [verify](https://devcenter.heroku.com/articles/account-verification) your account
+- [Git](https://git-scm.com/downloads) and a [GitHub](https://github.com/) account
+- Your favorite text editor or IDE (RStudio Desktop or VS Code) and a terminal
+- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+
+### Deploying the app
+
+Log into Heroku, in the dashboard click on _Create New App_:
+
+![](images/heroku-001.png)
+
+Give the app a name, e.g. _hello-shiny_, if available:
+
+![](images/heroku-002.png)
+
+Go to your _Account settings_:
+
+![](images/heroku-004.png)
+
+Scroll down and find your _API key_. Click the _Reveal_ button and copy the key to your clipboard.
+
+![](images/heroku-005.png)
+
+Got to the _Settings_ tab of the repo on GitHub, scroll down to _Secrets and variables_:
+
+![](images/heroku-006.png)
+
+Add the Heroku API key as a _New repository secret_:
+
+![](images/heroku-007.png)
+
+Repeat this with your Heroku email:
+
+![](images/heroku-008.png)
+
+The [`heroku-deploy.yml`](../.github/workflows/heroku-deploy.yml) file defines the [GitHub Action](https://github.com/features/actions) that uses the secrets to log in with Heroku and push the changes to your app. See comments in the [YAML]((../.github/workflows/heroku-deploy.yml)) file for details. The Action uses the [AkhileshNS/heroku-deploy](https://github.com/AkhileshNS/heroku-deploy) action, see the documentation for more arguments as needed.
+
+![](images/heroku-009.png)
+
+Go back to the Heroku dashboard for the application, you should see that the app is now deployed:
+
+![](images/heroku-010.png)
+
+Click on the _Open app_ button which will take you to the deployed app:
+
+![](images/heroku-011.png)
+
+You can view the container logs by clicking the _More_ button in the top right corner, fund the logs there.
+
+### Custom domain
+
+Go to your application dashboard in Heroku. Under the Settings tab, scroll down to find the _Domain settings_:
+
+![](images/heroku-012.png)
+
+Click on _Add domain_, type in the domain/subdomain name you'd like to add. I am showing a subdomain here:
+
+![](images/heroku-013.png)
+
+You can read more about domains [in the Heroku docs](https://devcenter.heroku.com/articles/custom-domains). Once you click next, you'll see the _DNS target_:
+
+![](images/heroku-014.png)
+
+You have to provide this DNS target for the a `CNAME` record with your DNS provider:
+
+![](images/heroku-015.png)
+
+After you added the `CNAME` record, go back to the Heroku dashboard and test the custom (sub)domain. It should work, but it will not have HTTPS with the little lock icon in your browser. For HTTPS, you need to add SSL security (more recently SSL is referred to as TLS, transport layer security, but Heroku uses the SSL terminology).
+
+You can use [_Automated Certificate Management_](https://devcenter.heroku.com/articles/automated-certificate-management) for applications running on paid [dynos](https://devcenter.heroku.com/articles/dyno-types) to automate your SSL security. Click Configure SSL:
+
+![](images/heroku-016.png)
+
+Select _Automated Certificate Management_ and click Next:
+
+![](images/heroku-017.png)
+
+You should see a green check mark under the _ACM Status_:
+
+![](images/heroku-018.png)
+
+### Scaling the app
+
+We will use the _Heroku CLI_ to scale the app. The app name is defined as the `APP` variable that we have to provide for the commands.
+
+Enabling [session affinity](https://devcenter.heroku.com/articles/session-affinity):
+
+```bash
+export APP=hello-shiny
+
+heroku features:enable http-session-affinity --app=$APP
+# Enabling http-session-affinity for ⬢ hello-shiny... done
+```
+
+Session affinity is using a cookie:
+
+> As soon as the feature is enabled on an application, the Heroku router will start adding an HTTP cookie named `heroku-session-affinity` to every new request and response.
+>
+> This cookie contains no private application information and doesn’t require request- or response-related data to function.
+>
+> Based on this cookie value, the Heroku router will be able to determine the appropriate dyno for each request.
+
+The least expensive dyno type that we can use with automatic certificate management is the `basic` (with 500 MB RAM). This, however, does not allow horizontal scaling. Change [dyno type](https://devcenter.heroku.com/articles/dyno-types) to allow scaling to >1 replicas, for this you need at least the Standard-1X (with 500 MB RAM, `web=standard-1x`) or Standard-2X (1 GB RAM, `web=standard-2x`) dyno type:
+
+```bash
+heroku ps:type web=standard-1x --app=$APP
+# Scaling dynos on ⬢ hello-shiny... done
+# === Dyno Types
+# type  size         qty  cost/hour  max cost/month
+# ────  ───────────  ───  ─────────  ──────────────
+# web   Standard-1X  1    ~$0.035    $25
+# === Dyno Totals
+# type         total
+# ───────────  ─────
+# Standard-1X  1
+```
+
+[Scale](https://devcenter.heroku.com/articles/scaling) the number of web dynos to 2 or more:
+
+```bash
+heroku ps:scale web=2 --app=$APP
+# Scaling dynos... done, now running web at 2:Standard-1X
+```
+
+You can now refresh your browser, and open a new incognito window to see how a new user would connect. Go to the logs in the dashboard (under the _More_ button). You'll see the `web.1` and the `web.2` replicas listed, and both sessions should pass the sticky session test successfully:
+
+![](images/heroku-019.png)
+
+The dyno type and replication can be changed according to demand. The standard dyno types (1X and 2X) also allow [preboot](https://devcenter.heroku.com/articles/preboot) to be turned on (`heroku features:enable preboot --app=$APP`). This old instances are not shut down before new instances can receive traffic, this eliminates cold start behavior when deploying new versions of the web app.
+
+You can see how the app fails if you remove session affinity with `heroku features:disable http-session-affinity --app=$APP` and run the tests again.
+
+![](images/heroku-020.png)
+
+You can destroy the app with `heroku apps:destroy --confirm=$APP --app=$APP`.
+
+### Multiple apps in the same Heroku instance
+
+One can use the [`rocker/shiny`](https://rocker-project.org/images/versioned/shiny.html) image that has Shiny Served Open Source included, and you can add multiple apps under different paths.
+
+### Pricing
+
+Dyno prices are detailed [here](https://devcenter.heroku.com/articles/usage-and-billing).
+-->
+
+</div>
+</div>
+<div id="general-paas-doap" class="section level2 hasAnchor" number="19.2">
+<h2><span class="header-section-number">19.2</span> DigitalOcean App Platform<a href="19-hosting-platforms.html#general-paas-doap" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The DigitalOcean App Platform (DOAP) can publish applications from your GitHub repository,
+or publish a container image you have already uploaded to a Docker registry.
+The platform supports GitOps (git push-based deployment), and vertical and horizontal scaling.</p>
+<p>In spirit and most practical aspects, the DOAP is similar to Heroku in the sense that you
+can use Buildpacks or Dockerfiles to build applications. There is no native Buildpack for R. But as we
+explain in Chapter <a href="17-part2-containerizing-shiny-apps.html#part2-containerizing-shiny-apps">17</a>, Shiny apps can be containerized.
+This gives us a way to deploy to DOAP seamlessly.</p>
+<div id="prerequisites" class="section level3 hasAnchor" number="19.2.1">
+<h3><span class="header-section-number">19.2.1</span> Prerequisites<a href="19-hosting-platforms.html#prerequisites" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You must sign up for a DigitalOcean account and set up the appropriate billing information.
+After logging in, choose the ‘Apps’ option in the dashboard.
+After clicking ‘Launch Your App’, you are presented with source options such as: Docker Hub and GitHub.
+This screen can be seen in Figure <a href="19-hosting-platforms.html#fig:doap-source-selection">19.4</a>.
+We will delve into GitHub and Docker Hub in the subsequent sections. Docker Hub allows deployment from
+a container registry while GitHub allows deployment from a code repository.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:doap-source-selection"></span>
+<img src="images/paas-doap/doap-source-selection.png" alt="DOAP source selection options." width="100%" />
+<p class="caption">
+Figure 19.4: DOAP source selection options.
+</p>
+</div>
+</div>
+<div id="docker-hub-deployment" class="section level3 hasAnchor" number="19.2.2">
+<h3><span class="header-section-number">19.2.2</span> Docker Hub Deployment<a href="19-hosting-platforms.html#docker-hub-deployment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>After choosing the Docker Hub deployment option, you will need to specify the Docker Hub repository image
+location similar to the screen in Figure <a href="19-hosting-platforms.html#fig:doap-docker-hub">19.5</a>.
+To have an image on Docker Hub, you first must build and publish an image as explained
+in Chapter <a href="16-part2-images.html#part2-docker-push">16.4.1</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:doap-docker-hub"></span>
+<img src="images/paas-doap/doap-docker-hub.png" alt="Docker Hub configuration in DOAP." width="100%" />
+<p class="caption">
+Figure 19.5: Docker Hub configuration in DOAP.
+</p>
+</div>
+<p>Once an image has been specified, you will have to define the parameters for running your image. This includes
+specifying the type of application which is ‘Web Services’ in the case of Shiny, the run command, the
+port that your application runs on in the container, and any environment variables for configuring
+your application.</p>
+<p>Once the deployment parameters have been defined, you will need to specify the name you want
+DigitalOcean to identify your application as, as well as the region you want your Shiny app
+hosted in.</p>
+<p>Finally, you must specify a plan, which at a minimum is <code>Basic</code> as you are deploying a non-static application.
+You can also specify the number of replicates for horizontal scaling.</p>
+<p>After clicking launch, you will see the app deployed on a subdomain: <code>app-name-hash.ondigitalocean.app</code>.</p>
+<div id="updating-the-app" class="section level4 unnumbered hasAnchor">
+<h4>Updating the App<a href="19-hosting-platforms.html#updating-the-app" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>You can edit the source image tag in your app’s settings. Once the new
+version is tagged and pushed to the Docker registry, just edit the tag
+and the app will be redeployed to the App Platform.</p>
+</div>
+</div>
+<div id="github-deployment" class="section level3 hasAnchor" number="19.2.3">
+<h3><span class="header-section-number">19.2.3</span> GitHub Deployment<a href="19-hosting-platforms.html#github-deployment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>By linking with GitHub, you can enable the automatic deployment of your
+application to the DigitalOcean App Platform.
+To get started, you must define in the source repo: <code>/.do/app.yaml</code>.
+The .do folder contains the app specification (<code>app.yaml</code>) file that defines how the
+Shiny app should be deployed.</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb215-1"><a href="19-hosting-platforms.html#cb215-1" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> app-platform-shiny</span></span>
+<span id="cb215-2"><a href="19-hosting-platforms.html#cb215-2" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb215-3"><a href="19-hosting-platforms.html#cb215-3" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">dockerfile_path</span><span class="kw">:</span><span class="at"> Dockerfile</span></span>
+<span id="cb215-4"><a href="19-hosting-platforms.html#cb215-4" tabindex="-1"></a><span class="at">  </span><span class="fu">github</span><span class="kw">:</span></span>
+<span id="cb215-5"><a href="19-hosting-platforms.html#cb215-5" tabindex="-1"></a><span class="at">    </span><span class="fu">repo</span><span class="kw">:</span><span class="at"> h10y/faithful</span></span>
+<span id="cb215-6"><a href="19-hosting-platforms.html#cb215-6" tabindex="-1"></a><span class="at">    </span><span class="fu">branch</span><span class="kw">:</span><span class="at"> main</span></span>
+<span id="cb215-7"><a href="19-hosting-platforms.html#cb215-7" tabindex="-1"></a><span class="at">    </span><span class="fu">deploy_on_push</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb215-8"><a href="19-hosting-platforms.html#cb215-8" tabindex="-1"></a><span class="at">  </span><span class="fu">name</span><span class="kw">:</span><span class="at"> app-platform-shiny</span></span></code></pre></div>
+<!-- FIXME: explain the yaml specification -->
+<p>Choose the GitHub deployment option when deploying your application.
+Follow the prompts and install the GitHub app for your personal account or the organization
+of your choice. Select ‘All repositories’ or ‘Only select repositories’ as appropriate.
+Finally, click ‘Save’.</p>
+<p>Now go back to the Apps control panel, you will
+see a screen similar to Figure <a href="19-hosting-platforms.html#fig:doap-source-github">19.6</a>.
+Select the repository from the dropdown menu, specify
+the branch you wish to deploy. If you want to deploy both a development and a production
+version of the same repository, you can create multiple apps with the same repo but
+using different branches.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:doap-source-github"></span>
+<img src="images/paas-doap/doap-source-github.png" alt="GitHub repository selection screen in DOAP." width="100%" />
+<p class="caption">
+Figure 19.6: GitHub repository selection screen in DOAP.
+</p>
+</div>
+<p>Leave ‘autodeploy’ checked if you want to trigger new deployments when the code changes,
+then click ‘Next’.
+Review the app settings inferred from the Dockerfile, i.e. the HTTP port, etc.
+Type in the name of the service, select the data region, then click ‘Next’.
+The final step lets you define the performance of the app and the corresponding pricing.</p>
+<p>After a few minutes, you should see the green checks besides the build and deployment log
+entries. Building the image might take some time, depending on the number of dependencies
+in your app.
+Follow the app URL from the control panel to see the app online served over HTTPS.</p>
+<p>If you make any changes to your GitHub repository, then a new version of the app will
+be deployed. One potential issue with this GitHub integration is it does not depend on
+passing tests before deployment. If you want to test your changes before deployment, here
+are the steps to follow:</p>
+<ol style="list-style-type: decimal">
+<li>Push changes to the development branch,</li>
+<li>Run automated tests for the development branch, e.g. using GitHub actions,</li>
+<li>Set up the production branch as a protected branch, so that merging pull requests require
+passing tests.</li>
+</ol>
+</div>
+<div id="programmatic-deployment" class="section level3 hasAnchor" number="19.2.4">
+<h3><span class="header-section-number">19.2.4</span> Programmatic Deployment<a href="19-hosting-platforms.html#programmatic-deployment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>DigitalOcean also offers a command line tool with a YAML specification file for deploying applications
+to the DigitalOcean App Platform.
+Once you have deployed an app, you can find the YAML specification file for your deployed app under the Settings
+tab in apps. Most of the info in the spec file is self-explanatory and relates to all the settings defined
+when deploying from the browser GUI.
+To use the app spec from the command line you have to install the doctl command-line tool and follow
+the steps described in the <a href="https://docs.digitalocean.com/reference/doctl/how-to/install/?ref=hosting.analythium.io">docs</a>
+to use the API token to grant doctl access to your DigitalOcean account.</p>
+<!-- FIXME: reference yaml specification in the previous section -->
+<!-- FIXME: explain doctl setup better -->
+</div>
+<div id="logs" class="section level3 hasAnchor" number="19.2.5">
+<h3><span class="header-section-number">19.2.5</span> Logs<a href="19-hosting-platforms.html#logs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The dashboard (similar to Figure <a href="19-hosting-platforms.html#fig:doap-app-dashboard">19.7</a>) of your deployed app allows you to inspect the deployment and runtime logs under
+the “Runtime Logs” tab.
+You can even access the container through the console under the “Console”.
+Under the “Insights” tab, you can also check CPU and memory consumption.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:doap-app-dashboard"></span>
+<img src="images/paas-doap/doap-app-dashboard.png" alt="Dashboard of deployed application in DOAP." width="100%" />
+<p class="caption">
+Figure 19.7: Dashboard of deployed application in DOAP.
+</p>
+</div>
+</div>
+<div id="custom-domains" class="section level3 hasAnchor" number="19.2.6">
+<h3><span class="header-section-number">19.2.6</span> Custom Domains<a href="19-hosting-platforms.html#custom-domains" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You can add a custom domain using a CNAME record with your DNS provider.
+Go to your app’s settings tab, find the ‘Add Domain’ button.
+You will be presented with a screen similar to Figure <a href="19-hosting-platforms.html#fig:doap-custom-domain">19.8</a>.
+Follow the prompts and copy the app’s current URL.
+Go to your DNS provider and add a CNAME record, and save.
+After some time the custom domain will be live and listed as ‘Active’ under settings.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:doap-custom-domain"></span>
+<img src="images/paas-doap/doap-custom-domain.png" alt="Custom domain configuration in DOAP." width="100%" />
+<p class="caption">
+Figure 19.8: Custom domain configuration in DOAP.
+</p>
+</div>
+<!--
+### Considerations and Limitations
+#### Costs
+Cost ranges from **$60 to $3600 per year per app** depending on the
+plan. Container-based applications are billed by the second, starting at
+a minimum of one minute.
+
+On top of this, there might be **additional fees** for managed databases
+and other services. You'll have **no server costs** or costs related to
+maintenance or personnel running the servers. Platform pricing covers
+all of these.
+
+#### Skill level and support
+The App Platform is a **fully managed** platform-as-a-service (PaaS),
+**no DevOps skills** (setting up and running infrastructure) are
+required to get started.
+
+You only have to worry about your application. Hosting **dockerized
+apps** will provide lots of benefits when it comes to [managing
+dependencies](https://hosting.analythium.io/dockerized-shiny-apps-with-dependencies/).
+
+Shiny apps can be deployed using **[existing Docker
+images](https://hosting.analythium.io/how-to-host-shiny-apps-on-the-digitalocean-app-platform/)**,
+directly from [GitHub/GitLab **after git
+push**](https://hosting.analythium.io/auto-deploy-shiny-app-changes-to-the-digitalocean-app-platform/),
+or using **[GitHub
+Actions](https://hosting.analythium.io/how-to-use-github-actions-with-the-digitalocean-app-platform-for-shiny-apps/)**.
+
+[Support](https://docs.digitalocean.com/support/) is available as a
+ticket system tied to your account.
+
+#### Scale and Performance
+There are only paid plans, so your **apps will run 24/7**. App
+performance will vary depending on whether you use a **shared or
+dedicated CPU**, and based on the number of CPUs and memory allocated
+(see the cost breakdown above).
+
+**[Horizontal
+scaling](https://docs.digitalocean.com/products/app-platform/how-to/scale-app/)**
+(increase replicas for the app) and **high availability** is available
+for the Professional plan.
+
+#### User Management
+**Authentication needs to be added manually**. E.g. as simple
+authentication via a reverse proxy server in front of the Shiny app in
+the Docker container, or third-party integrations as part of the Shiny
+app.
+
+Apps are managed independently, so authorization needs to be handled
+using groups, labels, or something similar with your authentication
+provider when you are applying it to multiple apps.
+
+You can have unlimited team members.
+
+#### Security
+
+Never forget that it is **your responsibility** to ensure that the Shiny
+code does not expose anything sensitive!
+
+All plans include assigned or **custom domains** served over **HTTPS**.
+
+Apps can be deployed in **[8 different
+regions](https://docs.digitalocean.com/products/platform/availability-matrix/#app-platform-availability)**.
+
+**Distributed denial of service (DDoS) attack mitigation** is included
+in all plans.
+
+#### Branding
+All plans include assigned or **custom domains** served over **HTTPS**.
+
+##### Other considerations
+-   Docker is versatile so you can easily host **any containerized
+    applications**, e.g.
+    <a href="https://www.rplumber.io/articles/hosting.html#docker"
+    rel="noreferrer noopener">Plumber APIs</a>, <a
+    href="https://towardsdatascience.com/docker-for-python-dash-r-shiny-6097c8998506"
+    rel="noreferrer noopener">Python/Dash apps</a> etc., not just Shiny
+    apps
+-   **Application metrics** are available hourly or by the minute
+-   **Data persistence** needs database connections-->
+</div>
+<div id="summary-19" class="section level3 hasAnchor" number="19.2.7">
+<h3><span class="header-section-number">19.2.7</span> Summary<a href="19-hosting-platforms.html#summary-19" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>DigitalOcean App Platform allows you to deploy containerized applications from
+a container image hosted in a container registry, through a container image specified
+in a code repository, or programmatically. It can be an easier to setup
+alternative to Heroku for hosting containerized applications.</p>
+<p>The next chapter will cover another alternative
+container hosting platform named “Fly.io” which offers the option of
+multi-region availability for your hosted Shiny application.</p>
+
+</div>
+</div>
+<div id="general-paas-flyio" class="section level2 hasAnchor" number="19.3">
+<h2><span class="header-section-number">19.3</span> Fly.io<a href="19-hosting-platforms.html#general-paas-flyio" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><a href="https://fly.io/">Fly.io</a> is an application hosting platform. The
+platform is ideal for hosting worldwide apps with low latency.
+Fly.io enables the launch of containerized applications with
+the command line.</p>
+<div id="prerequisites-1" class="section level3 hasAnchor" number="19.3.1">
+<h3><span class="header-section-number">19.3.1</span> Prerequisites<a href="19-hosting-platforms.html#prerequisites-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>First of all, you’ll need Docker installed on your local machine.</p>
+<p>This <a href="https://fly.io/docs/hands-on/start/">hands-on intro</a> from the Fly
+documentation is a good place to start to make sure you have everything
+installed. First, you need to <a href="https://fly.io/docs/hands-on/installing/">install
+<code>flyctl</code></a>, that is the
+command-line utility that lets you work with Fly. Follow instructions
+for your operating system of choice.</p>
+<p><a href="https://fly.io/docs/hands-on/sign-up/">Sign up</a> for a Fly account. Set
+up email/password combination or use your GitHub social login. You will
+also be prompted for credit card payment information, required for
+charges outside the free tier on Fly (see
+<a href="https://fly.io/docs/about/pricing">pricing</a> info, you can run 3 apps
+for free). Without a credit card, you will not be unable to create a new
+application on Fly.</p>
+<p>Now you can <a href="https://fly.io/docs/hands-on/sign-in/">sign in</a> with
+<code>flyctl</code>:</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb216-1"><a href="19-hosting-platforms.html#cb216-1" tabindex="-1"></a><span class="ex">flyctl</span> auth login</span></code></pre></div>
+</div>
+<div id="creating-a-fly.io-app" class="section level3 hasAnchor" number="19.3.2">
+<h3><span class="header-section-number">19.3.2</span> Creating a Fly.io App<a href="19-hosting-platforms.html#creating-a-fly.io-app" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will use the Docker image from the
+<a href="https://gitlab.com/analythium/shinyproxy-hello"
+rel="nofollow">analythium/shinyproxy-hello</a> GitHub project. If you
+have another Docker image with a Shiny app in it, feel free to use a
+different <code>DOCKER_IMAGE</code>. Once the image tag is specified, you have to
+pull the image to your local machine:</p>
+<div class="sourceCode" id="cb217"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb217-1"><a href="19-hosting-platforms.html#cb217-1" tabindex="-1"></a><span class="bu">export</span> <span class="va">DOCKER_IMAGE</span><span class="op">=</span><span class="st">&quot;ghcr.io/h10y/faithful/py-shiny:main&quot;</span></span>
+<span id="cb217-2"><a href="19-hosting-platforms.html#cb217-2" tabindex="-1"></a><span class="ex">docker</span> pull <span class="va">$DOCKER_IMAGE</span></span></code></pre></div>
+<p>With that app pulled, you can go ahead and create a Fly app from the
+existing Docker image. You’ll be prompted to select the account and the
+data center region:</p>
+<div class="sourceCode" id="cb218"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb218-1"><a href="19-hosting-platforms.html#cb218-1" tabindex="-1"></a><span class="ex">flyctl</span> launch <span class="at">--image</span> <span class="va">$DOCKER_IMAGE</span></span>
+<span id="cb218-2"><a href="19-hosting-platforms.html#cb218-2" tabindex="-1"></a></span>
+<span id="cb218-3"><a href="19-hosting-platforms.html#cb218-3" tabindex="-1"></a><span class="co"># Creating app in /Users/Peter</span></span>
+<span id="cb218-4"><a href="19-hosting-platforms.html#cb218-4" tabindex="-1"></a><span class="co"># Using image ghcr.io/h10y/faithful/py-shiny:main</span></span>
+<span id="cb218-5"><a href="19-hosting-platforms.html#cb218-5" tabindex="-1"></a><span class="co"># ? Select organization: &lt;organization_name&gt;</span></span>
+<span id="cb218-6"><a href="19-hosting-platforms.html#cb218-6" tabindex="-1"></a><span class="co"># ? Select region: sea (Seattle, Washington (US))</span></span>
+<span id="cb218-7"><a href="19-hosting-platforms.html#cb218-7" tabindex="-1"></a><span class="co"># Created app cool-smoke-1972 in organization &lt;organization_name&gt;</span></span>
+<span id="cb218-8"><a href="19-hosting-platforms.html#cb218-8" tabindex="-1"></a><span class="co"># Wrote config file fly.toml</span></span></code></pre></div>
+<p>There are quite a few regions to select from, you are offered the one
+closest to you based on your IP address.</p>
+<p>Open and edit the newly created <code>fly.toml</code> (see the <a href="https://fly.io/docs/reference/configuration/">Fly
+docs</a> for detailed config
+options). Leave all the contents except for the <code>internal_port</code> that you
+should change from <code>8080</code> to <code>3838</code> because this is the port exposed in
+the Docker image:</p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb219-1"><a href="19-hosting-platforms.html#cb219-1" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb219-2"><a href="19-hosting-platforms.html#cb219-2" tabindex="-1"></a><span class="at">    </span><span class="kw">[[</span><span class="at">services</span><span class="kw">]]</span></span>
+<span id="cb219-3"><a href="19-hosting-platforms.html#cb219-3" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb219-4"><a href="19-hosting-platforms.html#cb219-4" tabindex="-1"></a><span class="at">      internal_port = 3838</span></span>
+<span id="cb219-5"><a href="19-hosting-platforms.html#cb219-5" tabindex="-1"></a><span class="at">    ...</span></span></code></pre></div>
+<p>If you are using a different image, make sure you set this to the port
+that the app is running at.</p>
+</div>
+<div id="deploying-to-fly.io" class="section level3 hasAnchor" number="19.3.3">
+<h3><span class="header-section-number">19.3.3</span> Deploying to Fly.io<a href="19-hosting-platforms.html#deploying-to-fly.io" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Use the <code>flyctl deploy</code> command to deploy the app:</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb220-1"><a href="19-hosting-platforms.html#cb220-1" tabindex="-1"></a><span class="ex">flyctl</span> deploy</span>
+<span id="cb220-2"><a href="19-hosting-platforms.html#cb220-2" tabindex="-1"></a></span>
+<span id="cb220-3"><a href="19-hosting-platforms.html#cb220-3" tabindex="-1"></a><span class="co"># Deploying cool-smoke-1972</span></span>
+<span id="cb220-4"><a href="19-hosting-platforms.html#cb220-4" tabindex="-1"></a><span class="co"># ==&gt; Validating app configuration</span></span>
+<span id="cb220-5"><a href="19-hosting-platforms.html#cb220-5" tabindex="-1"></a><span class="co"># --&gt; Validating app configuration done</span></span>
+<span id="cb220-6"><a href="19-hosting-platforms.html#cb220-6" tabindex="-1"></a><span class="co"># Services</span></span>
+<span id="cb220-7"><a href="19-hosting-platforms.html#cb220-7" tabindex="-1"></a><span class="co"># TCP 80/443 ⇢ 3838</span></span>
+<span id="cb220-8"><a href="19-hosting-platforms.html#cb220-8" tabindex="-1"></a><span class="co"># Searching for image &#39;ghcr.io/h10y/faithful/py-shiny:main&#39; locally...</span></span>
+<span id="cb220-9"><a href="19-hosting-platforms.html#cb220-9" tabindex="-1"></a><span class="co"># image found: sha256:b11b4100...</span></span>
+<span id="cb220-10"><a href="19-hosting-platforms.html#cb220-10" tabindex="-1"></a><span class="co"># ==&gt; Pushing image to fly</span></span>
+<span id="cb220-11"><a href="19-hosting-platforms.html#cb220-11" tabindex="-1"></a><span class="co"># The push refers to repository [registry.fly.io/cool-smoke-1972]</span></span>
+<span id="cb220-12"><a href="19-hosting-platforms.html#cb220-12" tabindex="-1"></a><span class="co"># e86054b4a909: Pushed</span></span>
+<span id="cb220-13"><a href="19-hosting-platforms.html#cb220-13" tabindex="-1"></a><span class="co"># ...</span></span>
+<span id="cb220-14"><a href="19-hosting-platforms.html#cb220-14" tabindex="-1"></a><span class="co"># e749bc5a8d9b: Pushed</span></span>
+<span id="cb220-15"><a href="19-hosting-platforms.html#cb220-15" tabindex="-1"></a><span class="co"># deployment-1636607519: digest: sha256:33b633191... size: 3245</span></span>
+<span id="cb220-16"><a href="19-hosting-platforms.html#cb220-16" tabindex="-1"></a><span class="co"># --&gt; Pushing image done</span></span>
+<span id="cb220-17"><a href="19-hosting-platforms.html#cb220-17" tabindex="-1"></a><span class="co"># Image: registry.fly.io/cool-smoke-1972:deployment-1636607519</span></span>
+<span id="cb220-18"><a href="19-hosting-platforms.html#cb220-18" tabindex="-1"></a><span class="co"># Image size: 1.2 GB</span></span>
+<span id="cb220-19"><a href="19-hosting-platforms.html#cb220-19" tabindex="-1"></a><span class="co"># ==&gt; Creating release</span></span>
+<span id="cb220-20"><a href="19-hosting-platforms.html#cb220-20" tabindex="-1"></a><span class="co"># Release v2 created</span></span>
+<span id="cb220-21"><a href="19-hosting-platforms.html#cb220-21" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb220-22"><a href="19-hosting-platforms.html#cb220-22" tabindex="-1"></a><span class="co"># You can detach the terminal anytime without stopping the deployment</span></span>
+<span id="cb220-23"><a href="19-hosting-platforms.html#cb220-23" tabindex="-1"></a><span class="co"># Monitoring Deployment</span></span>
+<span id="cb220-24"><a href="19-hosting-platforms.html#cb220-24" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb220-25"><a href="19-hosting-platforms.html#cb220-25" tabindex="-1"></a><span class="co"># 1 desired, 1 placed, 1 healthy, 0 unhealthy [health checks: 1 total, 1 passing]</span></span>
+<span id="cb220-26"><a href="19-hosting-platforms.html#cb220-26" tabindex="-1"></a><span class="co"># --&gt; v0 deployed successfully</span></span></code></pre></div>
+<p>As a result of the deploy command, the image is pushed into the Fly
+registry. Watch the process from the command line. If you quit the
+process, you can still check the app status:</p>
+<div class="sourceCode" id="cb221"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb221-1"><a href="19-hosting-platforms.html#cb221-1" tabindex="-1"></a><span class="ex">flyctl</span> status</span>
+<span id="cb221-2"><a href="19-hosting-platforms.html#cb221-2" tabindex="-1"></a></span>
+<span id="cb221-3"><a href="19-hosting-platforms.html#cb221-3" tabindex="-1"></a><span class="co"># App</span></span>
+<span id="cb221-4"><a href="19-hosting-platforms.html#cb221-4" tabindex="-1"></a><span class="co">#   Name     = cool-smoke-1972</span></span>
+<span id="cb221-5"><a href="19-hosting-platforms.html#cb221-5" tabindex="-1"></a><span class="co">#   Owner    = &lt;organization_name&gt;</span></span>
+<span id="cb221-6"><a href="19-hosting-platforms.html#cb221-6" tabindex="-1"></a><span class="co">#   Version  = 0</span></span>
+<span id="cb221-7"><a href="19-hosting-platforms.html#cb221-7" tabindex="-1"></a><span class="co">#   Status   = running</span></span>
+<span id="cb221-8"><a href="19-hosting-platforms.html#cb221-8" tabindex="-1"></a><span class="co">#   Hostname = cool-smoke-1972.fly.dev</span></span>
+<span id="cb221-9"><a href="19-hosting-platforms.html#cb221-9" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb221-10"><a href="19-hosting-platforms.html#cb221-10" tabindex="-1"></a><span class="co"># Deployment Status</span></span>
+<span id="cb221-11"><a href="19-hosting-platforms.html#cb221-11" tabindex="-1"></a><span class="co">#   ID          = 1c31f05d-b84c-d5da-4613-9679727495e5</span></span>
+<span id="cb221-12"><a href="19-hosting-platforms.html#cb221-12" tabindex="-1"></a><span class="co">#   Version     = v0</span></span>
+<span id="cb221-13"><a href="19-hosting-platforms.html#cb221-13" tabindex="-1"></a><span class="co">#   Status      = successful</span></span>
+<span id="cb221-14"><a href="19-hosting-platforms.html#cb221-14" tabindex="-1"></a><span class="co">#   Description = Deployment completed successfully</span></span>
+<span id="cb221-15"><a href="19-hosting-platforms.html#cb221-15" tabindex="-1"></a><span class="co">#   Instances   = 1 desired, 1 placed, 1 healthy, 0 unhealthy</span></span>
+<span id="cb221-16"><a href="19-hosting-platforms.html#cb221-16" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb221-17"><a href="19-hosting-platforms.html#cb221-17" tabindex="-1"></a><span class="co"># Instances</span></span>
+<span id="cb221-18"><a href="19-hosting-platforms.html#cb221-18" tabindex="-1"></a><span class="co"># ID       PROCESS VERSION REGION DESIRED STATUS  HEALTH CHECKS      RESTARTS CREATED</span></span>
+<span id="cb221-19"><a href="19-hosting-platforms.html#cb221-19" tabindex="-1"></a><span class="co"># 00d78cfc app     0       sea    run     running 1 total, 1 passing 0        5m8s ago</span></span></code></pre></div>
+<p>Your app is up and running when the status changes to successful.
+Inspect the container logs with <code>flyctl logs</code>.</p>
+<p>The output will give the Hostname (<code>app_name.fly.dev</code> where <code>app_name</code>
+is the app name from the TOML configuration file). Copy the Hostname and
+paste in the browser tab, or use <code>flyctl open</code> to visit the app.</p>
+</div>
+<div id="metrics-and-logs" class="section level3 hasAnchor" number="19.3.4">
+<h3><span class="header-section-number">19.3.4</span> Metrics and Logs<a href="19-hosting-platforms.html#metrics-and-logs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If you go to the Fly.io dashboard and click on your app name,
+you’ll see a menu with the app overview with the status, green means the app
+is healthy (Fig. <a href="19-hosting-platforms.html#fig:paas-fly-io-01">19.9</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:paas-fly-io-01"></span>
+<img src="images/paas-fly-io/paas-fly-io-01.png" alt="The Fly.io dashboard for the app." width="100%" />
+<p class="caption">
+Figure 19.9: The Fly.io dashboard for the app.
+</p>
+</div>
+<p>The Metrics tab shows HTTP response times,
+concurrency (meaningful only if you scaled the app to more than 1 replica), data transfer speed,
+memory usage, etc. (Fig. <a href="19-hosting-platforms.html#fig:paas-fly-io-02">19.10</a>). You can access logs for up to 2 days.
+You can also manage TLS certificates here, view activity and settings.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:paas-fly-io-02"></span>
+<img src="images/paas-fly-io/paas-fly-io-02.png" alt="Metrics in the Fly.io dashboard." width="100%" />
+<p class="caption">
+Figure 19.10: Metrics in the Fly.io dashboard.
+</p>
+</div>
+</div>
+<div id="setting-up-a-custom-domain" class="section level3 hasAnchor" number="19.3.5">
+<h3><span class="header-section-number">19.3.5</span> Setting up a Custom Domain<a href="19-hosting-platforms.html#setting-up-a-custom-domain" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>It is recommended to use an A or AAAA record if you set up an apex
+domain (like <code>example.com</code>). Get the IPv4 and IPv6 addresses and add
+those to your DNS.</p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb222-1"><a href="19-hosting-platforms.html#cb222-1" tabindex="-1"></a><span class="ex">flyctl</span> ips list</span>
+<span id="cb222-2"><a href="19-hosting-platforms.html#cb222-2" tabindex="-1"></a></span>
+<span id="cb222-3"><a href="19-hosting-platforms.html#cb222-3" tabindex="-1"></a><span class="co"># TYPE ADDRESS             REGION CREATED AT</span></span>
+<span id="cb222-4"><a href="19-hosting-platforms.html#cb222-4" tabindex="-1"></a><span class="co"># v4   213.188.220.171     global 5m47s ago</span></span>
+<span id="cb222-5"><a href="19-hosting-platforms.html#cb222-5" tabindex="-1"></a><span class="co"># v6   2a09:8280:1::6:11cc global 5m47s ago</span></span></code></pre></div>
+<p>This means creating an A or AAAA record with your domain name provider to point to
+the IPs listed by the command above.
+Give a few minutes to the name servers. Once the records are propagated,
+you should be able to access the app at your custom domain.</p>
+</div>
+<div id="adding-tlsssl-certificate" class="section level3 hasAnchor" number="19.3.6">
+<h3><span class="header-section-number">19.3.6</span> Adding TLS/SSL certificate<a href="19-hosting-platforms.html#adding-tlsssl-certificate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You might have noticed the crossed lock symbol when loading your Shiny app,
+indicating that the app is served over HTTP.</p>
+<p>Let’s add TLS certificate to the domain name:</p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb223-1"><a href="19-hosting-platforms.html#cb223-1" tabindex="-1"></a><span class="bu">export</span> <span class="va">DOMAIN_NAME</span><span class="op">=</span><span class="st">&quot;your.domain.com&quot;</span> <span class="co"># change domain here</span></span>
+<span id="cb223-2"><a href="19-hosting-platforms.html#cb223-2" tabindex="-1"></a></span>
+<span id="cb223-3"><a href="19-hosting-platforms.html#cb223-3" tabindex="-1"></a><span class="ex">flyctl</span> certs create <span class="va">$DOMAIN_NAME</span></span>
+<span id="cb223-4"><a href="19-hosting-platforms.html#cb223-4" tabindex="-1"></a><span class="co"># Your certificate for your.domain.com is being issued.</span></span>
+<span id="cb223-5"><a href="19-hosting-platforms.html#cb223-5" tabindex="-1"></a><span class="co"># Status is Awaiting certificates.</span></span></code></pre></div>
+<p>Wait for a bit, issuing certificates might take a couple of minutes.
+Once it is done, you should see that a certificate has been issued:</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb224-1"><a href="19-hosting-platforms.html#cb224-1" tabindex="-1"></a><span class="ex">flyctl</span> certs show <span class="va">$DOMAIN_NAME</span></span>
+<span id="cb224-2"><a href="19-hosting-platforms.html#cb224-2" tabindex="-1"></a><span class="co"># The certificate for fly-shiny.analythium.net has been issued.</span></span>
+<span id="cb224-3"><a href="19-hosting-platforms.html#cb224-3" tabindex="-1"></a><span class="co"># Hostname                  = your.domain.com</span></span>
+<span id="cb224-4"><a href="19-hosting-platforms.html#cb224-4" tabindex="-1"></a><span class="co"># DNS Provider              = googledomains</span></span>
+<span id="cb224-5"><a href="19-hosting-platforms.html#cb224-5" tabindex="-1"></a><span class="co"># Certificate Authority     = Let&#39;s Encrypt</span></span>
+<span id="cb224-6"><a href="19-hosting-platforms.html#cb224-6" tabindex="-1"></a><span class="co"># Issued                    = ecdsa,rsa</span></span>
+<span id="cb224-7"><a href="19-hosting-platforms.html#cb224-7" tabindex="-1"></a><span class="co"># Added to App              = 24 minutes ago</span></span>
+<span id="cb224-8"><a href="19-hosting-platforms.html#cb224-8" tabindex="-1"></a><span class="co"># Source                    = fly</span></span></code></pre></div>
+<p>If you visit your app URL now, the lock symbol looks good, the Shiny app
+is now served over HTTPS</p>
+</div>
+<div id="autoscaling-in-multiple-regions" class="section level3 hasAnchor" number="19.3.7">
+<h3><span class="header-section-number">19.3.7</span> Autoscaling in Multiple-Regions<a href="19-hosting-platforms.html#autoscaling-in-multiple-regions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Fly.io allows the deployment of your application across data centers located worldwide including:
+Amsterdam, Atlanta, Paris, Dallas, Parsippany, Frankfurt, Sao Paulo, Hong Kong, Ashburn, Los Angeles,
+London, Chennai, Tokyo, Chicago, Santiago, Seattle, Singapore, Sunnyvale, Sydney, Toronto, Bathurst.</p>
+<p>Fly.io makes sure users are directed to the geographically closest location to
+ensure performance is as best as can be.
+Use the <code>flyctl</code> to list the regions for the deployed app. Depending on
+your location, you will see different regions listed. I deployed the app
+from Toronto (<code>yyz</code>). If you are in doubt about what the 3-letter codes
+mean, these are airport codes, so just search for them.</p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb225-1"><a href="19-hosting-platforms.html#cb225-1" tabindex="-1"></a><span class="ex">flyctl</span> regions list</span>
+<span id="cb225-2"><a href="19-hosting-platforms.html#cb225-2" tabindex="-1"></a></span>
+<span id="cb225-3"><a href="19-hosting-platforms.html#cb225-3" tabindex="-1"></a><span class="co"># Region Pool:</span></span>
+<span id="cb225-4"><a href="19-hosting-platforms.html#cb225-4" tabindex="-1"></a><span class="co"># yyz</span></span>
+<span id="cb225-5"><a href="19-hosting-platforms.html#cb225-5" tabindex="-1"></a><span class="co"># Backup Region:</span></span>
+<span id="cb225-6"><a href="19-hosting-platforms.html#cb225-6" tabindex="-1"></a><span class="co"># bhs</span></span>
+<span id="cb225-7"><a href="19-hosting-platforms.html#cb225-7" tabindex="-1"></a><span class="co"># ewr</span></span></code></pre></div>
+<p>My backup regions are <code>ewr</code> (Parsippany, NJ US) and <code>bhs</code> Bathurst,
+Australia. If for any reason, the app can’t be deployed in Toronto, Fly will try to
+spin it up in one of the backup regions. You can build your own region
+pool. For example, <code>flyctl regions add ord cdg</code> would add Chicago and
+Paris to the region pool:</p>
+<div class="sourceCode" id="cb226"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb226-1"><a href="19-hosting-platforms.html#cb226-1" tabindex="-1"></a><span class="ex">flyctl</span> regions add ord cdg</span>
+<span id="cb226-2"><a href="19-hosting-platforms.html#cb226-2" tabindex="-1"></a></span>
+<span id="cb226-3"><a href="19-hosting-platforms.html#cb226-3" tabindex="-1"></a><span class="co"># Region Pool:</span></span>
+<span id="cb226-4"><a href="19-hosting-platforms.html#cb226-4" tabindex="-1"></a><span class="co"># cdg</span></span>
+<span id="cb226-5"><a href="19-hosting-platforms.html#cb226-5" tabindex="-1"></a><span class="co"># ord</span></span>
+<span id="cb226-6"><a href="19-hosting-platforms.html#cb226-6" tabindex="-1"></a><span class="co"># yyz</span></span>
+<span id="cb226-7"><a href="19-hosting-platforms.html#cb226-7" tabindex="-1"></a><span class="co"># Backup Region:</span></span>
+<span id="cb226-8"><a href="19-hosting-platforms.html#cb226-8" tabindex="-1"></a><span class="co"># ams</span></span>
+<span id="cb226-9"><a href="19-hosting-platforms.html#cb226-9" tabindex="-1"></a><span class="co"># bhs</span></span>
+<span id="cb226-10"><a href="19-hosting-platforms.html#cb226-10" tabindex="-1"></a><span class="co"># ewr</span></span>
+<span id="cb226-11"><a href="19-hosting-platforms.html#cb226-11" tabindex="-1"></a><span class="co"># lhr</span></span>
+<span id="cb226-12"><a href="19-hosting-platforms.html#cb226-12" tabindex="-1"></a><span class="co"># vin</span></span></code></pre></div>
+<p>Use <code>flyctl regions remove ord</code> to remove <code>ord</code> from the region pool.
+Once you defined the regions where you want your apps to run, it is time
+to set how many instances your app will have. But when do you need a new
+instance and what is an instance in this case?</p>
+<div id="instances-and-concurrency" class="section level4 unnumbered hasAnchor">
+<h4>Instances and concurrency<a href="19-hosting-platforms.html#instances-and-concurrency" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Fly.io uses a virtualization technology called Firecracker
+microVMs to run multi-tenant container services. So an instance is a microVM.
+Think of it as a portion of a shared virtual CPU and 256 MB memory
+units. These units are scaled up and down.</p>
+<p>In your <code>fly.toml</code> configuration
+file you can find a section about concurrency with the following defaults:</p>
+<div class="sourceCode" id="cb227"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb227-1"><a href="19-hosting-platforms.html#cb227-1" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb227-2"><a href="19-hosting-platforms.html#cb227-2" tabindex="-1"></a><span class="at">      </span><span class="kw">[</span><span class="at">services.concurrency</span><span class="kw">]</span></span>
+<span id="cb227-3"><a href="19-hosting-platforms.html#cb227-3" tabindex="-1"></a><span class="at">        hard_limit = 25</span></span>
+<span id="cb227-4"><a href="19-hosting-platforms.html#cb227-4" tabindex="-1"></a><span class="at">        soft_limit = 20</span></span>
+<span id="cb227-5"><a href="19-hosting-platforms.html#cb227-5" tabindex="-1"></a><span class="at">        type = &quot;connections&quot;</span></span>
+<span id="cb227-6"><a href="19-hosting-platforms.html#cb227-6" tabindex="-1"></a><span class="at">    ...</span></span></code></pre></div>
+<p>This concurrency setting determines the microVM capacity. The default is
+20 concurrent connections. When a user connects, the request is sent to
+the nearest microVM with capacity. If the existing VMs are at capacity,
+Fly launches more in the busiest regions. Idle microVMs are shut off.
+The room between the soft and hard limits gives time for new instances to be
+brought to life.</p>
+</div>
+<div id="scale-count" class="section level4 unnumbered hasAnchor">
+<h4>Scale count<a href="19-hosting-platforms.html#scale-count" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The scale count is the number of instances. A scale count of 1 (default)
+means that 1 instance of the app is running in 1 of the regions in the
+region pool. Scale count refers to horizontal scaling.</p>
+<p>You can increase the scale count with the <code>flyctl scale count</code> command.
+<code>flyctl scale count 2</code> tells us to run 2 instances of your application.
+You can see your current scaling parameters with <code>flyctl scale show</code>:</p>
+<div class="sourceCode" id="cb228"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb228-1"><a href="19-hosting-platforms.html#cb228-1" tabindex="-1"></a><span class="ex">flyctl</span> scale show</span>
+<span id="cb228-2"><a href="19-hosting-platforms.html#cb228-2" tabindex="-1"></a><span class="co"># VM Resources for cool-smoke-1972</span></span>
+<span id="cb228-3"><a href="19-hosting-platforms.html#cb228-3" tabindex="-1"></a><span class="co">#         VM Size: shared-cpu-1x</span></span>
+<span id="cb228-4"><a href="19-hosting-platforms.html#cb228-4" tabindex="-1"></a><span class="co">#       VM Memory: 256 MB</span></span>
+<span id="cb228-5"><a href="19-hosting-platforms.html#cb228-5" tabindex="-1"></a><span class="co">#           Count: 2</span></span>
+<span id="cb228-6"><a href="19-hosting-platforms.html#cb228-6" tabindex="-1"></a><span class="co">#  Max Per Region: Not set</span></span></code></pre></div>
+<p>The scaled app is placed in different regions in the region pool. Use
+the <code>flyctl status</code> command to list instances and which regions they are
+running in:</p>
+<div class="sourceCode" id="cb229"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb229-1"><a href="19-hosting-platforms.html#cb229-1" tabindex="-1"></a><span class="ex">flyctl</span> status</span>
+<span id="cb229-2"><a href="19-hosting-platforms.html#cb229-2" tabindex="-1"></a><span class="co"># App</span></span>
+<span id="cb229-3"><a href="19-hosting-platforms.html#cb229-3" tabindex="-1"></a><span class="co">#   Name     = cool-smoke-1972</span></span>
+<span id="cb229-4"><a href="19-hosting-platforms.html#cb229-4" tabindex="-1"></a><span class="co">#   Owner    = &lt;organization_name&gt;</span></span>
+<span id="cb229-5"><a href="19-hosting-platforms.html#cb229-5" tabindex="-1"></a><span class="co">#   Version  = 3</span></span>
+<span id="cb229-6"><a href="19-hosting-platforms.html#cb229-6" tabindex="-1"></a><span class="co">#   Status   = running</span></span>
+<span id="cb229-7"><a href="19-hosting-platforms.html#cb229-7" tabindex="-1"></a><span class="co">#   Hostname = cool-smoke-1972.fly.dev</span></span>
+<span id="cb229-8"><a href="19-hosting-platforms.html#cb229-8" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb229-9"><a href="19-hosting-platforms.html#cb229-9" tabindex="-1"></a><span class="co"># Instances</span></span>
+<span id="cb229-10"><a href="19-hosting-platforms.html#cb229-10" tabindex="-1"></a><span class="co"># ID       PROCESS VERSION REGION DESIRED STATUS  HEALTH CHECKS      RESTARTS CREATED</span></span>
+<span id="cb229-11"><a href="19-hosting-platforms.html#cb229-11" tabindex="-1"></a><span class="co"># 535327bc app     3       yyz    run     running 1 total, 1 passing 0        3m7s ago</span></span>
+<span id="cb229-12"><a href="19-hosting-platforms.html#cb229-12" tabindex="-1"></a><span class="co"># 0c0bd76e app     3       cdg    run     running 1 total, 1 passing 0        4h55m ago</span></span></code></pre></div>
+</div>
+<div id="scaling-virtual-machines" class="section level4 unnumbered hasAnchor">
+<h4>Scaling virtual machines<a href="19-hosting-platforms.html#scaling-virtual-machines" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The physical servers that the microVM instances are running on have 8–32
+CPU cores and 32–256 GB of RAM. Multiple virtual machines (VMs) share
+the same physical box. The number of cores and amount of memory
+available in the virtual machine can be set for all application
+instances using the <code>flyctl scale vm</code> command.</p>
+<div class="sourceCode" id="cb230"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb230-1"><a href="19-hosting-platforms.html#cb230-1" tabindex="-1"></a><span class="ex">flyctl</span> platform vm-sizes</span>
+<span id="cb230-2"><a href="19-hosting-platforms.html#cb230-2" tabindex="-1"></a><span class="co"># NAME             CPU CORES MEMORY</span></span>
+<span id="cb230-3"><a href="19-hosting-platforms.html#cb230-3" tabindex="-1"></a><span class="co"># shared-cpu-1x    1         256 MB</span></span>
+<span id="cb230-4"><a href="19-hosting-platforms.html#cb230-4" tabindex="-1"></a><span class="co"># dedicated-cpu-1x 1         2 GB</span></span>
+<span id="cb230-5"><a href="19-hosting-platforms.html#cb230-5" tabindex="-1"></a><span class="co"># dedicated-cpu-2x 2         4 GB</span></span>
+<span id="cb230-6"><a href="19-hosting-platforms.html#cb230-6" tabindex="-1"></a><span class="co"># dedicated-cpu-4x 4         8 GB</span></span>
+<span id="cb230-7"><a href="19-hosting-platforms.html#cb230-7" tabindex="-1"></a><span class="co"># dedicated-cpu-8x 8         16 GB</span></span></code></pre></div>
+<p>You can change the type of your VMs by
+adding the required size name to <code>fly scale vm</code> or using the
+<code>fly scale memory</code> to directly set the VM’s memory allocation. This type
+of scaling is referred to as vertical scaling.</p>
+</div>
+<div id="autoscaling" class="section level4 unnumbered hasAnchor">
+<h4>Autoscaling<a href="19-hosting-platforms.html#autoscaling" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Autoscaling means that the Fly system will create at least the minimum number of
+application instances across the regions in your region pool. New
+instances will be created based on traffic up to the maximum count.</p>
+<p>By default, autoscaling is disabled and scale count is in effect. There
+are two types of auto-scaling models: Standard and Balanced. Here is
+what the Fly docs say:</p>
+<ul>
+<li><strong>Standard</strong>: Instances of the application, up to the minimum count,
+are evenly distributed among the regions in the pool. They are not
+relocated in response to traffic. New instances are added where
+there is demand, up to the maximum count.</li>
+<li><strong>Balanced</strong>: Instances of the application are, at first, evenly
+distributed among the regions in the pool up to the minimum count.
+Where traffic is high in a particular region, new instances will be
+created there and then, when the maximum count of instances has been
+used, instances will be moved from other regions to that region.</li>
+</ul>
+<p>The command <code>flyctl autoscale standard</code> will turn on the Standard
+autoscaling plan. If you want the Balanced plan with min/max counts of 3
+and 5, use <code>flyctl autoscale balanced min=3 max=10</code>. The command
+<code>flyctl autoscale disable</code> will disable autoscaling.</p>
+<p>When you are done, use <code>flyctl destroy $APP_NAME</code> to destroy the
+deployed application. Don’t forget to remove the A or CNAME record from
+your DNS settings too.</p>
+<!-- #### Session affinity {-}
+
+When there are multiple instances of the same app running (scale count
+>1), load balancing is needed to distribute the workload among the
+server processes. Without so-called "session affinity" (or "sticky
+sessions"), requests are sent to the instance that is next in line.
+
+Problems with this type of load balancing can arise when the internet
+connection is severed for some reason, e.g. due to poor cell coverage.
+If saving the users' state is important for the app to work, e.g. the
+user uploads files etc., having no session affinity won't be ideal.
+
+> When you bump up your scale count, we'll place your app in different
+> regions (based on your region pool). If there are three regions in the
+> pool and the count is set to six, there will be two app instances in
+> each region.
+
+In theory, we could place instances in different
+regions to make sure traffic is only going to the closest instance. So
+when you increase the scale count (`flyctl scale count`), make sure you
+have the matching number of regions set up first (`flyctl regions add`). -->
+<!--
+### Considerations and Limitations
+#### Costs
+Fly offers a **Free tier** that includes **2,340 hours per month** that
+is enough to run 3 shared 1 CPU virtual machines with 256 MB RAM full
+time.
+
+The paid plans can cost anywhere between **$23.28 and $6,697.92
+US/year/app**, not including extras like persistent volumes or
+databases. The cheapest is the same shared CPU instance as under the
+free tier. The largest instances boast 8 dedicated CPUs and 64 GB RAM.
+
+You'll have **no server costs** or costs related to maintenance or
+personnel running the servers. Platform pricing covers all of these.
+
+#### Skill level and support
+The Fly platform is a **fully managed** platform-as-a-service (PaaS),
+**no DevOps skills** (setting up and running infrastructure) are
+required to get started.
+
+You only have to worry about your application. Hosting **dockerized
+apps** will provide lots of benefits when it comes to [managing
+dependencies](https://hosting.analythium.io/dockerized-shiny-apps-with-dependencies/).
+
+Shiny apps can be deployed using **[existing Docker
+images](https://hosting.analythium.io/make-your-shiny-app-fly/)** or
+using **[GitHub
+Actions](https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/)**.
+
+Support is available through the [Fly
+Community](https://community.fly.io/).
+
+#### Scale and Performance
+Your **apps will run 24/7** under the free and paid tiers alike. App
+performance will vary depending on whether you use a **shared or
+dedicated CPU**, and based on the number of CPUs and memory allocated
+(see the cost breakdown above).
+
+You can fine-tune **[concurrency, horizontal and vertical
+scaling](https://hosting.analythium.io/auto-scaling-shiny-apps-in-multiple-regions-with-fly-io/#scaling)**
+for the app using the command-line tool. Read about **[session
+affinity](https://hosting.analythium.io/scaling-shiny-apps-for-python-and-r-sticky-sessions-on-heroku/)**
+if your app needs to preserve state or has file upload functionality to
+avoid surprises for your users.
+
+#### User Management
+**Authentication needs to be added manually**. E.g. as simple
+authentication via a reverse proxy server in front of the Shiny app in
+the Docker container or third-party integrations as part of the Shiny
+app.
+
+Apps are managed independently, so authorization needs to be handled
+using groups, labels, or something similar with your authentication
+provider when you are applying it to multiple apps.
+
+[**Organizations**](https://fly.io/docs/hands-on/create-app/) are a way
+of sharing applications and resources between Fly users. There is no
+limit on the number of members in your organization. This feature is
+useful for team collaboration.
+
+#### Security
+Never forget that it is **your responsibility** to ensure that the Shiny
+code does not expose anything sensitive!
+
+The free plan includes 10 free **SSL/TLS certificates** for your apps.
+You can get additional certificates for $0.10/month for a single
+hostname and for $2/month for wildcards.
+
+You can set up **custom domains** and use free or paid certificates to
+serve your apps over **HTTPS**.
+
+Apps can be deployed in **[20 different
+regions](https://fly.io/docs/reference/regions/)**. You can pick **[one
+or multiple
+regions](https://hosting.analythium.io/auto-scaling-shiny-apps-in-multiple-regions-with-fly-io/#regions)**,
+and select how new instances should be deployed when autoscaling.
+
+#### Branding
+All plans include the option to use **custom domains** served over
+**HTTPS** for no additional cost.
+
+#### Other considerations
+-   Docker is versatile so you can easily host **any containerized
+    applications**, e.g.
+    <a href="https://www.rplumber.io/articles/hosting.html#docker"
+    rel="noreferrer noopener">Plumber APIs</a>, <a
+    href="https://towardsdatascience.com/docker-for-python-dash-r-shiny-6097c8998506"
+    rel="noreferrer noopener">Python/Dash apps</a> etc., not just Shiny
+    apps
+-   **Application metrics** are available in the dashboard
+-   **Data persistence** needs database connections-->
+</div>
+</div>
+<div id="summary-20" class="section level3 hasAnchor" number="19.3.8">
+<h3><span class="header-section-number">19.3.8</span> Summary<a href="19-hosting-platforms.html#summary-20" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Fly.io is a quick and easy way for deploying containerized Shiny app to a
+PaaS for free. There are some features that set Fly.io apart from other similar platforms.
+If you need multi-region availability and really flexible scaling for
+your app, Fly can give that to you at a reasonably low cost and with no
+ops involved.</p>
+
+</div>
+</div>
+<div id="other-general-paas" class="section level2 hasAnchor" number="19.4">
+<h2><span class="header-section-number">19.4</span> Other Providers<a href="19-hosting-platforms.html#other-general-paas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We have outlined the processes for deploying your Shiny application using
+platforms such as Heroku, DigitalOcean App Platform,
+and Fly.io in this chapter. These platforms simplify deployment by handling
+networking and application execution, while also providing analytics
+to monitor your Shiny application’s performance. The platforms that we have
+outlined are not comprehensive, and there are several other deployment
+options you may want to explore:</p>
+<ul>
+<li><p><strong>shinyapps.io</strong> offers native support for the deployment of Python Shiny
+and R Shiny applications. It is the only platform to do so. We cover how to
+use shinyapps.io in Sections <a href="7-part2-sharing-shiny-code.html#part2-deploy-to-shinyapps-io">7.2.1</a>
+and <a href="9-platforms-shiny-hosting.html#platforms-shiny-hosting">9</a>.</p></li>
+<li><p><strong>Posit Connect Cloud</strong> natively supports Python
+and R Shiny applications as explained in Section <a href="9-platforms-shiny-hosting.html#paas-posit-connect-cloud">9.2.1</a>.</p></li>
+<li><p><strong>Ploomber</strong> natively supports deploying R Shiny applications as explored
+in Section <a href="9-platforms-shiny-hosting.html#paas-ploomber">9.2.2</a> and also supports R and Python Shiny deployment
+via Dockerfiles.</p></li>
+<li><p><strong>Hugging Face Spaces</strong> offers a service for deploying applications,
+requiring Shiny apps to be containerized with a Dockerfile.
+Detailed information on deploying Shiny apps (both R and Python) can be
+found in their documentation at <a href="https://huggingface.co/docs/hub/en/spaces-sdks-docker-shiny" class="uri">https://huggingface.co/docs/hub/en/spaces-sdks-docker-shiny</a>.</p></li>
+<li><p><strong>Northflank</strong> provides a deployment service similar to Heroku, with the
+option to build applications using buildpacks or deploy containerized Shiny applications.</p></li>
+<li><p><strong>webapp.io</strong> uses a unique specification called a “Layerfile” (similar to
+Dockerfiles) to deploy applications. Once a Layerfile is committed to a
+repository, it’s used to deploy your application on the webapp.io platform.</p></li>
+<li><p><strong>porter</strong> allows you to deploy applications directly from a GitHub repository
+or Docker registry, supporting both buildpacks and Dockerfiles for deployment.</p></li>
+<li><p><strong>Coolify</strong> simplifies deployment using a format similar to Docker Compose,
+providing an easy way to deploy your containerized application on their platform.</p></li>
+<li><p><strong>AWS Elastic Beanstalk</strong> supports Shiny application deployment using Dockerfiles,
+providing a scalable cloud environment for your app.</p></li>
+<li><p><strong>Railway</strong> allows you to deploy Shiny applications via Dockerfiles,
+streamlining the process of getting your app online.</p></li>
+<li><p><strong>Koyeb</strong> supports both buildpacks and Dockerfiles for deploying Shiny
+applications, offering flexibility in how you package your app.</p></li>
+<li><p><strong>Render</strong> is another platform that supports Shiny application deployment
+using Dockerfiles, providing a reliable and easy-to-use deployment solution.</p></li>
+<li><p><strong>Qovery</strong> allows you to deploy Shiny applications using either buildpacks or
+Dockerfiles by acting as a middleware between a cloud provider. It has support
+to create deployments on AWS, GCP, and Scaleway. Qovery can also manage
+deployments on Kubernetes clusters.</p>
+<p>Almost every platform offers a container deployment option.
+A possible alternative to a containerized application is buildpacks
+or nixpacks which define the dependencies needed for your application
+and are used to build container images of your application.
+However, buildpacks and nixpacks require configuration that is not
+covered in this book.</p></li>
+</ul>
+<!-- See convo on https://github.com/posit-dev/py-shiny/issues/372 -->
+<!-- ### Important notes about Ploomber: {-}
+Some R packages depend on C libraries, which are not installed by default. 
+To fix this, you can use the Docker deployment option and install necessary system libraries.
+There is a Ploomber example for the Faithful example, but
+for a successful deployment, your app must run on port 80.
+This means that non-privileged users cannot run the app on lower ports, such as 80.
+Therefore the app must run as root, which is a code smell and bad practice.
+Currently there is no way for to select an alternative port.
+You also need to upload the app code and the Dockerfile together as a
+zip file or use the github integration to build the Docker image
+in the Ploomber cloud. You can not simply use an existing image. -->
+</div>
+<div id="summary-21" class="section level2 hasAnchor" number="19.5">
+<h2><span class="header-section-number">19.5</span> Summary<a href="19-hosting-platforms.html#summary-21" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We have explained multiple options to host your Shiny application.
+We have shown how to deploy on Heroku, DigitalOcean App Platform, and Fly.io.
+We have also provided alternative platforms to deploy to.</p>
+<p>A common theme among these platforms is the use of buildpacks and containerization
+to deploy Shiny applications while varying in different costs,
+and abilities to deploy from code repositories so you may want to explore them
+further to find the best fit for your Shiny application (Table <a href="19-hosting-platforms.html#tab:paas-comparison">19.1</a>).</p>
+<p>Table <a href="19-hosting-platforms.html#tab:paas-comparison">19.1</a> summarizes the providers in the previous Chapter <a href="19-hosting-platforms.html#other-general-paas">19.4</a>.
+The “Platform” column are all the platforms that support hosting Shiny apps. The subsequent
+columns outline the features of each platform. The “Shiny” column refer to native Shiny application
+support, while “Container”, “Buildpack”, “Registry”, “Nixpack” denote the platforms support
+for using container images, building from buildpacks, pulling from container registries,
+and building from nixpacks.</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:paas-comparison">Table 19.1: </span>Platform-as-a-Service (PaaS) offerings that can be used to host Shiny applications.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Platform
+</th>
+<th style="text-align:center;">
+Shiny
+</th>
+<th style="text-align:center;">
+Container
+</th>
+<th style="text-align:center;">
+Registry
+</th>
+<th style="text-align:center;">
+Buildpack
+</th>
+<th style="text-align:center;">
+Nixpack
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+shinyapps.io
+</td>
+<td style="text-align:center;">
+R, Python
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Posit Connect Cloud
+</td>
+<td style="text-align:center;">
+R, Python
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ploomber
+</td>
+<td style="text-align:center;">
+R
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Heroku
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DigitalOcean App Platform
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fly.io
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hugging Face Spaces
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Northflank
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+webapp.io
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+porter
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Coolify
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AWS Elastic Beanstalk
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Railway
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Koyeb
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Render
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Qovery
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+✔
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="18-part2-working-with-containers.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="20-part2-docker-compose.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/h10y/book/edit/main/book-source/05-01-a-paas-with-docker.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

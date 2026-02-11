@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 20 Docker Compose | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 20 Docker Compose | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="h10y/book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 20 Docker Compose | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@psolymos" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2026-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="19-hosting-platforms.html"/>
+<link rel="next" href="21-shinyproxy-deployment.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.js"></script>
+<link href="libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.5/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.5/reactable.js"></script>
+<script src="https://cdn.usefathom.com/script.js" data-site="PASYTARS" defer></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-part1-background.html"><a href="1-part1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-part1-background.html"><a href="1-part1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-web-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-python"><i class="fa fa-check"></i><b>3.1.2</b> Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-docker"><i class="fa fa-check"></i><b>3.1.4</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-super-user"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-scm-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+<li class="chapter" data-level="3.3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-in-practice"><i class="fa fa-check"></i><b>3.3.5</b> Git in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-working-with-servers"><i class="fa fa-check"></i><b>3.4</b> Working with Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#readability-and-other-useful-tools"><i class="fa fa-check"></i><b>3.5</b> Readability and Other Useful Tools</a></li>
+<li class="chapter" data-level="3.6" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-part1-examples.html"><a href="4-part1-examples.html"><i class="fa fa-check"></i><b>4</b> Shiny Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a></li>
+<li class="chapter" data-level="4.3" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-lbtest"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-part1-examples.html"><a href="4-part1-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r"><i class="fa fa-check"></i><b>5.1.1</b> R</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.1.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shiny-lifecycle"><i class="fa fa-check"></i><b>5.2</b> The Shiny App Lifecycle</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections"><i class="fa fa-check"></i><b>5.2.1</b> Connections</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#sessions"><i class="fa fa-check"></i><b>5.2.2</b> Sessions</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections-sessions"><i class="fa fa-check"></i><b>5.2.3</b> Connections + Sessions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.4</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-apps"><i class="fa fa-check"></i><b>5.3</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python-1"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive"><i class="fa fa-check"></i><b>5.4</b> Shinylive</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-python"><i class="fa fa-check"></i><b>5.4.1</b> Python Shinylive</a></li>
+<li class="chapter" data-level="5.4.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-r"><i class="fa fa-check"></i><b>5.4.2</b> R Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-dynamic-documents"><i class="fa fa-check"></i><b>5.5</b> Dynamic Documents</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-r-markdown"><i class="fa fa-check"></i><b>5.5.1</b> R Markdown</a></li>
+<li class="chapter" data-level="5.5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-quarto-with-python"><i class="fa fa-check"></i><b>5.5.2</b> Quarto with Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html"><i class="fa fa-check"></i><b>6</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#r-2"><i class="fa fa-check"></i><b>6.1</b> R</a></li>
+<li class="chapter" data-level="6.2" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#python-2"><i class="fa fa-check"></i><b>6.2</b> Python</a></li>
+<li class="chapter" data-level="6.3" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#summary-5"><i class="fa fa-check"></i><b>6.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html"><i class="fa fa-check"></i><b>7</b> Sharing Your Shiny App</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-distributing-code"><i class="fa fa-check"></i><b>7.1</b> Distributing Code</a></li>
+<li class="chapter" data-level="7.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploying-shiny-apps"><i class="fa fa-check"></i><b>7.2</b> Deploying Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploy-to-shinyapps-io"><i class="fa fa-check"></i><b>7.2.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="7.2.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-sharing-shinylive"><i class="fa fa-check"></i><b>7.2.2</b> Sharing Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#summary-6"><i class="fa fa-check"></i><b>7.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="8" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html"><i class="fa fa-check"></i><b>8</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-hosting-patterns"><i class="fa fa-check"></i><b>8.1</b> Hosting Patterns for Shiny Apps</a></li>
+<li class="chapter" data-level="8.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-decision-framework"><i class="fa fa-check"></i><b>8.2</b> The Decision Framework</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>8.2.1</b> Start with the Why</a></li>
+<li class="chapter" data-level="8.2.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#requirements"><i class="fa fa-check"></i><b>8.2.2</b> Requirements</a></li>
+<li class="chapter" data-level="8.2.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#constraints"><i class="fa fa-check"></i><b>8.2.3</b> Constraints</a></li>
+<li class="chapter" data-level="8.2.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#picking-an-option"><i class="fa fa-check"></i><b>8.2.4</b> Picking an Option</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-important-prerequisites"><i class="fa fa-check"></i><b>8.3</b> Important Prerequisites</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-custom-domains"><i class="fa fa-check"></i><b>8.3.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="8.3.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-https"><i class="fa fa-check"></i><b>8.3.2</b> HTTPS Access to Your App</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#summary-7"><i class="fa fa-check"></i><b>8.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html"><i class="fa fa-check"></i><b>9</b> Platforms for Shiny Hosting</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io"><i class="fa fa-check"></i><b>9.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="9.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io-alternatives"><i class="fa fa-check"></i><b>9.2</b> shinyapps.io Alternatives</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-posit-connect-cloud"><i class="fa fa-check"></i><b>9.2.1</b> Posit Connect Cloud</a></li>
+<li class="chapter" data-level="9.2.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-ploomber"><i class="fa fa-check"></i><b>9.2.2</b> Ploomber</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#summary-8"><i class="fa fa-check"></i><b>9.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html"><i class="fa fa-check"></i><b>10</b> Static Hosting for Shinylive</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#building-shinylive"><i class="fa fa-check"></i><b>10.1</b> Building Shinylive</a></li>
+<li class="chapter" data-level="10.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#github-pages"><i class="fa fa-check"></i><b>10.2</b> GitHub Pages</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#enabling-pages"><i class="fa fa-check"></i><b>10.2.1</b> Enabling Pages</a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#accessing-the-published-site"><i class="fa fa-check"></i><b>10.2.2</b> Accessing the Published Site</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#other-static-site-hosting"><i class="fa fa-check"></i><b>10.3</b> Other Static Site Hosting Providers</a></li>
+<li class="chapter" data-level="10.4" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#summary-9"><i class="fa fa-check"></i><b>10.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html"><i class="fa fa-check"></i><b>11</b> Embedding Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#understanding-iframes"><i class="fa fa-check"></i><b>11.1</b> Understanding Iframes</a></li>
+<li class="chapter" data-level="11.2" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#styling-iframes"><i class="fa fa-check"></i><b>11.2</b> Styling Iframes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#summary-10"><i class="fa fa-check"></i><b>11.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html"><i class="fa fa-check"></i><b>12</b> Hosting on Virtual Machines</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-custom-domains"><i class="fa fa-check"></i><b>12.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="12.2" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-servers"><i class="fa fa-check"></i><b>12.2</b> Server Setup</a></li>
+<li class="chapter" data-level="12.3" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-install"><i class="fa fa-check"></i><b>12.3</b> Installing Software for Shiny Hosting</a></li>
+<li class="chapter" data-level="12.4" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#reverse-proxies"><i class="fa fa-check"></i><b>12.4</b> Reverse Proxies</a></li>
+<li class="chapter" data-level="12.5" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#set-firewall"><i class="fa fa-check"></i><b>12.5</b> Setting the Firewall</a></li>
+<li class="chapter" data-level="12.6" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#monitoring-processes"><i class="fa fa-check"></i><b>12.6</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="12.7" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>12.7</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="12.8" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#summary-11"><i class="fa fa-check"></i><b>12.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-shiny-server.html"><a href="13-shiny-server.html"><i class="fa fa-check"></i><b>13</b> Shiny Server</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#provisioning-a-server"><i class="fa fa-check"></i><b>13.1</b> Provisioning a Server</a></li>
+<li class="chapter" data-level="13.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#using-systemd"><i class="fa fa-check"></i><b>13.2</b> Using Systemd</a></li>
+<li class="chapter" data-level="13.3" data-path="13-shiny-server.html"><a href="13-shiny-server.html#configuring-shiny-server"><i class="fa fa-check"></i><b>13.3</b> Configuring Shiny Server</a></li>
+<li class="chapter" data-level="13.4" data-path="13-shiny-server.html"><a href="13-shiny-server.html#file-transfer-based-publishing"><i class="fa fa-check"></i><b>13.4</b> File Transfer Based Publishing</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#editing-files-on-the-server"><i class="fa fa-check"></i><b>13.4.1</b> Editing Files on the Server</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#secure-copy-files-to-the-server"><i class="fa fa-check"></i><b>13.4.2</b> Secure Copy Files to the Server</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-shiny-server.html"><a href="13-shiny-server.html#git-based-deployment"><i class="fa fa-check"></i><b>13.5</b> Git-based Deployment</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#apps-with-multiple-linux-users"><i class="fa fa-check"></i><b>13.5.1</b> Apps with Multiple Linux Users</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-shiny-server.html"><a href="13-shiny-server.html#licensing-considerations"><i class="fa fa-check"></i><b>13.6</b> Licensing Considerations</a></li>
+<li class="chapter" data-level="13.7" data-path="13-shiny-server.html"><a href="13-shiny-server.html#summary-12"><i class="fa fa-check"></i><b>13.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="14-posit-connect.html"><a href="14-posit-connect.html"><i class="fa fa-check"></i><b>14</b> Posit Connect</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="14-posit-connect.html"><a href="14-posit-connect.html#summary-13"><i class="fa fa-check"></i><b>14.1</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>IV Containerized Shiny Apps</b></span></li>
+<li class="chapter" data-level="15" data-path="15-part4-containers.html"><a href="15-part4-containers.html"><i class="fa fa-check"></i><b>15</b> Introduction to Containers</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-concepts"><i class="fa fa-check"></i><b>15.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="15.1.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-engine"><i class="fa fa-check"></i><b>15.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-container-registries"><i class="fa fa-check"></i><b>15.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-images"><i class="fa fa-check"></i><b>15.1.3</b> Images</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-the-dockerfile"><i class="fa fa-check"></i><b>15.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-containers"><i class="fa fa-check"></i><b>15.1.5</b> Containers</a></li>
+<li class="chapter" data-level="15.1.6" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-cli"><i class="fa fa-check"></i><b>15.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#summary-14"><i class="fa fa-check"></i><b>15.2</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-part2-images.html"><a href="16-part2-images.html"><i class="fa fa-check"></i><b>16</b> Container Images</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-existing-images"><i class="fa fa-check"></i><b>16.1</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-image-names-tags"><i class="fa fa-check"></i><b>16.1.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-pull"><i class="fa fa-check"></i><b>16.1.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-login"><i class="fa fa-check"></i><b>16.1.3</b> Docker Login</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-run"><i class="fa fa-check"></i><b>16.1.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-build"><i class="fa fa-check"></i><b>16.2</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-r-shiny"><i class="fa fa-check"></i><b>16.2.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-buildx-buildkit"><i class="fa fa-check"></i><b>16.2.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-inspect"><i class="fa fa-check"></i><b>16.2.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-python-shiny"><i class="fa fa-check"></i><b>16.2.4</b> Python for Shiny</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-managing-images"><i class="fa fa-check"></i><b>16.3</b> Managing Images</a></li>
+<li class="chapter" data-level="16.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-sharing-images"><i class="fa fa-check"></i><b>16.4</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-push"><i class="fa fa-check"></i><b>16.4.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registries"><i class="fa fa-check"></i><b>16.4.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-login"><i class="fa fa-check"></i><b>16.4.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="16.4.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-local"><i class="fa fa-check"></i><b>16.4.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-part2-images.html"><a href="16-part2-images.html#summary-15"><i class="fa fa-check"></i><b>16.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>17</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile"><i class="fa fa-check"></i><b>17.1</b> The Dockerfile</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-parent-image"><i class="fa fa-check"></i><b>17.1.1</b> The Parent Image</a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-metadata"><i class="fa fa-check"></i><b>17.1.2</b> Metadata</a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-dependencies"><i class="fa fa-check"></i><b>17.1.3</b> Dependencies</a></li>
+<li class="chapter" data-level="17.1.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-files-and-dirs"><i class="fa fa-check"></i><b>17.1.4</b> Directories and Files</a></li>
+<li class="chapter" data-level="17.1.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-user"><i class="fa fa-check"></i><b>17.1.5</b> Switching User</a></li>
+<li class="chapter" data-level="17.1.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-port"><i class="fa fa-check"></i><b>17.1.6</b> Expose a Port</a></li>
+<li class="chapter" data-level="17.1.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-env-and-arg"><i class="fa fa-check"></i><b>17.1.7</b> Variables</a></li>
+<li class="chapter" data-level="17.1.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-cmd"><i class="fa fa-check"></i><b>17.1.8</b> Executable and Command</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images"><i class="fa fa-check"></i><b>17.2</b> Parent Images</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-r"><i class="fa fa-check"></i><b>17.2.1</b> R Parent Images</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-python"><i class="fa fa-check"></i><b>17.2.2</b> Python Parent Images</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries"><i class="fa fa-check"></i><b>17.3</b> Installing System Libraries</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-manual"><i class="fa fa-check"></i><b>17.3.1</b> Manual Installation</a></li>
+<li class="chapter" data-level="17.3.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-r2u"><i class="fa fa-check"></i><b>17.3.2</b> Automated Dependency Resolution with r2u</a></li>
+<li class="chapter" data-level="17.3.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-alpine"><i class="fa fa-check"></i><b>17.3.3</b> Dependencies on Alpine Linux</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg"><i class="fa fa-check"></i><b>17.4</b> Installing R Packages</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-explicit"><i class="fa fa-check"></i><b>17.4.1</b> Explicitly Stating Dependencies</a></li>
+<li class="chapter" data-level="17.4.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-description"><i class="fa fa-check"></i><b>17.4.2</b> Using the DESCRIPTION File</a></li>
+<li class="chapter" data-level="17.4.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-renv"><i class="fa fa-check"></i><b>17.4.3</b> Using renv</a></li>
+<li class="chapter" data-level="17.4.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-deps"><i class="fa fa-check"></i><b>17.4.4</b> Using deps</a></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-python"><i class="fa fa-check"></i><b>17.5</b> Python Requirements</a></li>
+<li class="chapter" data-level="17.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps"><i class="fa fa-check"></i><b>17.6</b> Classic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.6.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-r"><i class="fa fa-check"></i><b>17.6.1</b> R</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-python"><i class="fa fa-check"></i><b>17.6.2</b> Python</a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-rmd"><i class="fa fa-check"></i><b>17.6.3</b> R Markdown</a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-r"><i class="fa fa-check"></i><b>17.6.4</b> Quarto with R</a></li>
+<li class="chapter" data-level="17.6.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-python"><i class="fa fa-check"></i><b>17.6.5</b> Quarto with Python</a></li>
+<li class="chapter" data-level="17.6.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-shiny-server"><i class="fa fa-check"></i><b>17.6.6</b> Shiny Server</a></li>
+</ul></li>
+<li class="chapter" data-level="17.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-static-shiny-apps"><i class="fa fa-check"></i><b>17.7</b> Containerizing Shinylive</a></li>
+<li class="chapter" data-level="17.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#summary-16"><i class="fa fa-check"></i><b>17.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html"><i class="fa fa-check"></i><b>18</b> Working with Containers</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-run"><i class="fa fa-check"></i><b>18.1</b> Docker Run</a></li>
+<li class="chapter" data-level="18.2" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-managing"><i class="fa fa-check"></i><b>18.2</b> Managing Containers</a></li>
+<li class="chapter" data-level="18.3" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#summary-17"><i class="fa fa-check"></i><b>18.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>V Hosting Shiny with Containers</b></span></li>
+<li class="chapter" data-level="19" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html"><i class="fa fa-check"></i><b>19</b> Hosting Platforms</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-heroku"><i class="fa fa-check"></i><b>19.1</b> Heroku</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-from-the-command-line"><i class="fa fa-check"></i><b>19.1.1</b> Deployment from the Command Line</a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-using-the-web-dashboard"><i class="fa fa-check"></i><b>19.1.2</b> Deployment using the Web Dashboard</a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domain-and-https"><i class="fa fa-check"></i><b>19.1.3</b> Custom Domain and HTTPS</a></li>
+<li class="chapter" data-level="19.1.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#scaling"><i class="fa fa-check"></i><b>19.1.4</b> Scaling</a></li>
+<li class="chapter" data-level="19.1.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-18"><i class="fa fa-check"></i><b>19.1.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-doap"><i class="fa fa-check"></i><b>19.2</b> DigitalOcean App Platform</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites"><i class="fa fa-check"></i><b>19.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#docker-hub-deployment"><i class="fa fa-check"></i><b>19.2.2</b> Docker Hub Deployment</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#github-deployment"><i class="fa fa-check"></i><b>19.2.3</b> GitHub Deployment</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#programmatic-deployment"><i class="fa fa-check"></i><b>19.2.4</b> Programmatic Deployment</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#logs"><i class="fa fa-check"></i><b>19.2.5</b> Logs</a></li>
+<li class="chapter" data-level="19.2.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domains"><i class="fa fa-check"></i><b>19.2.6</b> Custom Domains</a></li>
+<li class="chapter" data-level="19.2.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-19"><i class="fa fa-check"></i><b>19.2.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-flyio"><i class="fa fa-check"></i><b>19.3</b> Fly.io</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites-1"><i class="fa fa-check"></i><b>19.3.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#creating-a-fly.io-app"><i class="fa fa-check"></i><b>19.3.2</b> Creating a Fly.io App</a></li>
+<li class="chapter" data-level="19.3.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deploying-to-fly.io"><i class="fa fa-check"></i><b>19.3.3</b> Deploying to Fly.io</a></li>
+<li class="chapter" data-level="19.3.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#metrics-and-logs"><i class="fa fa-check"></i><b>19.3.4</b> Metrics and Logs</a></li>
+<li class="chapter" data-level="19.3.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#setting-up-a-custom-domain"><i class="fa fa-check"></i><b>19.3.5</b> Setting up a Custom Domain</a></li>
+<li class="chapter" data-level="19.3.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#adding-tlsssl-certificate"><i class="fa fa-check"></i><b>19.3.6</b> Adding TLS/SSL certificate</a></li>
+<li class="chapter" data-level="19.3.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#autoscaling-in-multiple-regions"><i class="fa fa-check"></i><b>19.3.7</b> Autoscaling in Multiple-Regions</a></li>
+<li class="chapter" data-level="19.3.8" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-20"><i class="fa fa-check"></i><b>19.3.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#other-general-paas"><i class="fa fa-check"></i><b>19.4</b> Other Providers</a></li>
+<li class="chapter" data-level="19.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-21"><i class="fa fa-check"></i><b>19.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html"><i class="fa fa-check"></i><b>20</b> Docker Compose</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-file"><i class="fa fa-check"></i><b>20.1</b> The Compose File</a></li>
+<li class="chapter" data-level="20.2" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-cli"><i class="fa fa-check"></i><b>20.2</b> Compose Command Line</a></li>
+<li class="chapter" data-level="20.3" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-vm"><i class="fa fa-check"></i><b>20.3</b> Docker Compose on a Virtual Machine</a></li>
+<li class="chapter" data-level="20.4" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-up-and-down"><i class="fa fa-check"></i><b>20.4</b> Docker Compose Up and Down</a></li>
+<li class="chapter" data-level="20.5" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#compose-scaling"><i class="fa fa-check"></i><b>20.5</b> Scaling with Docker Compose</a></li>
+<li class="chapter" data-level="20.6" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#server-maintenance"><i class="fa fa-check"></i><b>20.6</b> Server Maintenance</a></li>
+<li class="chapter" data-level="20.7" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#summary-22"><i class="fa fa-check"></i><b>20.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html"><i class="fa fa-check"></i><b>21</b> ShinyProxy</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#setting-up-shinyproxy-using-docker"><i class="fa fa-check"></i><b>21.1</b> Setting up ShinyProxy Using Docker</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#docker-compose-for-shinyproxy"><i class="fa fa-check"></i><b>21.1.1</b> Docker Compose for ShinyProxy</a></li>
+<li class="chapter" data-level="21.1.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config"><i class="fa fa-check"></i><b>21.1.2</b> ShinyProxy Configuration</a></li>
+<li class="chapter" data-level="21.1.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-general"><i class="fa fa-check"></i><b>21.1.3</b> General</a></li>
+<li class="chapter" data-level="21.1.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-authentication"><i class="fa fa-check"></i><b>21.1.4</b> Authentication</a></li>
+<li class="chapter" data-level="21.1.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config-applications"><i class="fa fa-check"></i><b>21.1.5</b> Applications</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#deploying-tls-with-shinyproxy-operator"><i class="fa fa-check"></i><b>21.2</b> Deploying TLS with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#user-interface"><i class="fa fa-check"></i><b>21.3</b> User Interface</a></li>
+<li class="chapter" data-level="21.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#spo-monitoring"><i class="fa fa-check"></i><b>21.4</b> Deploying Monitoring with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#benchmarking-shinyproxy-applications"><i class="fa fa-check"></i><b>21.5</b> Benchmarking ShinyProxy Applications</a>
+<ul>
+<li class="chapter" data-level="21.5.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-docker-stats"><i class="fa fa-check"></i><b>21.5.1</b> Docker Stats</a></li>
+<li class="chapter" data-level="21.5.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#grafana-dashboard"><i class="fa fa-check"></i><b>21.5.2</b> Grafana Dashboard</a></li>
+</ul></li>
+<li class="chapter" data-level="21.6" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-adding-apps"><i class="fa fa-check"></i><b>21.6</b> Adding and Removing Shiny Applications</a></li>
+<li class="chapter" data-level="21.7" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#other-considerations"><i class="fa fa-check"></i><b>21.7</b> Other Considerations</a></li>
+<li class="chapter" data-level="21.8" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#summary-23"><i class="fa fa-check"></i><b>21.8</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VI Production Shiny Apps</b></span></li>
+<li class="chapter" data-level="22" data-path="22-shiny-production.html"><a href="22-shiny-production.html"><i class="fa fa-check"></i><b>22</b> Considerations for Production</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#security"><i class="fa fa-check"></i><b>22.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#ssl-certificates"><i class="fa fa-check"></i><b>22.1.1</b> SSL Certificates</a></li>
+<li class="chapter" data-level="22.1.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#storing-secrets"><i class="fa fa-check"></i><b>22.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="22.1.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#firewalls"><i class="fa fa-check"></i><b>22.1.3</b> Firewalls</a></li>
+<li class="chapter" data-level="22.1.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#private-networking"><i class="fa fa-check"></i><b>22.1.4</b> Private Networking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#authentication"><i class="fa fa-check"></i><b>22.2</b> Authentication</a>
+<ul>
+<li class="chapter" data-level="22.2.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#http-basic-auth"><i class="fa fa-check"></i><b>22.2.1</b> HTTP Basic Auth</a></li>
+<li class="chapter" data-level="22.2.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#third-party-auth"><i class="fa fa-check"></i><b>22.2.2</b> Third Party Auth</a></li>
+<li class="chapter" data-level="22.2.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#native-authentication"><i class="fa fa-check"></i><b>22.2.3</b> Native Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reliability"><i class="fa fa-check"></i><b>22.3</b> Reliability</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#backups"><i class="fa fa-check"></i><b>22.3.1</b> Backups</a></li>
+<li class="chapter" data-level="22.3.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reserved-ip-addresses"><i class="fa fa-check"></i><b>22.3.2</b> Reserved IP Addresses</a></li>
+<li class="chapter" data-level="22.3.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#monitoring"><i class="fa fa-check"></i><b>22.3.3</b> Monitoring</a></li>
+<li class="chapter" data-level="22.3.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#benchmarking"><i class="fa fa-check"></i><b>22.3.4</b> Benchmarking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#scaling-1"><i class="fa fa-check"></i><b>22.4</b> Scaling</a>
+<ul>
+<li class="chapter" data-level="22.4.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#options-for-scaling"><i class="fa fa-check"></i><b>22.4.1</b> Options for Scaling</a></li>
+<li class="chapter" data-level="22.4.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#part2-container-orchestration"><i class="fa fa-check"></i><b>22.4.2</b> Container Orchestration</a></li>
+</ul></li>
+<li class="chapter" data-level="22.5" data-path="22-shiny-production.html"><a href="22-shiny-production.html#operations-and-maintenance"><i class="fa fa-check"></i><b>22.5</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="22.5.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#continuous-integration-and-deployment"><i class="fa fa-check"></i><b>22.5.1</b> Continuous Integration and Deployment</a></li>
+<li class="chapter" data-level="22.5.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#logging"><i class="fa fa-check"></i><b>22.5.2</b> Logging</a></li>
+</ul></li>
+<li class="chapter" data-level="22.6" data-path="22-shiny-production.html"><a href="22-shiny-production.html#summary-24"><i class="fa fa-check"></i><b>22.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="23-what-is-next.html"><a href="23-what-is-next.html"><i class="fa fa-check"></i><b>23</b> What is Next</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='images/logos/banner.png' alt="Hosting Shiny">
+</html>
+<div id="part2-docker-compose" class="section level1 hasAnchor" number="20">
+<h1><span class="header-section-number">Chapter 20</span> Docker Compose<a href="20-part2-docker-compose.html#part2-docker-compose" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="noteblock">
+<p>This chapter covers using Docker Compose to run
+your containerized Shiny application. Docker Compose
+is meant to be run on your own self-hosted machine,
+and requires more technical knowledge than a hosting
+platform.</p>
+<p>You should be familiar with the command line and containers to
+understand this chapter. Please refer back to Chapter <a href="3-part1-local-setup.html#part1-command-line">3.2</a>
+if you need a refresher on the command line, and refer back to
+Chapter <a href="15-part4-containers.html#part4-containers">15</a> for a refresher on containers.</p>
+</div>
+<p>You have seen how to manage a single container in the previous chapters. But in practice, we often
+manage multiple containers: multiple replicas of the same app, different
+applications, and services that help with sending traffic to the right places,
+collect diagnostic information, provide a layer of security etc.</p>
+<p>Managing all this complexity with Docker on a single container basis is going
+to be a problem. It is not impossible, but it will be difficult and error prone,
+and as a result less secure.</p>
+<p>Docker Compose is a tool for defining and running multi-container applications.
+Docker Compose is declarative in nature, it uses a single, comprehensible YAML
+configuration file to define the expected state of your system. The YAML defines
+the services, networks, and volumes.</p>
+<p>Version 1 of the Docker Compose project stopped receiving updates from July 2023.
+Compose Version 2 is included with any new install of Docker Desktop. Version 2
+uses BuildKit, and has continued new-feature development.</p>
+<p>You might see commands starting with <code>docker-compose</code>. That used to be the
+command for Version 1. It is now an alias for <code>docker compose</code> by default.
+It is important to be aware of this historical difference because most examples
+that you find online might refer to the use of Version 1 and <code>docker-compose</code>.
+We will use the recommended Version 2 and <code>docker compose</code> for our examples
+to make this distinction clear.</p>
+<blockquote>
+<p>Compose is a tool for defining and running multi-container Docker
+applications. With Compose, you use a YAML file to configure your
+application’s services. Then, with a single command, you create and
+start all the services from your configuration. – <a href="https://docs.docker.com/compose/">Docker Compose
+documentation</a></p>
+</blockquote>
+<p>This definition sums up the most important features for our Shiny app
+use case. We do not want to manage individual applications. Rather, we
+want to be able to define the whole stack in a declarative way.</p>
+<p>In this Chapter, you will learn the most important Docker Compose concepts and
+commands. If you followed the Docker examples so far, you should already have
+Docker Compose installed. Check it with <code>docker compose version</code>, this will print the
+version of Docker Compose.</p>
+<div id="part2-compose-file" class="section level2 hasAnchor" number="20.1">
+<h2><span class="header-section-number">20.1</span> The Compose File<a href="20-part2-docker-compose.html#part2-compose-file" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You will see older tutorials using <code>docker-compose.yml</code> which refers to
+Version 1 of Docker Compose. Version 2 still supports this file naming,
+but <code>compose.yaml</code> is recommended to make the distinction clear.</p>
+<p>Create an empty text file named <code>compose.yaml</code> and copy-paste this into it.</p>
+<div class="sourceCode" id="cb231"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb231-1"><a href="20-part2-docker-compose.html#cb231-1" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb231-2"><a href="20-part2-docker-compose.html#cb231-2" tabindex="-1"></a><span class="at">  </span><span class="fu">faithful</span><span class="kw">:</span></span>
+<span id="cb231-3"><a href="20-part2-docker-compose.html#cb231-3" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ghcr.io/h10y/faithful/py-shiny:main&quot;</span></span>
+<span id="cb231-4"><a href="20-part2-docker-compose.html#cb231-4" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb231-5"><a href="20-part2-docker-compose.html#cb231-5" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;8080:3838&quot;</span></span>
+<span id="cb231-6"><a href="20-part2-docker-compose.html#cb231-6" tabindex="-1"></a><span class="at">  </span><span class="fu">lbtest</span><span class="kw">:</span></span>
+<span id="cb231-7"><a href="20-part2-docker-compose.html#cb231-7" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ghcr.io/h10y/lbtest/r-shiny:main&quot;</span></span>
+<span id="cb231-8"><a href="20-part2-docker-compose.html#cb231-8" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb231-9"><a href="20-part2-docker-compose.html#cb231-9" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;8081:3838&quot;</span></span>
+<span id="cb231-10"><a href="20-part2-docker-compose.html#cb231-10" tabindex="-1"></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
+<span id="cb231-11"><a href="20-part2-docker-compose.html#cb231-11" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> DEBUG=1</span></span></code></pre></div>
+<!-- FIXME: provide link to the example. -->
+<p>The Compose file specification has several top level elements:</p>
+<ul>
+<li><code>name</code> is a value to override the default project name that is derived from
+the base name of the project directory.</li>
+<li><code>services</code> must be defined, it is the abstract definition of a computing resource
+within an application that can be “composed” together and modified
+independently from other components.</li>
+<li><code>networks</code> defines how the services communicate with each other. By default,
+each container for a service joins the default network and is reachable by
+other containers.</li>
+<li><code>volumes</code> are persistent data stores.</li>
+</ul>
+<p>In our simple example we only use <code>services</code> and define two Shiny apps.
+You will see more complex examples later.
+Services are listed by name, each service is followed by their attributes.
+Attributes are very similar to the command line options we saw for <code>docker run</code>.
+See the <a href="https://docs.docker.com/compose/compose-file/">Compose file specification</a>
+for all the details.</p>
+<p>The compose file can also define a service via a Dockerfile under the
+<code>build</code> attribute. The image will be built and started by Compose.
+Similarly, you can define the <code>image</code> attribute for pulling the image from a
+registry. The <code>ports</code> attribute should look familiar by now. It is used to
+define the port mappings between the host machine (left side of the colon)
+and the containers (right side of the colon). Notice the
+double quotes in the YAML file. Some characters, like <code>*</code> or <code>:</code> have special
+meaning in YAML, thus values containing these should be double quoted.</p>
+<p>We defined two services, the Python version of the Faithful example and
+the R version of the Bananas app. You see environment variables defined for
+the <code>bananas</code> service.</p>
+</div>
+<div id="part2-compose-cli" class="section level2 hasAnchor" number="20.2">
+<h2><span class="header-section-number">20.2</span> Compose Command Line<a href="20-part2-docker-compose.html#part2-compose-cli" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You can use Docker Compose through the <code>docker compose</code> command of the
+Docker Command Line Interface (CLI), and its subcommands.
+Let’s review the most important commands. Change your working directory
+so that the <code>compose.yaml</code> file is in the root of that folder.
+Start all the services defined in your <code>compose.yaml</code> file as:</p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb232-1"><a href="20-part2-docker-compose.html#cb232-1" tabindex="-1"></a><span class="ex">docker</span> compose up</span>
+<span id="cb232-2"><a href="20-part2-docker-compose.html#cb232-2" tabindex="-1"></a><span class="co"># [+] Running 10/10</span></span>
+<span id="cb232-3"><a href="20-part2-docker-compose.html#cb232-3" tabindex="-1"></a><span class="co">#  ✔ bananas Pulled                                        13.8s</span></span>
+<span id="cb232-4"><a href="20-part2-docker-compose.html#cb232-4" tabindex="-1"></a><span class="co"># [...]</span></span>
+<span id="cb232-5"><a href="20-part2-docker-compose.html#cb232-5" tabindex="-1"></a><span class="co">#  ✔ faithful Pulled                                        1.0s</span></span>
+<span id="cb232-6"><a href="20-part2-docker-compose.html#cb232-6" tabindex="-1"></a><span class="co"># [+] Running 3/3</span></span>
+<span id="cb232-7"><a href="20-part2-docker-compose.html#cb232-7" tabindex="-1"></a><span class="co">#  ✔ Network 03-compose_default       Created               0.1s</span></span>
+<span id="cb232-8"><a href="20-part2-docker-compose.html#cb232-8" tabindex="-1"></a><span class="co">#  ✔ Container 03-compose-faithful-1  Created               0.3s</span></span>
+<span id="cb232-9"><a href="20-part2-docker-compose.html#cb232-9" tabindex="-1"></a><span class="co">#  ✔ Container 03-compose-bananas-1   Created               0.3s</span></span>
+<span id="cb232-10"><a href="20-part2-docker-compose.html#cb232-10" tabindex="-1"></a><span class="co"># [...]</span></span>
+<span id="cb232-11"><a href="20-part2-docker-compose.html#cb232-11" tabindex="-1"></a><span class="co"># bananas-1   | Listening on http://0.0.0.0:3838</span></span>
+<span id="cb232-12"><a href="20-part2-docker-compose.html#cb232-12" tabindex="-1"></a><span class="co"># [...]</span></span>
+<span id="cb232-13"><a href="20-part2-docker-compose.html#cb232-13" tabindex="-1"></a><span class="co"># faithful-1  | INFO:     Uvicorn running on http://0.0.0.0:3838 [...]</span></span></code></pre></div>
+<p>You’ll see logs appearing in your terminal. First about pulling the images if
+those are not yet available, or if a newer version can be found.
+Visit <code>http://localhost:8080</code> to see the Faithful app and
+<code>http://localhost:8081</code> to see the Bananas app.
+Hit CTRL+C in the terminal to stop the containers.</p>
+<p>Similarly to <code>docker run</code>, we can use the <code>-d</code> (or <code>--detach</code>) flag to start
+the containers in the background as <code>docker compose up -d</code>.
+You will get back to your terminal. Use <code>docker compose ls</code> to list currently running
+Compose projects:</p>
+<!-- FIXME: edit the compose project name according to example repo name. -->
+<div class="sourceCode" id="cb233"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb233-1"><a href="20-part2-docker-compose.html#cb233-1" tabindex="-1"></a><span class="ex">docker</span> compose ls</span>
+<span id="cb233-2"><a href="20-part2-docker-compose.html#cb233-2" tabindex="-1"></a><span class="co"># NAME                STATUS              CONFIG FILES</span></span>
+<span id="cb233-3"><a href="20-part2-docker-compose.html#cb233-3" tabindex="-1"></a><span class="co"># 03-compose          running(2)          compose.yaml</span></span></code></pre></div>
+<p>Use <code>docker compose ps</code> to list the containers for the current Compose project:</p>
+<div class="sourceCode" id="cb234"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb234-1"><a href="20-part2-docker-compose.html#cb234-1" tabindex="-1"></a><span class="ex">docker</span> compose ps</span>
+<span id="cb234-2"><a href="20-part2-docker-compose.html#cb234-2" tabindex="-1"></a><span class="co"># NAME                    IMAGE</span></span>
+<span id="cb234-3"><a href="20-part2-docker-compose.html#cb234-3" tabindex="-1"></a><span class="co"># 03-compose-bananas-1    ghcr.io/h10y/bananas/r-shiny:main</span></span>
+<span id="cb234-4"><a href="20-part2-docker-compose.html#cb234-4" tabindex="-1"></a><span class="co"># 03-compose-faithful-1   ghcr.io/h10y/faithful/py-shiny:main</span></span>
+<span id="cb234-5"><a href="20-part2-docker-compose.html#cb234-5" tabindex="-1"></a></span>
+<span id="cb234-6"><a href="20-part2-docker-compose.html#cb234-6" tabindex="-1"></a><span class="co"># COMMAND                  SERVICE</span></span>
+<span id="cb234-7"><a href="20-part2-docker-compose.html#cb234-7" tabindex="-1"></a><span class="co"># &quot;R -e &#39;shiny::runApp…&quot;   bananas</span></span>
+<span id="cb234-8"><a href="20-part2-docker-compose.html#cb234-8" tabindex="-1"></a><span class="co"># &quot;uvicorn app:app --h…&quot;   faithful</span></span>
+<span id="cb234-9"><a href="20-part2-docker-compose.html#cb234-9" tabindex="-1"></a></span>
+<span id="cb234-10"><a href="20-part2-docker-compose.html#cb234-10" tabindex="-1"></a><span class="co"># CREATED          STATUS          PORTS</span></span>
+<span id="cb234-11"><a href="20-part2-docker-compose.html#cb234-11" tabindex="-1"></a><span class="co"># 11 minutes ago   Up 17 seconds   0.0.0.0:8081-&gt;3838/tcp</span></span>
+<span id="cb234-12"><a href="20-part2-docker-compose.html#cb234-12" tabindex="-1"></a><span class="co"># 11 minutes ago   Up 17 seconds   0.0.0.0:8080-&gt;3838/tcp</span></span></code></pre></div>
+<p>Use <code>docker compose logs</code> to get visibility into the logs when containers are
+running in detached mode. Logs can grow long. Use the <code>-n</code> option to show the
+tail of the logs: <code>docker compose logs -n 10</code> will show the last 10 lines of the
+logs; <code>docker compose logs -n 10 bananas</code> will show the last 10 lines of
+the logs for the Bananas app, you have to use the service name as defined in the
+YAML configuration. If you want to follow the logs in real time, use
+<code>docker compose logs -f</code> for all the logs or <code>docker compose logs -f &lt;service-name&gt;</code>
+for a given service. Hit CTRL+C to get back into the terminal.</p>
+<p>To poke around in the running containers, use <code>docker compose exec</code>.
+<code>docker compose exec bananas sh</code> will give you a shell inside the
+container. Let’s type the <code>env</code> command to see the environment variable
+<code>DEBUG</code> that we defined in the Compose file:</p>
+<div class="sourceCode" id="cb235"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb235-1"><a href="20-part2-docker-compose.html#cb235-1" tabindex="-1"></a><span class="ex">$</span> env</span>
+<span id="cb235-2"><a href="20-part2-docker-compose.html#cb235-2" tabindex="-1"></a><span class="co"># HOSTNAME=4f87a297b85c</span></span>
+<span id="cb235-3"><a href="20-part2-docker-compose.html#cb235-3" tabindex="-1"></a><span class="co"># DEBUG=1</span></span>
+<span id="cb235-4"><a href="20-part2-docker-compose.html#cb235-4" tabindex="-1"></a><span class="co"># HOME=/home/app</span></span>
+<span id="cb235-5"><a href="20-part2-docker-compose.html#cb235-5" tabindex="-1"></a><span class="co"># TERM=xterm</span></span>
+<span id="cb235-6"><a href="20-part2-docker-compose.html#cb235-6" tabindex="-1"></a><span class="co"># PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span></span>
+<span id="cb235-7"><a href="20-part2-docker-compose.html#cb235-7" tabindex="-1"></a><span class="co"># LANG=en_US.UTF-8</span></span>
+<span id="cb235-8"><a href="20-part2-docker-compose.html#cb235-8" tabindex="-1"></a><span class="co"># DEBIAN_FRONTEND=noninteractive</span></span>
+<span id="cb235-9"><a href="20-part2-docker-compose.html#cb235-9" tabindex="-1"></a><span class="co"># LC_ALL=en_US.UTF-8</span></span>
+<span id="cb235-10"><a href="20-part2-docker-compose.html#cb235-10" tabindex="-1"></a><span class="co"># PWD=/home/app</span></span>
+<span id="cb235-11"><a href="20-part2-docker-compose.html#cb235-11" tabindex="-1"></a><span class="co"># TZ=UTC</span></span></code></pre></div>
+<p>Type <code>exit</code> to exit the shell. Now let’s suppose that you want to change
+the <code>DEBUG</code> variable to <code>0</code> to turn off the debugging mode of the app.
+Edit the <code>config.yaml</code> file and change the value of <code>1</code> to <code>0</code>. Save your
+changes. Type <code>docker compose up -d</code> to apply the changes. This will recreate
+the Bananas service:</p>
+<div class="sourceCode" id="cb236"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb236-1"><a href="20-part2-docker-compose.html#cb236-1" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span>
+<span id="cb236-2"><a href="20-part2-docker-compose.html#cb236-2" tabindex="-1"></a><span class="co"># [+] Running 1/2</span></span>
+<span id="cb236-3"><a href="20-part2-docker-compose.html#cb236-3" tabindex="-1"></a><span class="co">#  ✔ Container 03-compose-faithful-1  Running              0.0s </span></span>
+<span id="cb236-4"><a href="20-part2-docker-compose.html#cb236-4" tabindex="-1"></a><span class="co">#  ⠏ Container 03-compose-bananas-1   Recreate</span></span>
+<span id="cb236-5"><a href="20-part2-docker-compose.html#cb236-5" tabindex="-1"></a></span>
+<span id="cb236-6"><a href="20-part2-docker-compose.html#cb236-6" tabindex="-1"></a><span class="co"># Wait for a few seconds ...</span></span>
+<span id="cb236-7"><a href="20-part2-docker-compose.html#cb236-7" tabindex="-1"></a></span>
+<span id="cb236-8"><a href="20-part2-docker-compose.html#cb236-8" tabindex="-1"></a><span class="co"># [+] Running 2/2</span></span>
+<span id="cb236-9"><a href="20-part2-docker-compose.html#cb236-9" tabindex="-1"></a><span class="co">#  ✔ Container 03-compose-faithful-1  Running                0.0s </span></span>
+<span id="cb236-10"><a href="20-part2-docker-compose.html#cb236-10" tabindex="-1"></a><span class="co">#  ✔ Container 03-compose-bananas-1   Started               10.5s </span></span></code></pre></div>
+<p>Type <code>docker compose exec bananas sh -c "env"</code> to list the environment variables.
+You should see the new value <code>DEBUG=0</code>.</p>
+<p>Stop the containers with <code>docker compose down</code>:</p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb237-1"><a href="20-part2-docker-compose.html#cb237-1" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
+<span id="cb237-2"><a href="20-part2-docker-compose.html#cb237-2" tabindex="-1"></a><span class="co"># [+] Running 3/3</span></span>
+<span id="cb237-3"><a href="20-part2-docker-compose.html#cb237-3" tabindex="-1"></a><span class="co">#  ✔ Container 03-compose-bananas-1   Removed 10.2s</span></span>
+<span id="cb237-4"><a href="20-part2-docker-compose.html#cb237-4" tabindex="-1"></a><span class="co">#  ✔ Container 03-compose-faithful-1  Removed 0.5s</span></span>
+<span id="cb237-5"><a href="20-part2-docker-compose.html#cb237-5" tabindex="-1"></a><span class="co">#  ✔ Network 03-compose_default       Removed 0.1s</span></span></code></pre></div>
+<p>We’ll be able to use these commands on a remote machine the same way.</p>
+</div>
+<div id="docker-compose-vm" class="section level2 hasAnchor" number="20.3">
+<h2><span class="header-section-number">20.3</span> Docker Compose on a Virtual Machine<a href="20-part2-docker-compose.html#docker-compose-vm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Chapter <a href="12-part3-vm-setup.html#part3-vm-setup">12</a> outlined how to set up a virtual server that
+runs Ubuntu Linux. For Docker Compose, we will only need a bare operating system.
+No need to install Caddy Server as a standalone service. We will need only Docker.
+Once the server is up and running, use <code>ssh</code> to log in and install Docker
+(including Docker Compose) on the server as:</p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb238-1"><a href="20-part2-docker-compose.html#cb238-1" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://get.docker.com <span class="at">-o</span> get-docker.sh</span>
+<span id="cb238-2"><a href="20-part2-docker-compose.html#cb238-2" tabindex="-1"></a><span class="fu">sudo</span> sh ./get-docker.sh</span></code></pre></div>
+<p>Set the firewall as explained in Section <a href="12-part3-vm-setup.html#set-firewall">12.5</a> to only allow
+incoming traffic on ports 22 (ssh), 80 (http), and 443 (https).</p>
+<p>The following compose file will build on our previous example. Here we add
+the <code>caddy</code> service besides the two apps we had before. This is the
+containerized version of the Caddy Server we have used as reverse proxy
+in previous chapters. The compose file also contains volumes.</p>
+<p>Open a file with nano as <code>nano compose.yml</code> and put the following content in it:</p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb239-1"><a href="20-part2-docker-compose.html#cb239-1" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb239-2"><a href="20-part2-docker-compose.html#cb239-2" tabindex="-1"></a><span class="at">  </span><span class="fu">faithful</span><span class="kw">:</span></span>
+<span id="cb239-3"><a href="20-part2-docker-compose.html#cb239-3" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ghcr.io/h10y/faithful/py-shiny:main&quot;</span></span>
+<span id="cb239-4"><a href="20-part2-docker-compose.html#cb239-4" tabindex="-1"></a><span class="at">    </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> always</span></span>
+<span id="cb239-5"><a href="20-part2-docker-compose.html#cb239-5" tabindex="-1"></a><span class="at">    </span><span class="fu">expose</span><span class="kw">:</span></span>
+<span id="cb239-6"><a href="20-part2-docker-compose.html#cb239-6" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;3838&quot;</span></span>
+<span id="cb239-7"><a href="20-part2-docker-compose.html#cb239-7" tabindex="-1"></a><span class="at">  </span><span class="fu">lbtest</span><span class="kw">:</span></span>
+<span id="cb239-8"><a href="20-part2-docker-compose.html#cb239-8" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ghcr.io/h10y/lbtest/r-shiny:main&quot;</span></span>
+<span id="cb239-9"><a href="20-part2-docker-compose.html#cb239-9" tabindex="-1"></a><span class="at">    </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> always</span></span>
+<span id="cb239-10"><a href="20-part2-docker-compose.html#cb239-10" tabindex="-1"></a><span class="at">    </span><span class="fu">expose</span><span class="kw">:</span></span>
+<span id="cb239-11"><a href="20-part2-docker-compose.html#cb239-11" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;3838&quot;</span></span>
+<span id="cb239-12"><a href="20-part2-docker-compose.html#cb239-12" tabindex="-1"></a><span class="at">  </span><span class="fu">caddy</span><span class="kw">:</span></span>
+<span id="cb239-13"><a href="20-part2-docker-compose.html#cb239-13" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> caddy:2.10-alpine</span></span>
+<span id="cb239-14"><a href="20-part2-docker-compose.html#cb239-14" tabindex="-1"></a><span class="at">    </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> unless-stopped</span></span>
+<span id="cb239-15"><a href="20-part2-docker-compose.html#cb239-15" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb239-16"><a href="20-part2-docker-compose.html#cb239-16" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;80:80&quot;</span></span>
+<span id="cb239-17"><a href="20-part2-docker-compose.html#cb239-17" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;443:443&quot;</span></span>
+<span id="cb239-18"><a href="20-part2-docker-compose.html#cb239-18" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;443:443/udp&quot;</span></span>
+<span id="cb239-19"><a href="20-part2-docker-compose.html#cb239-19" tabindex="-1"></a><span class="at">    </span><span class="fu">depends_on</span><span class="kw">:</span></span>
+<span id="cb239-20"><a href="20-part2-docker-compose.html#cb239-20" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> faithful</span></span>
+<span id="cb239-21"><a href="20-part2-docker-compose.html#cb239-21" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> lbtest</span></span>
+<span id="cb239-22"><a href="20-part2-docker-compose.html#cb239-22" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb239-23"><a href="20-part2-docker-compose.html#cb239-23" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> $PWD/conf:/etc/caddy</span></span>
+<span id="cb239-24"><a href="20-part2-docker-compose.html#cb239-24" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> $PWD/site:/srv</span></span>
+<span id="cb239-25"><a href="20-part2-docker-compose.html#cb239-25" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> caddy_data:/data</span></span>
+<span id="cb239-26"><a href="20-part2-docker-compose.html#cb239-26" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> caddy_config:/config</span></span>
+<span id="cb239-27"><a href="20-part2-docker-compose.html#cb239-27" tabindex="-1"></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
+<span id="cb239-28"><a href="20-part2-docker-compose.html#cb239-28" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> HOST=&quot;:80&quot;</span></span>
+<span id="cb239-29"><a href="20-part2-docker-compose.html#cb239-29" tabindex="-1"></a></span>
+<span id="cb239-30"><a href="20-part2-docker-compose.html#cb239-30" tabindex="-1"></a><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb239-31"><a href="20-part2-docker-compose.html#cb239-31" tabindex="-1"></a><span class="at">  </span><span class="fu">caddy_data</span><span class="kw">:</span></span>
+<span id="cb239-32"><a href="20-part2-docker-compose.html#cb239-32" tabindex="-1"></a><span class="at">  </span><span class="fu">caddy_config</span><span class="kw">:</span></span></code></pre></div>
+<p>The <code>faithful</code> and <code>lbtest</code> apps are defined similarly to how we did it
+for the local deployment. We added the restart policy <code>always</code> to always
+restart the app services if for whatever reason they are down.
+Instead of <code>ports</code> we used <code>expose</code> which refers to the container port
+3838 that is exposed to the other services inside the bridge network
+that Compose creates upon deployment. This way the apps will not be directly
+available over any host ports.</p>
+<p>The Caddy service definition uses the unless-stopped restart policy to make
+sure the Caddy container is restarted automatically when your machine is rebooted.
+The Caddy server service is based on the official Alpine Linux-based Caddy server
+image. We maps the HTTP (80) and HTTPS (443) ports of the container to the same
+ports of the host (443/udp stands for the HTTP/3 protocol).
+It mounts the <code>conf</code> directory which contains e.g. your Caddyfile configuration,
+and the <code>site</code> directory to serve the static files from.
+<code>$PWD</code> stands for the current work directory. These mounted volumes can be
+changed by external processes. For example, we can open the files in <code>nano</code>
+and make changes to them, as we’ll show below.</p>
+<p>Then we declare that the Caddy service depends on the <code>faithful</code> and <code>lbtest</code>
+services. This means, that these services need to be up before the Caddy service
+is launched. This is to ensure that Caddy can send traffic to the apps.
+As a result, services will start (and stop) according to the dependency order.</p>
+<p>The named volumes for <code>/data</code> and <code>/config</code> are defined to persist important information.
+Volumes in the Compose file follow the <code>source_path:target_path</code> syntax.
+These volumes are created and managed by the Docker daemon and
+are used to store the TLS certificates and the server logs. The
+<code>volumes</code> key at the end of the file lists the volumes that will be
+created at the first invocation of the compose file. The two volume
+definitions are empty, which implies the default settings, i.e. <code>local</code>
+driver. If data in these volumes need to be
+persisted between Docker compose ups and downs, you might want to create
+external named volumes with i.e. <code>docker volume create caddy_data</code> and
+<code>docker volume create caddy_config</code>, then specify these in the
+<code>compose.yml</code> as follows:</p>
+<div class="sourceCode" id="cb240"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb240-1"><a href="20-part2-docker-compose.html#cb240-1" tabindex="-1"></a><span class="co">...</span></span>
+<span id="cb240-2"><a href="20-part2-docker-compose.html#cb240-2" tabindex="-1"></a><span class="co">volumes:</span></span>
+<span id="cb240-3"><a href="20-part2-docker-compose.html#cb240-3" tabindex="-1"></a><span class="co">  caddy_data:</span></span>
+<span id="cb240-4"><a href="20-part2-docker-compose.html#cb240-4" tabindex="-1"></a><span class="co">    external: true</span></span>
+<span id="cb240-5"><a href="20-part2-docker-compose.html#cb240-5" tabindex="-1"></a><span class="co">  caddy_config:</span></span>
+<span id="cb240-6"><a href="20-part2-docker-compose.html#cb240-6" tabindex="-1"></a><span class="co">    external: true</span></span></code></pre></div>
+<p>This will not be torn down with <code>docker compose down</code>, only when using
+<code>docker volume rm &lt;volume_name&gt;</code>.</p>
+<p>The environment variable we defined called <code>HOST</code> is set to port 80 on the
+local host. If you have an A record with a domain name set you can replace the
+<code>":80"</code> with the domain name. We will use <code>"compose-test.h10y.com"</code> here.</p>
+<p>Next, we create the Caddyfile inside the <code>config</code> folder as
+<code>nano conf/Caddyfile</code> and add the following:</p>
+<pre class="text"><code>{$HOST} {
+        root * /srv
+        handle_path /faithful/* {
+                reverse_proxy faithful:3838
+        }
+        handle_path /lbtest/* {
+                reverse_proxy lbtest:3838
+        }
+        file_server
+}</code></pre>
+<p>You can see that we define rules for the <code>HOST</code> which will be substituted from
+the Docker compose environment variable. The Caddyfile defines two paths
+for the two apps. Notice that the target for the reverse proxy is the
+service name and the container port (<code>faithful:3838</code>). These are available
+inside the Docker network. The other lines are responsible for sending any
+other requests not mapped to the app paths to the static file server.
+Let’s add a simple HTML file as our landing page listing the apps.
+Use <code>nano site/index.html</code> and put the following content inside the file:</p>
+<div class="sourceCode" id="cb242"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb242-1"><a href="20-part2-docker-compose.html#cb242-1" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
+<span id="cb242-2"><a href="20-part2-docker-compose.html#cb242-2" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb242-3"><a href="20-part2-docker-compose.html#cb242-3" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Shiny Hosting with Docker Compose<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb242-4"><a href="20-part2-docker-compose.html#cb242-4" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Apps<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb242-5"><a href="20-part2-docker-compose.html#cb242-5" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">ul</span><span class="dt">&gt;</span></span>
+<span id="cb242-6"><a href="20-part2-docker-compose.html#cb242-6" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">li</span><span class="dt">&gt;&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">&quot;./faithful/&quot;</span><span class="dt">&gt;</span>Faithful<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;&lt;/</span><span class="kw">li</span><span class="dt">&gt;</span></span>
+<span id="cb242-7"><a href="20-part2-docker-compose.html#cb242-7" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">li</span><span class="dt">&gt;&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">&quot;./lbtest/&quot;</span><span class="dt">&gt;</span>Load Balancing Test<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;&lt;/</span><span class="kw">li</span><span class="dt">&gt;</span></span>
+<span id="cb242-8"><a href="20-part2-docker-compose.html#cb242-8" tabindex="-1"></a>  <span class="dt">&lt;/</span><span class="kw">ul</span><span class="dt">&gt;</span></span>
+<span id="cb242-9"><a href="20-part2-docker-compose.html#cb242-9" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb242-10"><a href="20-part2-docker-compose.html#cb242-10" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div>
+</div>
+<div id="docker-compose-up-and-down" class="section level2 hasAnchor" number="20.4">
+<h2><span class="header-section-number">20.4</span> Docker Compose Up and Down<a href="20-part2-docker-compose.html#docker-compose-up-and-down" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>It is time now to Docker Compose up with the <code>-d</code> flag to start the services
+in the background:</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb243-1"><a href="20-part2-docker-compose.html#cb243-1" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span>
+<span id="cb243-2"><a href="20-part2-docker-compose.html#cb243-2" tabindex="-1"></a><span class="co"># [+] up 38/38</span></span>
+<span id="cb243-3"><a href="20-part2-docker-compose.html#cb243-3" tabindex="-1"></a><span class="co">#  ✔ Image ghcr.io/h10y/lbtest/r-shiny:main    Pulled              28.4s</span></span>
+<span id="cb243-4"><a href="20-part2-docker-compose.html#cb243-4" tabindex="-1"></a><span class="co">#  ✔ Image caddy:2.10-alpine                   Pulled              4.8s</span></span>
+<span id="cb243-5"><a href="20-part2-docker-compose.html#cb243-5" tabindex="-1"></a><span class="co">#  ✔ Image ghcr.io/h10y/faithful/py-shiny:main Pulled              35.4s</span></span>
+<span id="cb243-6"><a href="20-part2-docker-compose.html#cb243-6" tabindex="-1"></a><span class="co">#  ✔ Network root_default                      Created             0.1s</span></span>
+<span id="cb243-7"><a href="20-part2-docker-compose.html#cb243-7" tabindex="-1"></a><span class="co">#  ✔ Volume root_caddy_config                  Created             0.0s</span></span>
+<span id="cb243-8"><a href="20-part2-docker-compose.html#cb243-8" tabindex="-1"></a><span class="co">#  ✔ Volume root_caddy_data                    Created             0.0s</span></span>
+<span id="cb243-9"><a href="20-part2-docker-compose.html#cb243-9" tabindex="-1"></a><span class="co">#  ✔ Container root-lbtest-1                   Created             0.3s</span></span>
+<span id="cb243-10"><a href="20-part2-docker-compose.html#cb243-10" tabindex="-1"></a><span class="co">#  ✔ Container root-faithful-1                 Created             0.3s</span></span>
+<span id="cb243-11"><a href="20-part2-docker-compose.html#cb243-11" tabindex="-1"></a><span class="co">#  ✔ Container root-caddy-1                    Created             0.1s</span></span></code></pre></div>
+<p>The command pulls three images, sets up the default network and create the
+volumes.
+Now visit domain you set to see the simple landing page as shown in
+Figure <a href="20-part2-docker-compose.html#fig:docker-compose-01">20.1</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:docker-compose-01"></span>
+<img src="images/docker-compose/docker-compose-01.png" alt="Shiny apps listed on the landing page of a site running Docker Compose." width="100%" />
+<p class="caption">
+Figure 20.1: Shiny apps listed on the landing page of a site running Docker Compose.
+</p>
+</div>
+</div>
+<div id="compose-scaling" class="section level2 hasAnchor" number="20.5">
+<h2><span class="header-section-number">20.5</span> Scaling with Docker Compose<a href="20-part2-docker-compose.html#compose-scaling" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Docker Compose can scale services to more than one replica.
+Add the <code>deploy</code> part to the compose YAML as</p>
+<div class="sourceCode" id="cb244"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb244-1"><a href="20-part2-docker-compose.html#cb244-1" tabindex="-1"></a><span class="at">  ...</span></span>
+<span id="cb244-2"><a href="20-part2-docker-compose.html#cb244-2" tabindex="-1"></a><span class="at">  </span><span class="fu">lbtest</span><span class="kw">:</span></span>
+<span id="cb244-3"><a href="20-part2-docker-compose.html#cb244-3" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ghcr.io/h10y/lbtest/r-shiny:main&quot;</span></span>
+<span id="cb244-4"><a href="20-part2-docker-compose.html#cb244-4" tabindex="-1"></a><span class="at">    </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> always</span></span>
+<span id="cb244-5"><a href="20-part2-docker-compose.html#cb244-5" tabindex="-1"></a><span class="at">    </span><span class="fu">expose</span><span class="kw">:</span></span>
+<span id="cb244-6"><a href="20-part2-docker-compose.html#cb244-6" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;3838&quot;</span></span>
+<span id="cb244-7"><a href="20-part2-docker-compose.html#cb244-7" tabindex="-1"></a><span class="at">    </span><span class="fu">deploy</span><span class="kw">:</span></span>
+<span id="cb244-8"><a href="20-part2-docker-compose.html#cb244-8" tabindex="-1"></a><span class="at">      </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> replicated</span></span>
+<span id="cb244-9"><a href="20-part2-docker-compose.html#cb244-9" tabindex="-1"></a><span class="at">      </span><span class="fu">replicas</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span>
+<span id="cb244-10"><a href="20-part2-docker-compose.html#cb244-10" tabindex="-1"></a><span class="at">  ...</span></span></code></pre></div>
+<p>Use <code>docker compose up -d</code> for the changes to take effect. You’ll see the 2
+replicas coming live (<code>lbtest-1</code>, <code>lbtest-2</code> and <code>lbtest-3</code>):</p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb245-1"><a href="20-part2-docker-compose.html#cb245-1" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span>
+<span id="cb245-2"><a href="20-part2-docker-compose.html#cb245-2" tabindex="-1"></a><span class="co"># [+] up 8/8</span></span>
+<span id="cb245-3"><a href="20-part2-docker-compose.html#cb245-3" tabindex="-1"></a><span class="co">#  ✔ Network root_default      Created               0.1s</span></span>
+<span id="cb245-4"><a href="20-part2-docker-compose.html#cb245-4" tabindex="-1"></a><span class="co">#  ✔ Container root-faithful-1 Created               0.1s</span></span>
+<span id="cb245-5"><a href="20-part2-docker-compose.html#cb245-5" tabindex="-1"></a><span class="co">#  ✔ Container root-lbtest-2   Created               0.1s</span></span>
+<span id="cb245-6"><a href="20-part2-docker-compose.html#cb245-6" tabindex="-1"></a><span class="co">#  ✔ Container root-lbtest-1   Created               0.1s</span></span>
+<span id="cb245-7"><a href="20-part2-docker-compose.html#cb245-7" tabindex="-1"></a><span class="co">#  ✔ Container root-lbtest-3   Created               0.1s</span></span>
+<span id="cb245-8"><a href="20-part2-docker-compose.html#cb245-8" tabindex="-1"></a><span class="co">#  ✔ Container root-caddy-1    Created               0.1s</span></span></code></pre></div>
+<p>Run the test in the browser by following the link to the <code>/lbtest/</code> app.
+Sometimes it counts up to 100 and does not fail. Repeat a few times
+and you will see that it fails.
+The setup fails because the standard load balancing provided by Docker
+for scaling services is “round robin” and the replica that the app is
+connecting to is not always the same. In other worlds, the sessions are
+not “sticky”.</p>
+<p>Load balancing is the process of splitting traffic when directed to the same app
+and sending different users or browser sessions to the replicas according
+to some rules. Round robin iterates the replicas in turn.
+To achieve session affinity (“sticky” sessions), we can replicate the service
+using a template in the compose file and using Caddy to do the load balancing.</p>
+<p>Here is how the templating works so we don’t have to copy-paste the definitions:</p>
+<div class="sourceCode" id="cb246"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb246-1"><a href="20-part2-docker-compose.html#cb246-1" tabindex="-1"></a><span class="fu">x-node</span><span class="kw">:</span><span class="at"> </span><span class="ot">&amp;node</span></span>
+<span id="cb246-2"><a href="20-part2-docker-compose.html#cb246-2" tabindex="-1"></a><span class="at">  </span><span class="fu">image</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ghcr.io/h10y/lbtest/r-shiny:main&quot;</span></span>
+<span id="cb246-3"><a href="20-part2-docker-compose.html#cb246-3" tabindex="-1"></a><span class="at">  </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> always</span></span>
+<span id="cb246-4"><a href="20-part2-docker-compose.html#cb246-4" tabindex="-1"></a><span class="at">  </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb246-5"><a href="20-part2-docker-compose.html#cb246-5" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;:3838&quot;</span></span>
+<span id="cb246-6"><a href="20-part2-docker-compose.html#cb246-6" tabindex="-1"></a></span>
+<span id="cb246-7"><a href="20-part2-docker-compose.html#cb246-7" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb246-8"><a href="20-part2-docker-compose.html#cb246-8" tabindex="-1"></a><span class="at">  </span><span class="fu">faithful</span><span class="kw">:</span></span>
+<span id="cb246-9"><a href="20-part2-docker-compose.html#cb246-9" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;ghcr.io/h10y/faithful/py-shiny:main&quot;</span></span>
+<span id="cb246-10"><a href="20-part2-docker-compose.html#cb246-10" tabindex="-1"></a><span class="at">    </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> always</span></span>
+<span id="cb246-11"><a href="20-part2-docker-compose.html#cb246-11" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb246-12"><a href="20-part2-docker-compose.html#cb246-12" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;:3838&quot;</span></span>
+<span id="cb246-13"><a href="20-part2-docker-compose.html#cb246-13" tabindex="-1"></a><span class="at">  </span><span class="fu">lbtest1</span><span class="kw">:</span></span>
+<span id="cb246-14"><a href="20-part2-docker-compose.html#cb246-14" tabindex="-1"></a><span class="at">    </span><span class="fu">&lt;&lt;</span><span class="kw">:</span><span class="at"> </span><span class="ot">*node</span></span>
+<span id="cb246-15"><a href="20-part2-docker-compose.html#cb246-15" tabindex="-1"></a><span class="at">  </span><span class="fu">lbtest2</span><span class="kw">:</span></span>
+<span id="cb246-16"><a href="20-part2-docker-compose.html#cb246-16" tabindex="-1"></a><span class="at">    </span><span class="fu">&lt;&lt;</span><span class="kw">:</span><span class="at"> </span><span class="ot">*node</span></span>
+<span id="cb246-17"><a href="20-part2-docker-compose.html#cb246-17" tabindex="-1"></a><span class="at">  </span><span class="fu">lbtest3</span><span class="kw">:</span></span>
+<span id="cb246-18"><a href="20-part2-docker-compose.html#cb246-18" tabindex="-1"></a><span class="at">    </span><span class="fu">&lt;&lt;</span><span class="kw">:</span><span class="at"> </span><span class="ot">*node</span></span>
+<span id="cb246-19"><a href="20-part2-docker-compose.html#cb246-19" tabindex="-1"></a><span class="at">  </span><span class="fu">caddy</span><span class="kw">:</span></span>
+<span id="cb246-20"><a href="20-part2-docker-compose.html#cb246-20" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> caddy:2.10-alpine</span></span>
+<span id="cb246-21"><a href="20-part2-docker-compose.html#cb246-21" tabindex="-1"></a><span class="at">    </span><span class="fu">restart</span><span class="kw">:</span><span class="at"> unless-stopped</span></span>
+<span id="cb246-22"><a href="20-part2-docker-compose.html#cb246-22" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb246-23"><a href="20-part2-docker-compose.html#cb246-23" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;80:80&quot;</span></span>
+<span id="cb246-24"><a href="20-part2-docker-compose.html#cb246-24" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;443:443&quot;</span></span>
+<span id="cb246-25"><a href="20-part2-docker-compose.html#cb246-25" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;443:443/udp&quot;</span></span>
+<span id="cb246-26"><a href="20-part2-docker-compose.html#cb246-26" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb246-27"><a href="20-part2-docker-compose.html#cb246-27" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> $PWD/conf:/etc/caddy</span></span>
+<span id="cb246-28"><a href="20-part2-docker-compose.html#cb246-28" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> $PWD/site:/srv</span></span>
+<span id="cb246-29"><a href="20-part2-docker-compose.html#cb246-29" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> caddy_data:/data</span></span>
+<span id="cb246-30"><a href="20-part2-docker-compose.html#cb246-30" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> caddy_config:/config</span></span>
+<span id="cb246-31"><a href="20-part2-docker-compose.html#cb246-31" tabindex="-1"></a><span class="at">    </span><span class="fu">depends_on</span><span class="kw">:</span></span>
+<span id="cb246-32"><a href="20-part2-docker-compose.html#cb246-32" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> faithful</span></span>
+<span id="cb246-33"><a href="20-part2-docker-compose.html#cb246-33" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> lbtest1</span></span>
+<span id="cb246-34"><a href="20-part2-docker-compose.html#cb246-34" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> lbtest2</span></span>
+<span id="cb246-35"><a href="20-part2-docker-compose.html#cb246-35" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> lbtest3</span></span>
+<span id="cb246-36"><a href="20-part2-docker-compose.html#cb246-36" tabindex="-1"></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
+<span id="cb246-37"><a href="20-part2-docker-compose.html#cb246-37" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> HOST=&quot;compose-test.h10y.com&quot;</span></span>
+<span id="cb246-38"><a href="20-part2-docker-compose.html#cb246-38" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> LB_POLICY=&quot;ip_hash&quot;</span></span>
+<span id="cb246-39"><a href="20-part2-docker-compose.html#cb246-39" tabindex="-1"></a></span>
+<span id="cb246-40"><a href="20-part2-docker-compose.html#cb246-40" tabindex="-1"></a><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb246-41"><a href="20-part2-docker-compose.html#cb246-41" tabindex="-1"></a><span class="at">  </span><span class="fu">caddy_data</span><span class="kw">:</span></span>
+<span id="cb246-42"><a href="20-part2-docker-compose.html#cb246-42" tabindex="-1"></a><span class="at">  </span><span class="fu">caddy_config</span><span class="kw">:</span></span></code></pre></div>
+<p>We manually defined 3 replicas. You have to remember to add these as dependencies
+for the <code>caddy</code> service. You might also notice that there is a new environment
+variable called <code>LB_POLICY</code> that we set to <code>"ip_hash"</code>. Load balancing
+based on the IP hash maps the remote IP address to a “sticky” session.
+Change the <code>conf/Caddyfile</code> as follows:</p>
+<pre class="text"><code>{$HOST} {
+        root * /srv
+        handle_path /faithful/* {
+                reverse_proxy faithful:3838
+        }
+        handle_path /lbtest/* {
+                reverse_proxy /* lbtest1:3838 lbtest2:3838 lbtest3:3838 {
+                        lb_policy {$LB_POLICY}
+                }
+
+        }
+        file_server
+}</code></pre>
+<p>The load balancing policy is part of the reverse proxy directive,
+we listed the 3 services to balance across.</p>
+<p>If you reload the changes with Docker Compose down and up again and visit
+the URL in your browser, you’ll see that the load balancing test now
+succeeds (Figs. <a href="20-part2-docker-compose.html#fig:docker-compose-03">20.2</a>).
+Try changing <code>"ip_hash"</code> to <code>"random"</code> (Caddy default) in the compose file.
+The test will fail (Fig. <a href="20-part2-docker-compose.html#fig:docker-compose-04">20.3</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:docker-compose-03"></span>
+<img src="images/docker-compose/docker-compose-03.png" alt="Round robin load balancing with Docker Compose fails." width="100%" />
+<p class="caption">
+Figure 20.2: Round robin load balancing with Docker Compose fails.
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:docker-compose-04"></span>
+<img src="images/docker-compose/docker-compose-04.png" alt="Scaling apps with Docker Compose using session affinity." width="100%" />
+<p class="caption">
+Figure 20.3: Scaling apps with Docker Compose using session affinity.
+</p>
+</div>
+</div>
+<div id="server-maintenance" class="section level2 hasAnchor" number="20.6">
+<h2><span class="header-section-number">20.6</span> Server Maintenance<a href="20-part2-docker-compose.html#server-maintenance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You can list the services that are running using <code>docker compose ps</code>.
+When the containers are already running, and the configuration or image
+has changed after the container’s creation, by default
+<code>docker-compose up -d</code> picks up the changes by stopping and recreating
+the containers. This feature makes it ideal for managing apps, compared
+to starting and stopping individual containers.</p>
+<p>However, if you used the <code>:latest</code> image tag, compose will not know the
+difference if the image has been updated in the registry (a good reason
+for using versioned image tags). If this is the case, use
+<code>docker compose pull &amp;&amp; docker compose up -d</code> to pull new images before
+the compose up.</p>
+<p>The <code>docker compose down</code> command will stop containers and removes
+containers, networks, volumes, and images created by <code>up</code>.</p>
+<p>Check the logs with <code>docker compose logs</code> or
+<code>docker compose logs &lt;service_name&gt;</code>. E.g. <code>docker compose logs caddy -n=1000 -f</code>
+will show you Caddy’s 1000 most recent logs, and follow to see new ones streaming in.</p>
+<p>If you change the image tags, or change the compose YAML file, compose will pick up the
+changes and restart the services accordingly.
+Remember that if you used the <code>:latest</code> image tag, compose will not know
+the difference if the image has been updated in the registry. You’ll
+have to use <code>docker-compose pull</code> before <code>docker compose up</code> to pull new images.</p>
+<p>If you make changes to the Caddyfile, here is how to reload Caddy:</p>
+<div class="sourceCode" id="cb248"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb248-1"><a href="20-part2-docker-compose.html#cb248-1" tabindex="-1"></a><span class="ex">docker</span> compose exec <span class="at">-w</span> /etc/caddy caddy caddy reload</span></code></pre></div>
+</div>
+<div id="summary-22" class="section level2 hasAnchor" number="20.7">
+<h2><span class="header-section-number">20.7</span> Summary<a href="20-part2-docker-compose.html#summary-22" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The Docker Compose setup we described is well suited for small to medium sites,
+as it includes HTTPS and custom domains with detailed access logs.
+Docker Compose does most of the heavy lifting for orchestrating containers and networking.</p>
+<p>With Docker Compose, developing and updating your application is straightforward.
+You simply have to pull container images from the container registry to ensure
+development/production parity, ensuring that your development environment
+is as similar to the production environment as possible and vice-versa.</p>
+
+<!--
+  - Containerized setups
+    - ShinyProxy
+      - Setup
+-->
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="19-hosting-platforms.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="21-shinyproxy-deployment.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/h10y/book/edit/main/book-source/05-02-vm-docker-compose.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

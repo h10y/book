@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 16 Container Images | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 16 Container Images | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="h10y/book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 16 Container Images | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@psolymos" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2026-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="15-part4-containers.html"/>
+<link rel="next" href="17-part2-containerizing-shiny-apps.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.js"></script>
+<link href="libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.5/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.5/reactable.js"></script>
+<script src="https://cdn.usefathom.com/script.js" data-site="PASYTARS" defer></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-part1-background.html"><a href="1-part1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-part1-background.html"><a href="1-part1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-web-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-python"><i class="fa fa-check"></i><b>3.1.2</b> Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-docker"><i class="fa fa-check"></i><b>3.1.4</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-super-user"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-scm-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+<li class="chapter" data-level="3.3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-in-practice"><i class="fa fa-check"></i><b>3.3.5</b> Git in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-working-with-servers"><i class="fa fa-check"></i><b>3.4</b> Working with Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#readability-and-other-useful-tools"><i class="fa fa-check"></i><b>3.5</b> Readability and Other Useful Tools</a></li>
+<li class="chapter" data-level="3.6" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-part1-examples.html"><a href="4-part1-examples.html"><i class="fa fa-check"></i><b>4</b> Shiny Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a></li>
+<li class="chapter" data-level="4.3" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-lbtest"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-part1-examples.html"><a href="4-part1-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r"><i class="fa fa-check"></i><b>5.1.1</b> R</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.1.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shiny-lifecycle"><i class="fa fa-check"></i><b>5.2</b> The Shiny App Lifecycle</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections"><i class="fa fa-check"></i><b>5.2.1</b> Connections</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#sessions"><i class="fa fa-check"></i><b>5.2.2</b> Sessions</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections-sessions"><i class="fa fa-check"></i><b>5.2.3</b> Connections + Sessions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.4</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-apps"><i class="fa fa-check"></i><b>5.3</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python-1"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive"><i class="fa fa-check"></i><b>5.4</b> Shinylive</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-python"><i class="fa fa-check"></i><b>5.4.1</b> Python Shinylive</a></li>
+<li class="chapter" data-level="5.4.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-r"><i class="fa fa-check"></i><b>5.4.2</b> R Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-dynamic-documents"><i class="fa fa-check"></i><b>5.5</b> Dynamic Documents</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-r-markdown"><i class="fa fa-check"></i><b>5.5.1</b> R Markdown</a></li>
+<li class="chapter" data-level="5.5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-quarto-with-python"><i class="fa fa-check"></i><b>5.5.2</b> Quarto with Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html"><i class="fa fa-check"></i><b>6</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#r-2"><i class="fa fa-check"></i><b>6.1</b> R</a></li>
+<li class="chapter" data-level="6.2" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#python-2"><i class="fa fa-check"></i><b>6.2</b> Python</a></li>
+<li class="chapter" data-level="6.3" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#summary-5"><i class="fa fa-check"></i><b>6.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html"><i class="fa fa-check"></i><b>7</b> Sharing Your Shiny App</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-distributing-code"><i class="fa fa-check"></i><b>7.1</b> Distributing Code</a></li>
+<li class="chapter" data-level="7.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploying-shiny-apps"><i class="fa fa-check"></i><b>7.2</b> Deploying Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploy-to-shinyapps-io"><i class="fa fa-check"></i><b>7.2.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="7.2.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-sharing-shinylive"><i class="fa fa-check"></i><b>7.2.2</b> Sharing Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#summary-6"><i class="fa fa-check"></i><b>7.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="8" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html"><i class="fa fa-check"></i><b>8</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-hosting-patterns"><i class="fa fa-check"></i><b>8.1</b> Hosting Patterns for Shiny Apps</a></li>
+<li class="chapter" data-level="8.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-decision-framework"><i class="fa fa-check"></i><b>8.2</b> The Decision Framework</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>8.2.1</b> Start with the Why</a></li>
+<li class="chapter" data-level="8.2.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#requirements"><i class="fa fa-check"></i><b>8.2.2</b> Requirements</a></li>
+<li class="chapter" data-level="8.2.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#constraints"><i class="fa fa-check"></i><b>8.2.3</b> Constraints</a></li>
+<li class="chapter" data-level="8.2.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#picking-an-option"><i class="fa fa-check"></i><b>8.2.4</b> Picking an Option</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-important-prerequisites"><i class="fa fa-check"></i><b>8.3</b> Important Prerequisites</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-custom-domains"><i class="fa fa-check"></i><b>8.3.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="8.3.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-https"><i class="fa fa-check"></i><b>8.3.2</b> HTTPS Access to Your App</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#summary-7"><i class="fa fa-check"></i><b>8.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html"><i class="fa fa-check"></i><b>9</b> Platforms for Shiny Hosting</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io"><i class="fa fa-check"></i><b>9.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="9.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io-alternatives"><i class="fa fa-check"></i><b>9.2</b> shinyapps.io Alternatives</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-posit-connect-cloud"><i class="fa fa-check"></i><b>9.2.1</b> Posit Connect Cloud</a></li>
+<li class="chapter" data-level="9.2.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-ploomber"><i class="fa fa-check"></i><b>9.2.2</b> Ploomber</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#summary-8"><i class="fa fa-check"></i><b>9.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html"><i class="fa fa-check"></i><b>10</b> Static Hosting for Shinylive</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#building-shinylive"><i class="fa fa-check"></i><b>10.1</b> Building Shinylive</a></li>
+<li class="chapter" data-level="10.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#github-pages"><i class="fa fa-check"></i><b>10.2</b> GitHub Pages</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#enabling-pages"><i class="fa fa-check"></i><b>10.2.1</b> Enabling Pages</a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#accessing-the-published-site"><i class="fa fa-check"></i><b>10.2.2</b> Accessing the Published Site</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#other-static-site-hosting"><i class="fa fa-check"></i><b>10.3</b> Other Static Site Hosting Providers</a></li>
+<li class="chapter" data-level="10.4" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#summary-9"><i class="fa fa-check"></i><b>10.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html"><i class="fa fa-check"></i><b>11</b> Embedding Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#understanding-iframes"><i class="fa fa-check"></i><b>11.1</b> Understanding Iframes</a></li>
+<li class="chapter" data-level="11.2" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#styling-iframes"><i class="fa fa-check"></i><b>11.2</b> Styling Iframes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#summary-10"><i class="fa fa-check"></i><b>11.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html"><i class="fa fa-check"></i><b>12</b> Hosting on Virtual Machines</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-custom-domains"><i class="fa fa-check"></i><b>12.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="12.2" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-servers"><i class="fa fa-check"></i><b>12.2</b> Server Setup</a></li>
+<li class="chapter" data-level="12.3" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-install"><i class="fa fa-check"></i><b>12.3</b> Installing Software for Shiny Hosting</a></li>
+<li class="chapter" data-level="12.4" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#reverse-proxies"><i class="fa fa-check"></i><b>12.4</b> Reverse Proxies</a></li>
+<li class="chapter" data-level="12.5" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#set-firewall"><i class="fa fa-check"></i><b>12.5</b> Setting the Firewall</a></li>
+<li class="chapter" data-level="12.6" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#monitoring-processes"><i class="fa fa-check"></i><b>12.6</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="12.7" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>12.7</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="12.8" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#summary-11"><i class="fa fa-check"></i><b>12.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-shiny-server.html"><a href="13-shiny-server.html"><i class="fa fa-check"></i><b>13</b> Shiny Server</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#provisioning-a-server"><i class="fa fa-check"></i><b>13.1</b> Provisioning a Server</a></li>
+<li class="chapter" data-level="13.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#using-systemd"><i class="fa fa-check"></i><b>13.2</b> Using Systemd</a></li>
+<li class="chapter" data-level="13.3" data-path="13-shiny-server.html"><a href="13-shiny-server.html#configuring-shiny-server"><i class="fa fa-check"></i><b>13.3</b> Configuring Shiny Server</a></li>
+<li class="chapter" data-level="13.4" data-path="13-shiny-server.html"><a href="13-shiny-server.html#file-transfer-based-publishing"><i class="fa fa-check"></i><b>13.4</b> File Transfer Based Publishing</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#editing-files-on-the-server"><i class="fa fa-check"></i><b>13.4.1</b> Editing Files on the Server</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#secure-copy-files-to-the-server"><i class="fa fa-check"></i><b>13.4.2</b> Secure Copy Files to the Server</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-shiny-server.html"><a href="13-shiny-server.html#git-based-deployment"><i class="fa fa-check"></i><b>13.5</b> Git-based Deployment</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#apps-with-multiple-linux-users"><i class="fa fa-check"></i><b>13.5.1</b> Apps with Multiple Linux Users</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-shiny-server.html"><a href="13-shiny-server.html#licensing-considerations"><i class="fa fa-check"></i><b>13.6</b> Licensing Considerations</a></li>
+<li class="chapter" data-level="13.7" data-path="13-shiny-server.html"><a href="13-shiny-server.html#summary-12"><i class="fa fa-check"></i><b>13.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="14-posit-connect.html"><a href="14-posit-connect.html"><i class="fa fa-check"></i><b>14</b> Posit Connect</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="14-posit-connect.html"><a href="14-posit-connect.html#summary-13"><i class="fa fa-check"></i><b>14.1</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>IV Containerized Shiny Apps</b></span></li>
+<li class="chapter" data-level="15" data-path="15-part4-containers.html"><a href="15-part4-containers.html"><i class="fa fa-check"></i><b>15</b> Introduction to Containers</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-concepts"><i class="fa fa-check"></i><b>15.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="15.1.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-engine"><i class="fa fa-check"></i><b>15.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-container-registries"><i class="fa fa-check"></i><b>15.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-images"><i class="fa fa-check"></i><b>15.1.3</b> Images</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-the-dockerfile"><i class="fa fa-check"></i><b>15.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-containers"><i class="fa fa-check"></i><b>15.1.5</b> Containers</a></li>
+<li class="chapter" data-level="15.1.6" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-cli"><i class="fa fa-check"></i><b>15.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#summary-14"><i class="fa fa-check"></i><b>15.2</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-part2-images.html"><a href="16-part2-images.html"><i class="fa fa-check"></i><b>16</b> Container Images</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-existing-images"><i class="fa fa-check"></i><b>16.1</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-image-names-tags"><i class="fa fa-check"></i><b>16.1.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-pull"><i class="fa fa-check"></i><b>16.1.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-login"><i class="fa fa-check"></i><b>16.1.3</b> Docker Login</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-run"><i class="fa fa-check"></i><b>16.1.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-build"><i class="fa fa-check"></i><b>16.2</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-r-shiny"><i class="fa fa-check"></i><b>16.2.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-buildx-buildkit"><i class="fa fa-check"></i><b>16.2.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-inspect"><i class="fa fa-check"></i><b>16.2.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-python-shiny"><i class="fa fa-check"></i><b>16.2.4</b> Python for Shiny</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-managing-images"><i class="fa fa-check"></i><b>16.3</b> Managing Images</a></li>
+<li class="chapter" data-level="16.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-sharing-images"><i class="fa fa-check"></i><b>16.4</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-push"><i class="fa fa-check"></i><b>16.4.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registries"><i class="fa fa-check"></i><b>16.4.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-login"><i class="fa fa-check"></i><b>16.4.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="16.4.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-local"><i class="fa fa-check"></i><b>16.4.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-part2-images.html"><a href="16-part2-images.html#summary-15"><i class="fa fa-check"></i><b>16.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>17</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile"><i class="fa fa-check"></i><b>17.1</b> The Dockerfile</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-parent-image"><i class="fa fa-check"></i><b>17.1.1</b> The Parent Image</a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-metadata"><i class="fa fa-check"></i><b>17.1.2</b> Metadata</a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-dependencies"><i class="fa fa-check"></i><b>17.1.3</b> Dependencies</a></li>
+<li class="chapter" data-level="17.1.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-files-and-dirs"><i class="fa fa-check"></i><b>17.1.4</b> Directories and Files</a></li>
+<li class="chapter" data-level="17.1.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-user"><i class="fa fa-check"></i><b>17.1.5</b> Switching User</a></li>
+<li class="chapter" data-level="17.1.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-port"><i class="fa fa-check"></i><b>17.1.6</b> Expose a Port</a></li>
+<li class="chapter" data-level="17.1.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-env-and-arg"><i class="fa fa-check"></i><b>17.1.7</b> Variables</a></li>
+<li class="chapter" data-level="17.1.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-cmd"><i class="fa fa-check"></i><b>17.1.8</b> Executable and Command</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images"><i class="fa fa-check"></i><b>17.2</b> Parent Images</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-r"><i class="fa fa-check"></i><b>17.2.1</b> R Parent Images</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-python"><i class="fa fa-check"></i><b>17.2.2</b> Python Parent Images</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries"><i class="fa fa-check"></i><b>17.3</b> Installing System Libraries</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-manual"><i class="fa fa-check"></i><b>17.3.1</b> Manual Installation</a></li>
+<li class="chapter" data-level="17.3.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-r2u"><i class="fa fa-check"></i><b>17.3.2</b> Automated Dependency Resolution with r2u</a></li>
+<li class="chapter" data-level="17.3.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-alpine"><i class="fa fa-check"></i><b>17.3.3</b> Dependencies on Alpine Linux</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg"><i class="fa fa-check"></i><b>17.4</b> Installing R Packages</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-explicit"><i class="fa fa-check"></i><b>17.4.1</b> Explicitly Stating Dependencies</a></li>
+<li class="chapter" data-level="17.4.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-description"><i class="fa fa-check"></i><b>17.4.2</b> Using the DESCRIPTION File</a></li>
+<li class="chapter" data-level="17.4.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-renv"><i class="fa fa-check"></i><b>17.4.3</b> Using renv</a></li>
+<li class="chapter" data-level="17.4.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-deps"><i class="fa fa-check"></i><b>17.4.4</b> Using deps</a></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-python"><i class="fa fa-check"></i><b>17.5</b> Python Requirements</a></li>
+<li class="chapter" data-level="17.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps"><i class="fa fa-check"></i><b>17.6</b> Classic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.6.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-r"><i class="fa fa-check"></i><b>17.6.1</b> R</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-python"><i class="fa fa-check"></i><b>17.6.2</b> Python</a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-rmd"><i class="fa fa-check"></i><b>17.6.3</b> R Markdown</a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-r"><i class="fa fa-check"></i><b>17.6.4</b> Quarto with R</a></li>
+<li class="chapter" data-level="17.6.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-python"><i class="fa fa-check"></i><b>17.6.5</b> Quarto with Python</a></li>
+<li class="chapter" data-level="17.6.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-shiny-server"><i class="fa fa-check"></i><b>17.6.6</b> Shiny Server</a></li>
+</ul></li>
+<li class="chapter" data-level="17.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-static-shiny-apps"><i class="fa fa-check"></i><b>17.7</b> Containerizing Shinylive</a></li>
+<li class="chapter" data-level="17.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#summary-16"><i class="fa fa-check"></i><b>17.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html"><i class="fa fa-check"></i><b>18</b> Working with Containers</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-run"><i class="fa fa-check"></i><b>18.1</b> Docker Run</a></li>
+<li class="chapter" data-level="18.2" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-managing"><i class="fa fa-check"></i><b>18.2</b> Managing Containers</a></li>
+<li class="chapter" data-level="18.3" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#summary-17"><i class="fa fa-check"></i><b>18.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>V Hosting Shiny with Containers</b></span></li>
+<li class="chapter" data-level="19" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html"><i class="fa fa-check"></i><b>19</b> Hosting Platforms</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-heroku"><i class="fa fa-check"></i><b>19.1</b> Heroku</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-from-the-command-line"><i class="fa fa-check"></i><b>19.1.1</b> Deployment from the Command Line</a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-using-the-web-dashboard"><i class="fa fa-check"></i><b>19.1.2</b> Deployment using the Web Dashboard</a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domain-and-https"><i class="fa fa-check"></i><b>19.1.3</b> Custom Domain and HTTPS</a></li>
+<li class="chapter" data-level="19.1.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#scaling"><i class="fa fa-check"></i><b>19.1.4</b> Scaling</a></li>
+<li class="chapter" data-level="19.1.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-18"><i class="fa fa-check"></i><b>19.1.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-doap"><i class="fa fa-check"></i><b>19.2</b> DigitalOcean App Platform</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites"><i class="fa fa-check"></i><b>19.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#docker-hub-deployment"><i class="fa fa-check"></i><b>19.2.2</b> Docker Hub Deployment</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#github-deployment"><i class="fa fa-check"></i><b>19.2.3</b> GitHub Deployment</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#programmatic-deployment"><i class="fa fa-check"></i><b>19.2.4</b> Programmatic Deployment</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#logs"><i class="fa fa-check"></i><b>19.2.5</b> Logs</a></li>
+<li class="chapter" data-level="19.2.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domains"><i class="fa fa-check"></i><b>19.2.6</b> Custom Domains</a></li>
+<li class="chapter" data-level="19.2.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-19"><i class="fa fa-check"></i><b>19.2.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-flyio"><i class="fa fa-check"></i><b>19.3</b> Fly.io</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites-1"><i class="fa fa-check"></i><b>19.3.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#creating-a-fly.io-app"><i class="fa fa-check"></i><b>19.3.2</b> Creating a Fly.io App</a></li>
+<li class="chapter" data-level="19.3.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deploying-to-fly.io"><i class="fa fa-check"></i><b>19.3.3</b> Deploying to Fly.io</a></li>
+<li class="chapter" data-level="19.3.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#metrics-and-logs"><i class="fa fa-check"></i><b>19.3.4</b> Metrics and Logs</a></li>
+<li class="chapter" data-level="19.3.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#setting-up-a-custom-domain"><i class="fa fa-check"></i><b>19.3.5</b> Setting up a Custom Domain</a></li>
+<li class="chapter" data-level="19.3.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#adding-tlsssl-certificate"><i class="fa fa-check"></i><b>19.3.6</b> Adding TLS/SSL certificate</a></li>
+<li class="chapter" data-level="19.3.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#autoscaling-in-multiple-regions"><i class="fa fa-check"></i><b>19.3.7</b> Autoscaling in Multiple-Regions</a></li>
+<li class="chapter" data-level="19.3.8" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-20"><i class="fa fa-check"></i><b>19.3.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#other-general-paas"><i class="fa fa-check"></i><b>19.4</b> Other Providers</a></li>
+<li class="chapter" data-level="19.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-21"><i class="fa fa-check"></i><b>19.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html"><i class="fa fa-check"></i><b>20</b> Docker Compose</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-file"><i class="fa fa-check"></i><b>20.1</b> The Compose File</a></li>
+<li class="chapter" data-level="20.2" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-cli"><i class="fa fa-check"></i><b>20.2</b> Compose Command Line</a></li>
+<li class="chapter" data-level="20.3" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-vm"><i class="fa fa-check"></i><b>20.3</b> Docker Compose on a Virtual Machine</a></li>
+<li class="chapter" data-level="20.4" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-up-and-down"><i class="fa fa-check"></i><b>20.4</b> Docker Compose Up and Down</a></li>
+<li class="chapter" data-level="20.5" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#compose-scaling"><i class="fa fa-check"></i><b>20.5</b> Scaling with Docker Compose</a></li>
+<li class="chapter" data-level="20.6" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#server-maintenance"><i class="fa fa-check"></i><b>20.6</b> Server Maintenance</a></li>
+<li class="chapter" data-level="20.7" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#summary-22"><i class="fa fa-check"></i><b>20.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html"><i class="fa fa-check"></i><b>21</b> ShinyProxy</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#setting-up-shinyproxy-using-docker"><i class="fa fa-check"></i><b>21.1</b> Setting up ShinyProxy Using Docker</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#docker-compose-for-shinyproxy"><i class="fa fa-check"></i><b>21.1.1</b> Docker Compose for ShinyProxy</a></li>
+<li class="chapter" data-level="21.1.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config"><i class="fa fa-check"></i><b>21.1.2</b> ShinyProxy Configuration</a></li>
+<li class="chapter" data-level="21.1.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-general"><i class="fa fa-check"></i><b>21.1.3</b> General</a></li>
+<li class="chapter" data-level="21.1.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-authentication"><i class="fa fa-check"></i><b>21.1.4</b> Authentication</a></li>
+<li class="chapter" data-level="21.1.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config-applications"><i class="fa fa-check"></i><b>21.1.5</b> Applications</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#deploying-tls-with-shinyproxy-operator"><i class="fa fa-check"></i><b>21.2</b> Deploying TLS with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#user-interface"><i class="fa fa-check"></i><b>21.3</b> User Interface</a></li>
+<li class="chapter" data-level="21.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#spo-monitoring"><i class="fa fa-check"></i><b>21.4</b> Deploying Monitoring with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#benchmarking-shinyproxy-applications"><i class="fa fa-check"></i><b>21.5</b> Benchmarking ShinyProxy Applications</a>
+<ul>
+<li class="chapter" data-level="21.5.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-docker-stats"><i class="fa fa-check"></i><b>21.5.1</b> Docker Stats</a></li>
+<li class="chapter" data-level="21.5.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#grafana-dashboard"><i class="fa fa-check"></i><b>21.5.2</b> Grafana Dashboard</a></li>
+</ul></li>
+<li class="chapter" data-level="21.6" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-adding-apps"><i class="fa fa-check"></i><b>21.6</b> Adding and Removing Shiny Applications</a></li>
+<li class="chapter" data-level="21.7" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#other-considerations"><i class="fa fa-check"></i><b>21.7</b> Other Considerations</a></li>
+<li class="chapter" data-level="21.8" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#summary-23"><i class="fa fa-check"></i><b>21.8</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VI Production Shiny Apps</b></span></li>
+<li class="chapter" data-level="22" data-path="22-shiny-production.html"><a href="22-shiny-production.html"><i class="fa fa-check"></i><b>22</b> Considerations for Production</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#security"><i class="fa fa-check"></i><b>22.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#ssl-certificates"><i class="fa fa-check"></i><b>22.1.1</b> SSL Certificates</a></li>
+<li class="chapter" data-level="22.1.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#storing-secrets"><i class="fa fa-check"></i><b>22.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="22.1.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#firewalls"><i class="fa fa-check"></i><b>22.1.3</b> Firewalls</a></li>
+<li class="chapter" data-level="22.1.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#private-networking"><i class="fa fa-check"></i><b>22.1.4</b> Private Networking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#authentication"><i class="fa fa-check"></i><b>22.2</b> Authentication</a>
+<ul>
+<li class="chapter" data-level="22.2.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#http-basic-auth"><i class="fa fa-check"></i><b>22.2.1</b> HTTP Basic Auth</a></li>
+<li class="chapter" data-level="22.2.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#third-party-auth"><i class="fa fa-check"></i><b>22.2.2</b> Third Party Auth</a></li>
+<li class="chapter" data-level="22.2.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#native-authentication"><i class="fa fa-check"></i><b>22.2.3</b> Native Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reliability"><i class="fa fa-check"></i><b>22.3</b> Reliability</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#backups"><i class="fa fa-check"></i><b>22.3.1</b> Backups</a></li>
+<li class="chapter" data-level="22.3.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reserved-ip-addresses"><i class="fa fa-check"></i><b>22.3.2</b> Reserved IP Addresses</a></li>
+<li class="chapter" data-level="22.3.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#monitoring"><i class="fa fa-check"></i><b>22.3.3</b> Monitoring</a></li>
+<li class="chapter" data-level="22.3.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#benchmarking"><i class="fa fa-check"></i><b>22.3.4</b> Benchmarking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#scaling-1"><i class="fa fa-check"></i><b>22.4</b> Scaling</a>
+<ul>
+<li class="chapter" data-level="22.4.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#options-for-scaling"><i class="fa fa-check"></i><b>22.4.1</b> Options for Scaling</a></li>
+<li class="chapter" data-level="22.4.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#part2-container-orchestration"><i class="fa fa-check"></i><b>22.4.2</b> Container Orchestration</a></li>
+</ul></li>
+<li class="chapter" data-level="22.5" data-path="22-shiny-production.html"><a href="22-shiny-production.html#operations-and-maintenance"><i class="fa fa-check"></i><b>22.5</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="22.5.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#continuous-integration-and-deployment"><i class="fa fa-check"></i><b>22.5.1</b> Continuous Integration and Deployment</a></li>
+<li class="chapter" data-level="22.5.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#logging"><i class="fa fa-check"></i><b>22.5.2</b> Logging</a></li>
+</ul></li>
+<li class="chapter" data-level="22.6" data-path="22-shiny-production.html"><a href="22-shiny-production.html#summary-24"><i class="fa fa-check"></i><b>22.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="23-what-is-next.html"><a href="23-what-is-next.html"><i class="fa fa-check"></i><b>23</b> What is Next</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='images/logos/banner.png' alt="Hosting Shiny">
+</html>
+<div id="part2-images" class="section level1 hasAnchor" number="16">
+<h1><span class="header-section-number">Chapter 16</span> Container Images<a href="16-part2-images.html#part2-images" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="noteblock">
+<p>This chapter dives more into what images are
+for containers. Images enable quick sharing
+of Shiny applications, by bundling all the
+configurations and dependencies required to
+run your Shiny application.</p>
+<p>Images are shared
+through container registries, and only need to
+be built once, saving time from installing dependencies and
+configuring the Shiny application each time it is
+run on a new computer.</p>
+</div>
+<div id="part2-existing-images" class="section level2 hasAnchor" number="16.1">
+<h2><span class="header-section-number">16.1</span> Working with Existing Images<a href="16-part2-images.html#part2-existing-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s learn how to work with an existing image. Such an image is stored
+in a container registry where we can pull it from if we know its name.</p>
+<div id="part2-docker-image-names-tags" class="section level3 hasAnchor" number="16.1.1">
+<h3><span class="header-section-number">16.1.1</span> Image Names and Tags<a href="16-part2-images.html#part2-docker-image-names-tags" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Image names follow the pattern <code>&lt;host&gt;/&lt;path&gt;:&lt;tag&gt;</code>.
+The optional <code>&lt;host&gt;</code> name specifies where the image is located.
+If you don’t specify a host name, the commands will use Docker’s public registry
+<code>docker.io</code>, aka the Docker Hub.</p>
+<p>The <code>&lt;path&gt;</code> can be an “official” image, like <code>ubuntu</code>.
+The <code>&lt;tag&gt;</code> is a human-readable identifier that is often a specific version of
+an image. If not specified, the <code>latest</code> tag will be used.
+So <code>ubuntu</code> as an image name will be identical to <code>docker.io/ubuntu:latest</code>.</p>
+<p>It is important to note that the <code>latest</code> tag only means “latest” in the sense
+of the last image that was tagged as <code>latest</code> or was untagged. If you use
+a different tag, like <code>v1</code>, the image with the <code>latest</code> tag will not get
+updated as well. So don’t let this tag fool you. It is strongly recommended
+in production to always explicitly use a tag that is not <code>latest</code> but
+a specific version.</p>
+<p>The path is usually more structured and consists of slash-separated components.
+It often looks like <code>&lt;namespace&gt;/&lt;repository&gt;</code> where the namespace
+specifies the user account or organization to which the image belongs to.
+The base R image maintained by the <a href="https://rocker-project.org/">Rocker</a> project
+is named as <code>rocker/r-base</code> where <code>rocker</code> is the organization namespace,
+<code>r-base</code> is the repository.</p>
+<p>Another example is the R version of the Old Faithful
+example which has the image name <code>ghcr.io/h10y/faithful/r-shiny:latest</code>.
+This means:</p>
+<ul>
+<li><code>ghcr.io</code> is the GitHub Container Registry host name,</li>
+<li><code>h10y</code> is the GitHub organization,</li>
+<li><code>faithful</code> is the GitHub repository,</li>
+<li><code>r-shiny</code> is the Shiny app build,</li>
+<li><code>latest</code> is the version tag.</li>
+</ul>
+<!--
+REVIEW:
+- There isn't enough explanation of why containers/Docker are useful. Before jumping into what Docker is, I would add a section that sets the stage that explains why containerization is such a useful concept
+- This may be directly related to the previous point, but reading through this chapter really feels like I don't understand why I'm learning so much about Docker. From the perspective of a reader: I bought a book about hosting shiny, and now there are entire pages about some software that I just don't understand how it relates to hosting and why it's so important. The motivation behind Docker must be made much stronger.
+- After reading the entire section about pulling an image, I didn't get a good idea of what it means to pull an image. What does that action do, why do I need to do it?
+-->
+</div>
+<div id="part2-docker-pull" class="section level3 hasAnchor" number="16.1.2">
+<h3><span class="header-section-number">16.1.2</span> Pulling an Image<a href="16-part2-images.html#part2-docker-pull" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You can use the <code>docker pull &lt;image-name&gt;</code> command to pull an image from
+a public registry. For example <code>docker pull ubuntu:24.04</code> will pull the
+24.04 version of the “official” Ubuntu image from the Docker Hub.
+<code>docker pull rocker/r-base:4.4.1</code> will pull the image with R version 4.1.1.
+Pull the R Shiny version of the Old Faithful as:</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb117-1"><a href="16-part2-images.html#cb117-1" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/h10y/faithful/r-shiny</span>
+<span id="cb117-2"><a href="16-part2-images.html#cb117-2" tabindex="-1"></a></span>
+<span id="cb117-3"><a href="16-part2-images.html#cb117-3" tabindex="-1"></a><span class="co"># Using default tag: latest</span></span>
+<span id="cb117-4"><a href="16-part2-images.html#cb117-4" tabindex="-1"></a><span class="co"># latest: Pulling from h10y/faithful/r-shiny</span></span>
+<span id="cb117-5"><a href="16-part2-images.html#cb117-5" tabindex="-1"></a><span class="co"># Digest: sha256:12e[...]4ea</span></span></code></pre></div>
+<p>You can see from the messages that the <code>latest</code> tag was applied because
+we did not specify the tag. We can also see the SHA256 digest, that is
+a unique and immutable identifier. The name can change, or multiple names can
+refer to the same image (i.e. a set of layers and their manifest). But the
+image digest will be the same. To “pin” the exact version, you can use the
+<code>&lt;image-name&gt;@sha256:12e[...]4ea</code> pattern (use the actual digest copied from
+your screen without the <code>[...]</code>):</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb118-1"><a href="16-part2-images.html#cb118-1" tabindex="-1"></a><span class="ex">docker</span> pull ghcr.io/h10y/faithful/r-shiny@sha256:12e<span class="pp">[</span><span class="ss">...</span><span class="pp">]</span>4ea</span></code></pre></div>
+<p>To pull all images from a repository, you can use the <code>--all-tags</code> flag:</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb119-1"><a href="16-part2-images.html#cb119-1" tabindex="-1"></a><span class="ex">docker</span> image pull <span class="at">--all-tags</span> ghcr.io/h10y/faithful/r-shiny</span></code></pre></div>
+<p>This will pull not only the <code>latest</code>, but also the image tagged as <code>main</code>
+named after the Git branch. Use the <code>docker images</code> command to list the
+images.</p>
+</div>
+<div id="part2-docker-login" class="section level3 hasAnchor" number="16.1.3">
+<h3><span class="header-section-number">16.1.3</span> Docker Login<a href="16-part2-images.html#part2-docker-login" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You don’t need to authenticate for public images, but in
+case you are trying to pull a private image from a private repository, you
+need to log into the container registry. Such private repositories are common
+and are available on Docker Hub, the GitHub or GitLab container registries.
+More on the different container registries later.</p>
+<p>To log in to the GitHub container registry, use:</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb120-1"><a href="16-part2-images.html#cb120-1" tabindex="-1"></a><span class="ex">docker</span> login ghcr.io</span></code></pre></div>
+<p>This command will ask for our credentials interactively. If you want,
+you can provide your username and password. But it is usually
+recommended to use an access token instead of your
+password because the token can have more restricted scopes, i.e. only used to
+(read) access the container registry which is a lot more secure.
+You can also set expiry dates and can revoke these tokens any time without
+having to change login passwords elsewhere.</p>
+<p>Let’s say that you saved your GitHub token value in a file <code>~/my_token.txt</code> in
+the root of your home folder (<code>~</code>). You can pass the PAT value to the
+<code>docker login</code> command via the standard input as:</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb121-1"><a href="16-part2-images.html#cb121-1" tabindex="-1"></a><span class="fu">cat</span> ~/my_token.txt <span class="kw">|</span> <span class="ex">docker</span> login <span class="dt">\</span></span>
+<span id="cb121-2"><a href="16-part2-images.html#cb121-2" tabindex="-1"></a>    <span class="at">--username</span> <span class="op">&lt;</span>username<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb121-3"><a href="16-part2-images.html#cb121-3" tabindex="-1"></a>    <span class="at">--password-stdin</span></span></code></pre></div>
+<p>where <code>&lt;username&gt;</code> is your GitHub username.</p>
+</div>
+<div id="part2-docker-run" class="section level3 hasAnchor" number="16.1.4">
+<h3><span class="header-section-number">16.1.4</span> Running a Container<a href="16-part2-images.html#part2-docker-run" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The next command is <code>docker run</code> which runs a command in a new container.
+It pulls the image if needed before starting the container.</p>
+<p>Try the following command. It will pull the latest image for the Python build
+of the Old Faithful example app, then it will start a new container:</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb122-1"><a href="16-part2-images.html#cb122-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 ghcr.io/h10y/faithful/py-shiny</span></code></pre></div>
+<p>The <code>-p</code> is a shorthand for <code>--publish</code> that instructs Docker to
+publish a container’s port to the host port. In our example, 3838 is the
+container’s port which is mapped to port 8080 of the host machine. As a
+result, you can visit <code>http://127.0.0.1:8080</code> in your browser to see the
+Python Shiny app. Hit CTRL+C in the terminal to stop the container. We will
+learn about container ports in a bit, but in essence it is just a channel that
+is used to send information back and forth.</p>
+</div>
+</div>
+<div id="part2-docker-build" class="section level2 hasAnchor" number="16.2">
+<h2><span class="header-section-number">16.2</span> Building a New Image<a href="16-part2-images.html#part2-docker-build" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far you saw how to use the basic Docker commands to
+pull and run images. Now you’ll build a Docker image by recreating the
+Old Faithful Shiny app that we worked with before.</p>
+<p>In our examples, we will use the following setup: a file named <code>Dockerfile</code>
+sits next to a folder named <code>app</code>, and the Shiny app files like
+<code>app.R</code> or <code>app.py</code> are in this folder. This setup is convenient
+because we can copy all the files from the <code>app</code> folder without
+having to worry about copying files that should not be there.</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb123-1"><a href="16-part2-images.html#cb123-1" tabindex="-1"></a><span class="ex">├──</span> Dockerfile</span>
+<span id="cb123-2"><a href="16-part2-images.html#cb123-2" tabindex="-1"></a><span class="ex">└──</span> app</span>
+<span id="cb123-3"><a href="16-part2-images.html#cb123-3" tabindex="-1"></a>    <span class="ex">└──</span> ...</span></code></pre></div>
+<p>You can follow along the examples by downloading or cloning the GitHub repository
+with <code>git clone https://github.com/h10y/faithful.git</code>. All the different builds
+of the Old Faithful app from Chapter <a href="5-part2-developing-shiny-apps.html#part2-developing-shiny-apps">5</a>
+will have a <code>Dockerfile</code> and instructions in the <code>README.md</code> files within each
+folder.</p>
+<!--
+REVIEW:
+- When building an image from a local Dockerfile for the first time, the given command is `docker build -t r-shiny:v1` but in the explanation it says that we are giving an image name of "r-shiny-test"
+- The paragraph talking about the `--platform` flag and different architectures adds more confusion to the mix for the average user in my opinion. You either need to give a short introduction to what ARM vs AMD is, or preface this section by saying that this is only relevant if you already understand what these terms mean. For many readers this will be gibberish.
+-->
+<div id="part2-docker-r-shiny" class="section level3 hasAnchor" number="16.2.1">
+<h3><span class="header-section-number">16.2.1</span> R for Shiny<a href="16-part2-images.html#part2-docker-r-shiny" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For our R Shiny example within the <code>r-shiny</code> folder,
+this is what is inside the <code>Dockerfile</code>:</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb124-1"><a href="16-part2-images.html#cb124-1" tabindex="-1"></a><span class="kw">FROM</span> rocker/r2u:24.04</span>
+<span id="cb124-2"><a href="16-part2-images.html#cb124-2" tabindex="-1"></a></span>
+<span id="cb124-3"><a href="16-part2-images.html#cb124-3" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">R</span> <span class="at">-q</span> <span class="at">-e</span> <span class="st">&quot;install.packages(&#39;shiny&#39;)&quot;</span></span>
+<span id="cb124-4"><a href="16-part2-images.html#cb124-4" tabindex="-1"></a></span>
+<span id="cb124-5"><a href="16-part2-images.html#cb124-5" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">groupadd</span> app <span class="kw">&amp;&amp;</span> <span class="ex">useradd</span> <span class="at">-g</span> app app</span>
+<span id="cb124-6"><a href="16-part2-images.html#cb124-6" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/app</span>
+<span id="cb124-7"><a href="16-part2-images.html#cb124-7" tabindex="-1"></a></span>
+<span id="cb124-8"><a href="16-part2-images.html#cb124-8" tabindex="-1"></a><span class="kw">COPY</span> app .</span>
+<span id="cb124-9"><a href="16-part2-images.html#cb124-9" tabindex="-1"></a></span>
+<span id="cb124-10"><a href="16-part2-images.html#cb124-10" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">chown</span> app:app <span class="at">-R</span> /home/app</span>
+<span id="cb124-11"><a href="16-part2-images.html#cb124-11" tabindex="-1"></a><span class="kw">USER</span> app</span>
+<span id="cb124-12"><a href="16-part2-images.html#cb124-12" tabindex="-1"></a><span class="kw">EXPOSE</span> 3838</span>
+<span id="cb124-13"><a href="16-part2-images.html#cb124-13" tabindex="-1"></a></span>
+<span id="cb124-14"><a href="16-part2-images.html#cb124-14" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;R&quot;</span>, <span class="st">&quot;-e&quot;</span>, <span class="st">&quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;</span>]</span></code></pre></div>
+<p>We will explain the <code>Dockerfile</code> instructions in the next section.
+For now, you can use the <code>docker build</code> command to build the image from the
+<code>Dockerfile</code>. You will have to be in the same directory as the <code>Dockerfile</code>,
+this place is what we call the <strong>build context</strong>.
+This is what the <code>.</code> at the end of the command stands for:</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb125-1"><a href="16-part2-images.html#cb125-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> r-shiny:v1 .</span></code></pre></div>
+<p>The context here specifies the current directory (<code>.</code>), but it can be
+any relative or absolute filepath. Files and directories inside the
+context directory are available to the builder, so it can load them when needed.
+You can use a <code>.dockerignore</code> file to list files and directories that should
+be ignored within the build context. It is similar to the <code>.gitignore</code> file.</p>
+<p>The instructions are taken from the <code>Dockerfile</code> at the root of the build
+context. If you want to specify a different file, do so by providing the
+path to the file using the <code>-f</code> (or <code>--file</code>) option as <code>docker build -f Dockerfile2 .</code>.</p>
+<p>The <code>-t</code> argument (same as <code>--tag</code>) is followed by the image name
+(<code>r-shiny-test</code>) and the tag (<code>v1</code>). If you do not specify the image
+name/tag at image build (i.e. <code>docker build .</code>), Docker will not tag the image
+but it will have an image ID that you can use later to tag the image with
+<code>docker tag &lt;image-id&gt; r-shiny-test:v1</code>.</p>
+<p>You can apply multiple tags as:</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb126-1"><a href="16-part2-images.html#cb126-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> r-shiny:v1 <span class="at">-t</span> r-shiny:latest .</span></code></pre></div>
+</div>
+<div id="part2-docker-buildx-buildkit" class="section level3 hasAnchor" number="16.2.2">
+<h3><span class="header-section-number">16.2.2</span> Buildx and BuildKit<a href="16-part2-images.html#part2-docker-buildx-buildkit" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>While the builder is running, you’ll see lots of messages printed
+as Docker goes through the instructions from the <code>Dockerfile</code>.
+As of Docker Engine 23.0 and Docker Desktop 4.19, Buildx is the default build
+client and user interface. Buildx brings extended build capabilities with
+BuildKit. BuildKit is the server that handles the build execution, e.g.
+it communicates with registries, instructs the Docker Engine and accesses
+the local file system. You can enable the use of BuildKit on older Docker
+systems by setting the environment variable <code>DOCKER_BUILDKIT=1</code>.</p>
+<p>The Buildx output is nicer and it provides you with timings for every step
+of your <code>Dockerfile</code>:</p>
+<p></p>
+<pre><code>[+] Building 32.4s (12/12) FINISHED
+ =&gt; [internal] load build definition from Dockerfile                    0.0s
+ =&gt; =&gt; transferring dockerfile: 282B                                    0.0s
+ =&gt; [internal] load metadata for docker.io/rocker/r2u:24.04             1.2s
+ =&gt; [auth] rocker/r2u:pull token for registry-1.docker.io               0.0s
+ =&gt; [internal] load .dockerignore                                       0.0s
+ =&gt; =&gt; transferring context: 2B                                         0.0s
+ =&gt; [1/6] FROM docker.io/rocker/r2u:24.04@sha256:f327[...]dd73          9.2s
+ =&gt; =&gt; resolve docker.io/rocker/r2u:24.04@sha256:f327[...]dd73          0.0s
+[...]
+ =&gt; [internal] load build context                                       0.0s
+ =&gt; =&gt; transferring context: 845B                                       0.0s
+ =&gt; [2/6] RUN groupadd app &amp;&amp; useradd -g app app                        0.7s
+ =&gt; [3/6] RUN R -q -e &quot;install.packages(&#39;shiny&#39;)&quot;                      20.9s
+ =&gt; [4/6] WORKDIR /home/app                                             0.0s
+ =&gt; [5/6] COPY app .                                                    0.0s
+ =&gt; [6/6] RUN chown app:app -R /home/app                                0.1s
+ =&gt; exporting to image                                                  0.3s
+ =&gt; =&gt; exporting layers                                                 0.3s
+ =&gt; =&gt; writing image sha256:4d10[...]bab7                               0.0s
+ =&gt; =&gt; naming to docker.io/library/r-shiny:v1                           0.0s</code></pre>
+<p></p>
+<p>Sometimes you want to inspect the output and do not only want the collapsed
+output. Add the <code>--progress=plain</code> to the build command to see all the
+output. This comes handy when troubleshooting the build.</p>
+<p>BuildKit also offers other nice features, for example setting the target
+platform(s) for the build via the <code>--platform</code> option.
+The default value is the platform of the BuildKit daemon where the build runs,
+i.e. your laptop or a server. This can be important for Mac OS X users
+on Apple Silicone (M1 and above), because the default ARM64 build will
+have poor performance or might fail on other platforms on AMD64 machines.
+Use the <code>--platform=linux/arm64</code> to build the image for AMD64 architecture.
+You can also build for multiple architectures at once with
+<code>docker build --platform linux/amd64,linux/arm64 .</code>.
+See <a href="3-part1-local-setup.html#part1-installing-docker">3.1.4</a> for enabling virtualization on Mac OS X
+to enable builds for multiple platforms.</p>
+</div>
+<div id="part2-docker-inspect" class="section level3 hasAnchor" number="16.2.3">
+<h3><span class="header-section-number">16.2.3</span> Inspecting the Image<a href="16-part2-images.html#part2-docker-inspect" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The output of the build is an image that has a SHA256 hash that can be used
+as a unique identifier. The image is made up of image layers. These layers are
+created by the instructions from the <code>Dockerfile</code>. If you run the build command
+again you will notice that instead of 32 seconds, it will take almost no time
+to build the image. This is because the layers are cached by default and Docker
+smartly evaluates which instructions and files have changed since the last
+build. Sometimes the cache gets tangled, or you just want to make sure that
+the error is not a caching issue. In this case use the <code>--no-cache</code> flag
+with <code>docker build</code>.</p>
+<p>You can use the <code>docker history r-shiny:v1</code> command to see how the image was
+built and you can see the sizes for every layer. Intermediate layers
+have a size of 0B and these do not contribute to the overall image size.
+The layers created 2 hours ago are the layers we created, the layers
+created 2 weeks ago are the layers from the parent image <code>rocker/r2u:24.04</code>,
+whereas the layers created 2 months ago are the official <code>ubuntu:24.04</code> image
+layers that form the parent image of the <code>rocker/r2u:24.04</code> one:</p>
+<p></p>
+<pre><code>IMAGE          CREATED        CREATED BY                                  SIZE
+4d[...]52   2 hours ago    CMD [&quot;R&quot; &quot;-e&quot; &quot;shiny::runApp(host=&#39;0.0.0.0&#39;,   0B
+&lt;missing&gt;   2 hours ago    EXPOSE map[3838/tcp:{}]                        0B
+&lt;missing&gt;   2 hours ago    USER app                                       0B
+&lt;missing&gt;   2 hours ago    RUN /bin/sh -c chown app:app -R /home/app #    780B
+&lt;missing&gt;   2 hours ago    COPY app . # buildkit                          780B
+&lt;missing&gt;   2 hours ago    WORKDIR /home/app                              0B
+&lt;missing&gt;   2 hours ago    RUN /bin/sh -c R -q -e &quot;install.packages(&#39;sh   109MB
+&lt;missing&gt;   2 hours ago    RUN /bin/sh -c groupadd app &amp;&amp; useradd -g ap   5.14kB
+&lt;missing&gt;   2 weeks ago    RUN /bin/sh -c apt-get update         &amp;&amp; apt   642MB
+&lt;missing&gt;   2 weeks ago    ENV TZ=UTC                                     0B
+&lt;missing&gt;   2 weeks ago    ENV DEBIAN_FRONTEND=noninteractive             0B
+&lt;missing&gt;   2 weeks ago    ENV LANG=en_US.UTF-8                           0B
+&lt;missing&gt;   2 weeks ago    ENV LC_ALL=en_US.UTF-8                         0B
+&lt;missing&gt;   2 weeks ago    RUN /bin/sh -c useradd -s /bin/bash -m docke   81.6MB
+&lt;missing&gt;   2 weeks ago    LABEL org.label-schema.license=GPL-2.0 org.l   0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  CMD [&quot;/bin/bash&quot;]           0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  ADD file:ac9d5a9d5b9b1217   76.2MB
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  LABEL org.opencontainers.   0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  LABEL org.opencontainers.   0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  ARG LAUNCHPAD_BUILD_ARCH    0B
+&lt;missing&gt;   2 months ago   /bin/sh -c #(nop)  ARG RELEASE                 0B</code></pre>
+<p></p>
+<p>The <code>docker inspect r-shiny:v1</code> returns a long JSON output that is the
+metadata of the image. It also has the SHA256 hash of the image.
+Here is the greatly simplified output:</p>
+<p></p>
+<pre><code>[
+    {
+        &quot;Id&quot;: &quot;sha256:4d10[...]bab7&quot;,
+        &quot;RepoTags&quot;: [&quot;r-shiny:v1&quot;],
+        &quot;Created&quot;: &quot;2024-07-05T04:59:01.123398172Z&quot;,
+        &quot;Config&quot;: {
+            &quot;User&quot;: &quot;app&quot;,
+            &quot;ExposedPorts&quot;: {&quot;3838/tcp&quot;: {}},
+            &quot;Cmd&quot;: [&quot;R&quot;,&quot;-e&quot;,
+                &quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;],
+            &quot;Volumes&quot;: null,
+            &quot;WorkingDir&quot;: &quot;/home/app&quot;,
+            &quot;Entrypoint&quot;: null,
+        },
+        &quot;Architecture&quot;: &quot;amd64&quot;,
+        &quot;Os&quot;: &quot;linux&quot;,
+        &quot;Size&quot;: 909132976,
+        &quot;Metadata&quot;: {
+            &quot;LastTagTime&quot;: &quot;2024-07-05T06:20:22.2764725Z&quot;
+        }
+    }
+]</code></pre>
+<p></p>
+<p>Once the docker image is built, you can run the container to
+make sure the app is working as expected:</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb130-1"><a href="16-part2-images.html#cb130-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 r-shiny:v1</span></code></pre></div>
+</div>
+<div id="part2-docker-python-shiny" class="section level3 hasAnchor" number="16.2.4">
+<h3><span class="header-section-number">16.2.4</span> Python for Shiny<a href="16-part2-images.html#part2-docker-python-shiny" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You can find the Python for Shiny example in the <code>py-shiny</code> folder of the
+Old Faithful example repository. The <code>Dockerfile</code> for the Python version looks
+like this:</p>
+<div class="sourceCode" id="cb131"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span id="cb131-1"><a href="16-part2-images.html#cb131-1" tabindex="-1"></a><span class="kw">FROM</span> python:3.9</span>
+<span id="cb131-2"><a href="16-part2-images.html#cb131-2" tabindex="-1"></a></span>
+<span id="cb131-3"><a href="16-part2-images.html#cb131-3" tabindex="-1"></a><span class="kw">COPY</span> app/requirements.txt .</span>
+<span id="cb131-4"><a href="16-part2-images.html#cb131-4" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">pip</span> install <span class="at">--no-cache-dir</span> <span class="at">--upgrade</span> <span class="at">-r</span> requirements.txt</span>
+<span id="cb131-5"><a href="16-part2-images.html#cb131-5" tabindex="-1"></a></span>
+<span id="cb131-6"><a href="16-part2-images.html#cb131-6" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">groupadd</span> app <span class="kw">&amp;&amp;</span> <span class="ex">useradd</span> <span class="at">-g</span> app app</span>
+<span id="cb131-7"><a href="16-part2-images.html#cb131-7" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/app</span>
+<span id="cb131-8"><a href="16-part2-images.html#cb131-8" tabindex="-1"></a></span>
+<span id="cb131-9"><a href="16-part2-images.html#cb131-9" tabindex="-1"></a><span class="kw">COPY</span> app .</span>
+<span id="cb131-10"><a href="16-part2-images.html#cb131-10" tabindex="-1"></a></span>
+<span id="cb131-11"><a href="16-part2-images.html#cb131-11" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">chown</span> app:app <span class="at">-R</span> /home/app</span>
+<span id="cb131-12"><a href="16-part2-images.html#cb131-12" tabindex="-1"></a><span class="kw">USER</span> app</span>
+<span id="cb131-13"><a href="16-part2-images.html#cb131-13" tabindex="-1"></a><span class="kw">EXPOSE</span> 3838</span>
+<span id="cb131-14"><a href="16-part2-images.html#cb131-14" tabindex="-1"></a></span>
+<span id="cb131-15"><a href="16-part2-images.html#cb131-15" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">mkdir</span> .config</span>
+<span id="cb131-16"><a href="16-part2-images.html#cb131-16" tabindex="-1"></a><span class="kw">ENV</span> MPLCONFIGDIR=/home/app/.config</span>
+<span id="cb131-17"><a href="16-part2-images.html#cb131-17" tabindex="-1"></a><span class="kw">ENV</span> HOME=/home/app</span>
+<span id="cb131-18"><a href="16-part2-images.html#cb131-18" tabindex="-1"></a></span>
+<span id="cb131-19"><a href="16-part2-images.html#cb131-19" tabindex="-1"></a><span class="kw">CMD</span> [<span class="st">&quot;uvicorn&quot;</span>, <span class="st">&quot;app:app&quot;</span>, <span class="st">&quot;--host&quot;</span>, <span class="st">&quot;0.0.0.0&quot;</span>, <span class="st">&quot;--port&quot;</span>, <span class="st">&quot;3838&quot;</span>]</span></code></pre></div>
+<p>We’ll explain each line shortly. To build and check the Docker image,
+use the following commands:</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb132-1"><a href="16-part2-images.html#cb132-1" tabindex="-1"></a><span class="bu">export</span> <span class="va">DOCKER_DEFAULT_PLATFORM</span><span class="op">=</span>linux/amd64</span>
+<span id="cb132-2"><a href="16-part2-images.html#cb132-2" tabindex="-1"></a></span>
+<span id="cb132-3"><a href="16-part2-images.html#cb132-3" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> py-shiny:v1 .</span>
+<span id="cb132-4"><a href="16-part2-images.html#cb132-4" tabindex="-1"></a></span>
+<span id="cb132-5"><a href="16-part2-images.html#cb132-5" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:3838 py-shiny:v1</span></code></pre></div>
+<p>The <code>DOCKER_DEFAULT_PLATFORM</code> environment variable is not strictly necessary,
+but it can save you some headaches on Mac OS X when the platform for the parent
+image is not matching the local ARM64 architecture of your Apple Silicone.</p>
+</div>
+</div>
+<div id="part2-docker-managing-images" class="section level2 hasAnchor" number="16.3">
+<h2><span class="header-section-number">16.3</span> Managing Images<a href="16-part2-images.html#part2-docker-managing-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are a few commands that you need to know to manage your Docker images
+in the absence of the Docker Desktop graphical user interface.
+This will pay off later when you have no such luxuries on a server.</p>
+<p>To list the Docker images, use the <code>docker images</code> command. It will give you
+a quick summary of the images:</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb133-1"><a href="16-part2-images.html#cb133-1" tabindex="-1"></a><span class="ex">REPOSITORY</span>   TAG       IMAGE ID       CREATED             SIZE</span>
+<span id="cb133-2"><a href="16-part2-images.html#cb133-2" tabindex="-1"></a><span class="ex">py-shiny</span>     v1        ed11a2980c07   5 seconds ago       1.24GB</span>
+<span id="cb133-3"><a href="16-part2-images.html#cb133-3" tabindex="-1"></a><span class="ex">r-shiny</span>      v1        4d10f42d6a52   About an hour ago   909MB</span></code></pre></div>
+<p>Size is the space taken up by the image and all its parent images.</p>
+<p>You can filter the output, for example <code>docker images --filter=reference="py-*"</code>
+will give you images whose name starts with <code>py-</code>, whereas
+<code>docker images --filter=reference="*:v1"</code> will list images that are tagged with
+<code>v1</code>.</p>
+<p>Use the <code>docker rmi &lt;image-name-or-id&gt;</code> to remove an image based on its name or
+the image ID.</p>
+<p>The <code>docker system df</code> command will give you a concise summary of disk usage
+by the Docker daemon including images, containers, and volumes:</p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb134-1"><a href="16-part2-images.html#cb134-1" tabindex="-1"></a><span class="ex">TYPE</span>            TOTAL     ACTIVE    SIZE      RECLAIMABLE</span>
+<span id="cb134-2"><a href="16-part2-images.html#cb134-2" tabindex="-1"></a><span class="ex">Images</span>          2         1         1.457GB   1.355GB <span class="er">(</span><span class="ex">98%</span><span class="kw">)</span></span>
+<span id="cb134-3"><a href="16-part2-images.html#cb134-3" tabindex="-1"></a><span class="ex">Containers</span>      1         1         0B        0B</span>
+<span id="cb134-4"><a href="16-part2-images.html#cb134-4" tabindex="-1"></a><span class="ex">Local</span> Volumes   0         0         0B        0B</span>
+<span id="cb134-5"><a href="16-part2-images.html#cb134-5" tabindex="-1"></a><span class="ex">Build</span> Cache     117       0         3.005GB   3.005GB</span></code></pre></div>
+<p>If you build images during development while keeping the image name and tag the
+same you will end up with “dangling” images that are untagged and are not used
+any longer. Dangling images can accumulate over time and can fill up the
+available space that Docker Desktop is allocating for images.
+Use <code>docker system prune</code> to clean up these dangling images.
+The command <code>docker system prune --all</code> will remove all unused images and containers.</p>
+<p>The Docker Desktop uses a finite amount of disk space that can fill up.
+Do the cleanup or go to the Docker Desktop settings and under Resources you
+should be able to change the virtual disk limit.
+You can check the RAM, CPU, and disk usage by looking at the bottom of the
+Docker Desktop window.</p>
+<!--
+REVIEW:
+- You should sample output, and you mention the "name" of images. But the outputs doesn't have a "name" column, it has a "repository" column. When the repository has a path (such as "ghcr.io/h10y/faithful/py-shiny"), it's not clear if "name" means the entire repository or just the last part of the path. I would clarify.
+-->
+</div>
+<div id="part2-docker-sharing-images" class="section level2 hasAnchor" number="16.4">
+<h2><span class="header-section-number">16.4</span> Sharing Images<a href="16-part2-images.html#part2-docker-sharing-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As we saw, Docker images are just compressed files linked by metadata.
+You should be able to copy these files and move them around.
+The <code>docker save</code> command lets you save an image to a compressed tar file:</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb135-1"><a href="16-part2-images.html#cb135-1" tabindex="-1"></a><span class="ex">docker</span> save <span class="at">-o</span> r-shiny-v1.tar r-shiny:v1</span></code></pre></div>
+<p>Next, you take this tar file, copy it to another server and load it with:</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb136-1"><a href="16-part2-images.html#cb136-1" tabindex="-1"></a><span class="ex">docker</span> load <span class="at">--input</span> r-shiny-v1.tar</span></code></pre></div>
+<p>This restores both the image and the tags.</p>
+<p>Now imagine that you are managing more than two machines, or you want to share
+the Docker image with others so that they can use it or to serve as a parent image.
+The save/copy/load workflow becomes cumbersome quickly.
+In this case, using a registry might be a much better idea. There are
+many options to choose from, and you can even host your own registry.</p>
+<!--
+REVIEW:
+- The first sentence says that we saw that "Docker images are just compressed files linked by metadata". I re-read the previous sections a few times and I don't think this conclusion can be reached from the text.
+- The section about pushing images (6.5.1) should be moved later, it should be AFTER all the sections that talk about registries, what they are, what are the options, how to access them
+- When listing the different types of Docker registries, using bullet point formatting would make more sense than paragraphs.
+- When creating a local registry, it's not clear what is meant by the sentence "just pull the registry image". It can be confusing, I myself didn't understand what a "registry image" means and had to look it up for it to make sense. It needs to be explained.
+- For running commands "incognito", are two spaces really required to prepend to a command? I thought only one space is enough
+-->
+<div id="part2-docker-push" class="section level3 hasAnchor" number="16.4.1">
+<h3><span class="header-section-number">16.4.1</span> Pushing Images<a href="16-part2-images.html#part2-docker-push" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s tag the <code>r-shiny</code> image so that it has a host defined:</p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb137-1"><a href="16-part2-images.html#cb137-1" tabindex="-1"></a><span class="ex">docker</span> tag r-shiny:v1 ghcr.io/h10y/faithful/r-shiny:latest</span></code></pre></div>
+<p>Now we can push the locally built Docker image to a container registry:</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb138-1"><a href="16-part2-images.html#cb138-1" tabindex="-1"></a><span class="ex">docker</span> push ghcr.io/h10y/faithful/r-shiny:latest</span></code></pre></div>
+<p>Note that this command will not work on your machine because you do not
+have write access to the <code>ghcr.io/h10y/faithful</code> repository.
+You need to create an image name that would let you push to your own personal
+Docker Hub account as an example.</p>
+<p>The image tag should start with the registry name unless you are pushing
+to Docker Hub. When the image tag is not specified, Docker will treat
+the new image as <code>:latest</code> automatically.</p>
+</div>
+<div id="part2-docker-registries" class="section level3 hasAnchor" number="16.4.2">
+<h3><span class="header-section-number">16.4.2</span> Docker Registries<a href="16-part2-images.html#part2-docker-registries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Docker registry stores Docker images. This is where we push images to and pull
+images from. <a href="https://hub.docker.com/">Docker Hub</a>
+is a public registry and Docker is configured to look for images on Docker Hub by
+default. <strong>Docker Hub</strong> is a service provided by Docker for finding and sharing
+container images. The canonical host name for Docker Hub is <code>docker.io</code>. This
+is the default registry when you don’t specify a registry host as part of the
+image name.</p>
+<p>There are many other registries out there besides Docker Hub. Here is a
+non-exhaustive list of options.</p>
+<p>The <strong>GitHub Container Registry</strong> (GHCR) is available as part of GitHub Packages
+for free and paid plans, even for private repositories under the free
+plan. This registry requires no authentication for public images, otherwise
+you have to authenticate using your GitHub token. The visibility of the
+images inherits the repository visibility but can be changed by the owner.
+The host name for GHCR is <code>ghcr.io</code>.</p>
+<p>An alternative to GitHub is GitLab (host name <code>registry.gitlab.com</code>),
+that has provided registry support for its free (public and private) repositories
+long before GitHub. The registry is tightly integrated with GitLab’s CI/CD
+pipelines. This registry also needs login with a token for private images.</p>
+<p>Heroku is a platform provider and it also comes with a Docker
+registry (host name is <code>registry.heroku.com</code>) where the Docker-based deployments
+push the images to.</p>
+<p>Every major cloud provider offers a Docker container registry
+that is integrated with their other offerings. Latency should be
+minimal due to network proximity to the servers:</p>
+<ul>
+<li>Amazon Elastic Container Registry</li>
+<li>Azure Container Registry</li>
+<li>Google Container Registry</li>
+<li>DigitalOcean Container Registry</li>
+</ul>
+<p>Other common alternatives for container registries include the JFrog Container
+Registry, Harbor, and Scaleway.</p>
+<p>Although these services are called “container registry”, but strictly
+speaking they store container images.</p>
+</div>
+<div id="part2-docker-registry-login" class="section level3 hasAnchor" number="16.4.3">
+<h3><span class="header-section-number">16.4.3</span> Log In to a Registry<a href="16-part2-images.html#part2-docker-registry-login" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When you work with private registries or private images, you need to log
+in with the <code>docker login</code> command. For Docker Hub, just type
+<code>docker login</code>. For all other registries, type in the registry URL as
+well, e.g. <code>docker login ghcr.io</code>.</p>
+<p>The Docker CLI then will prompt you for your username and password (or
+access token).</p>
+<p>You can log in programmatically by providing your username and the
+password through standard input from a file:</p>
+<div class="sourceCode" id="cb139"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb139-1"><a href="16-part2-images.html#cb139-1" tabindex="-1"></a><span class="fu">cat</span> ~/my_password.txt <span class="kw">|</span> <span class="ex">docker</span> login <span class="at">-u</span> USER <span class="at">--password-stdin</span></span></code></pre></div>
+<p>The <code>my_password.txt</code> in this example is is a simple text file with the token
+inside and it can be found in the root of your home folder (<code>~</code>). Change the
+file path and file name as needed.</p>
+<p>You can also use an environment variable to store your token value
+that you can pass to the login command as:</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb140-1"><a href="16-part2-images.html#cb140-1" tabindex="-1"></a>  <span class="bu">export</span> <span class="va">TOKEN</span><span class="op">=&lt;</span>your-token-value<span class="op">&gt;</span></span>
+<span id="cb140-2"><a href="16-part2-images.html#cb140-2" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$TOKEN</span> <span class="kw">|</span> <span class="ex">docker</span> login ghcr.io <span class="at">-u</span> USER <span class="at">--password-stdin</span></span></code></pre></div>
+<p>Notice the white space before the <code>export</code> statement, use double spaces so that
+the command after the spaces will not be saved in your shell history.
+The history allows you to recall previous commands by pushing the up arrow
+key. The shell history is really just a text file, so copy pasting secrets
+into the terminal will leave a trace. Use this trick for sensitive information.</p>
+<p>With one of these approaches you can log into any public or private repository
+for which you have credentials. The credentials will be stored
+locally in <code>$HOME/.docker/config.json</code> on Linux and Mac or in
+<code>%USERPROFILE%/.docker/config.json</code> on Windows. After login, there is no
+need to re-authenticate until you log out with <code>docker logout</code>.</p>
+<p>It is always a good idea to use a token instead of your password. Tokens
+can have limited scope (i.e. only for pulling images), and can be
+revoked at any time without it impacting other areas of your life.</p>
+<p>Note that <code>docker login</code> requires users to use <code>sudo</code> or be the <code>root</code> user.</p>
+</div>
+<div id="part2-docker-registry-local" class="section level3 hasAnchor" number="16.4.4">
+<h3><span class="header-section-number">16.4.4</span> Local Registry<a href="16-part2-images.html#part2-docker-registry-local" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You might not want the Docker images to leave your computer because you need an
+air gapped environment, or you are setting up a registry within your
+virtual private network (VPN). In these situations, you can host your own
+container registry.</p>
+<p>If you want a registry hosted on your machine, just pull the registry image.
+The next command will pull the registry image, and run the similarly named
+container in the background on port 5000:</p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb141-1"><a href="16-part2-images.html#cb141-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb141-2"><a href="16-part2-images.html#cb141-2" tabindex="-1"></a>  <span class="at">-p</span> 5000:5000 <span class="dt">\</span></span>
+<span id="cb141-3"><a href="16-part2-images.html#cb141-3" tabindex="-1"></a>  <span class="at">--restart</span><span class="op">=</span>always <span class="dt">\</span></span>
+<span id="cb141-4"><a href="16-part2-images.html#cb141-4" tabindex="-1"></a>  <span class="at">--name</span> registry <span class="dt">\</span></span>
+<span id="cb141-5"><a href="16-part2-images.html#cb141-5" tabindex="-1"></a>  registry:2</span></code></pre></div>
+<p>Giving a container a name makes it easier to remove the container later, this
+way you don’t have to find the container ID. The restart policy always restarts
+the container if it stops, but not when it is manually stopped.
+The <code>-d</code> flag will start the container in a background process, so you get back
+the shell prompt, and you will not see the container log messages.</p>
+<p>Tag an image with the host name of your local registry, <code>localhost:5000</code>, and
+push the image:</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb142-1"><a href="16-part2-images.html#cb142-1" tabindex="-1"></a><span class="ex">docker</span> tag r-shiny:v1 localhost:5000/r-shiny:v1</span>
+<span id="cb142-2"><a href="16-part2-images.html#cb142-2" tabindex="-1"></a></span>
+<span id="cb142-3"><a href="16-part2-images.html#cb142-3" tabindex="-1"></a><span class="ex">docker</span> push localhost:5000/r-shiny:v1</span></code></pre></div>
+<p>To test if it worked, remove the images from your local Docker system.
+If you use the <code>-f</code> flag and specify the image ID then the <code>docker rmi</code>
+command untags and removes all images that match that ID (get the image ID
+from <code>docker images</code>):</p>
+<div class="sourceCode" id="cb143"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb143-1"><a href="16-part2-images.html#cb143-1" tabindex="-1"></a><span class="ex">docker</span> rmi <span class="at">-f</span> <span class="op">&lt;</span>image_id<span class="op">&gt;</span></span></code></pre></div>
+<p>Now you can pull the image from your local registry:</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb144-1"><a href="16-part2-images.html#cb144-1" tabindex="-1"></a><span class="ex">docker</span> pull localhost:5000/r-shiny:v1</span></code></pre></div>
+<p>The next command stops and removes the registry container. It is a daemonized
+(background) process, so CTRL+C won’t work. The <code>-v</code> option makes sure to remove
+anonymous volumes associated with the container which is often used to mount a
+volume from your hard drive into the container where the images are stored:</p>
+<div class="sourceCode" id="cb145"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb145-1"><a href="16-part2-images.html#cb145-1" tabindex="-1"></a><span class="ex">docker</span> container stop registry <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb145-2"><a href="16-part2-images.html#cb145-2" tabindex="-1"></a>  <span class="ex">docker</span> container rm <span class="at">-v</span> registry</span></code></pre></div>
+<p>If you want your registry to be accessed over a public network, then you need to
+think about security and access control. You’ll have to set up transport
+layer security (TLS) for HTTPS and user authentication, which are advanced topics
+and we recommend using a commercial container registry that we listed above
+and use private repositories to control access to your images.</p>
+</div>
+</div>
+<div id="summary-15" class="section level2 hasAnchor" number="16.5">
+<h2><span class="header-section-number">16.5</span> Summary<a href="16-part2-images.html#summary-15" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This chapter covers the concepts of container images and registries.
+In the following chapter, we will cover how to build an image with a Shiny app.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="15-part4-containers.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="17-part2-containerizing-shiny-apps.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/h10y/book/edit/main/book-source/04-02-container-images.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

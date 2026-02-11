@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 21 ShinyProxy | Hosting Shiny Applications for R and Python</title>
+  <meta name="description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 21 ShinyProxy | Hosting Shiny Applications for R and Python" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+  <meta property="og:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="github-repo" content="h10y/book" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 21 ShinyProxy | Hosting Shiny Applications for R and Python" />
+  <meta name="twitter:site" content="@psolymos" />
+  <meta name="twitter:description" content="Everything you wanted to know about hosting Shiny apps." />
+  <meta name="twitter:image" content="https://hostingshiny.com//images/logos/book_cover.jpg" />
+
+<meta name="author" content="Péter Sólymos and Kalvin Eng" />
+
+
+<meta name="date" content="2026-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/logos/favicons/apple-touch-icon.png" />
+  <link rel="shortcut icon" href="images/logos/favicons/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="20-part2-docker-compose.html"/>
+<link rel="next" href="22-shiny-production.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/core-js-2.5.3/shim.min.js"></script>
+<script src="libs/react-18.2.0/react.min.js"></script>
+<script src="libs/react-18.2.0/react-dom.min.js"></script>
+<script src="libs/reactwidget-2.0.0/react-tools.js"></script>
+<link href="libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="libs/reactable-0.4.5/reactable.css" rel="stylesheet" />
+<script src="libs/reactable-binding-0.4.5/reactable.js"></script>
+<script src="https://cdn.usefathom.com/script.js" data-site="PASYTARS" defer></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i>License</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="foreword.html"><a href="foreword.html"><i class="fa fa-check"></i>Foreword</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#motivation"><i class="fa fa-check"></i>Motivation</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#who-is-this-book-for"><i class="fa fa-check"></i>Who Is This Book For?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-learn"><i class="fa fa-check"></i>What Will You Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-will-you-not-learn"><i class="fa fa-check"></i>What Will You Not Learn?</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#about-the-authors"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
+<li class="part"><span><b>I Getting Started</b></span></li>
+<li class="chapter" data-level="1" data-path="1-part1-background.html"><a href="1-part1-background.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-data-intensive-apps"><i class="fa fa-check"></i><b>1.1</b> Data-intensive Apps</a></li>
+<li class="chapter" data-level="1.2" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-enter-shiny"><i class="fa fa-check"></i><b>1.2</b> Enter Shiny</a></li>
+<li class="chapter" data-level="1.3" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-development"><i class="fa fa-check"></i><b>1.3</b> Application Development</a></li>
+<li class="chapter" data-level="1.4" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-application-hosting"><i class="fa fa-check"></i><b>1.4</b> Application Hosting</a></li>
+<li class="chapter" data-level="1.5" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-devops-cycle"><i class="fa fa-check"></i><b>1.5</b> The DevOps Cycle</a></li>
+<li class="chapter" data-level="1.6" data-path="1-part1-background.html"><a href="1-part1-background.html#part1-hosting-cycle"><i class="fa fa-check"></i><b>1.6</b> The Hosting Cycle</a></li>
+<li class="chapter" data-level="1.7" data-path="1-part1-background.html"><a href="1-part1-background.html#summary"><i class="fa fa-check"></i><b>1.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html"><i class="fa fa-check"></i><b>2</b> Hosting Concepts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-domains-and-networking"><i class="fa fa-check"></i><b>2.1</b> Domains and Networking</a></li>
+<li class="chapter" data-level="2.2" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-web-technologies"><i class="fa fa-check"></i><b>2.2</b> Website Technologies</a></li>
+<li class="chapter" data-level="2.3" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-servers"><i class="fa fa-check"></i><b>2.3</b> Servers</a></li>
+<li class="chapter" data-level="2.4" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#part1-hosting-environments"><i class="fa fa-check"></i><b>2.4</b> Hosting Environments</a></li>
+<li class="chapter" data-level="2.5" data-path="2-part1-hosting-concepts.html"><a href="2-part1-hosting-concepts.html#summary-1"><i class="fa fa-check"></i><b>2.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html"><i class="fa fa-check"></i><b>3</b> Local Setup</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#installing-your-developer-tools"><i class="fa fa-check"></i><b>3.1</b> Installing Your Developer Tools</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-r"><i class="fa fa-check"></i><b>3.1.1</b> R</a></li>
+<li class="chapter" data-level="3.1.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-python"><i class="fa fa-check"></i><b>3.1.2</b> Python</a></li>
+<li class="chapter" data-level="3.1.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-web-browser"><i class="fa fa-check"></i><b>3.1.3</b> Web Browser</a></li>
+<li class="chapter" data-level="3.1.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-installing-docker"><i class="fa fa-check"></i><b>3.1.4</b> Docker Desktop</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-command-line"><i class="fa fa-check"></i><b>3.2</b> The Command Line</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#navigation"><i class="fa fa-check"></i><b>3.2.1</b> Navigation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#editing-files"><i class="fa fa-check"></i><b>3.2.2</b> Editing Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#file-and-directory-operations"><i class="fa fa-check"></i><b>3.2.3</b> File and Directory Operations</a></li>
+<li class="chapter" data-level="3.2.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-super-user"><i class="fa fa-check"></i><b>3.2.4</b> Super User Access</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-scm-git"><i class="fa fa-check"></i><b>3.3</b> Source Code Management with Git</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-services"><i class="fa fa-check"></i><b>3.3.1</b> Git Services</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-commands"><i class="fa fa-check"></i><b>3.3.2</b> Git Commands</a></li>
+<li class="chapter" data-level="3.3.3" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#gitignore"><i class="fa fa-check"></i><b>3.3.3</b> .gitignore</a></li>
+<li class="chapter" data-level="3.3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#branching"><i class="fa fa-check"></i><b>3.3.4</b> Branching</a></li>
+<li class="chapter" data-level="3.3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#git-in-practice"><i class="fa fa-check"></i><b>3.3.5</b> Git in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-working-with-servers"><i class="fa fa-check"></i><b>3.4</b> Working with Servers</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#part1-ssh"><i class="fa fa-check"></i><b>3.4.1</b> Secure Shell (SSH)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#readability-and-other-useful-tools"><i class="fa fa-check"></i><b>3.5</b> Readability and Other Useful Tools</a></li>
+<li class="chapter" data-level="3.6" data-path="3-part1-local-setup.html"><a href="3-part1-local-setup.html#summary-2"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-part1-examples.html"><a href="4-part1-examples.html"><i class="fa fa-check"></i><b>4</b> Shiny Examples</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-faithful"><i class="fa fa-check"></i><b>4.1</b> Old Faithful</a></li>
+<li class="chapter" data-level="4.2" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-bananas"><i class="fa fa-check"></i><b>4.2</b> Bananas</a></li>
+<li class="chapter" data-level="4.3" data-path="4-part1-examples.html"><a href="4-part1-examples.html#part1-example-lbtest"><i class="fa fa-check"></i><b>4.3</b> Load Balancing Test</a></li>
+<li class="chapter" data-level="4.4" data-path="4-part1-examples.html"><a href="4-part1-examples.html#summary-3"><i class="fa fa-check"></i><b>4.4</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>II Shiny Apps</b></span></li>
+<li class="chapter" data-level="5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html"><i class="fa fa-check"></i><b>5</b> Developing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-creating-a-shiny-app"><i class="fa fa-check"></i><b>5.1</b> Creating a Shiny App</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r"><i class="fa fa-check"></i><b>5.1.1</b> R</a></li>
+<li class="chapter" data-level="5.1.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python"><i class="fa fa-check"></i><b>5.1.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shiny-lifecycle"><i class="fa fa-check"></i><b>5.2</b> The Shiny App Lifecycle</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections"><i class="fa fa-check"></i><b>5.2.1</b> Connections</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#sessions"><i class="fa fa-check"></i><b>5.2.2</b> Sessions</a></li>
+<li class="chapter" data-level="5.2.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#connections-sessions"><i class="fa fa-check"></i><b>5.2.3</b> Connections + Sessions</a></li>
+<li class="chapter" data-level="5.2.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#shinylive"><i class="fa fa-check"></i><b>5.2.4</b> Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-organizing-shiny-apps"><i class="fa fa-check"></i><b>5.3</b> Organizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#r-1"><i class="fa fa-check"></i><b>5.3.1</b> R</a></li>
+<li class="chapter" data-level="5.3.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#python-1"><i class="fa fa-check"></i><b>5.3.2</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive"><i class="fa fa-check"></i><b>5.4</b> Shinylive</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-python"><i class="fa fa-check"></i><b>5.4.1</b> Python Shinylive</a></li>
+<li class="chapter" data-level="5.4.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-shinylive-r"><i class="fa fa-check"></i><b>5.4.2</b> R Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-dynamic-documents"><i class="fa fa-check"></i><b>5.5</b> Dynamic Documents</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-r-markdown"><i class="fa fa-check"></i><b>5.5.1</b> R Markdown</a></li>
+<li class="chapter" data-level="5.5.2" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#part2-quarto-with-python"><i class="fa fa-check"></i><b>5.5.2</b> Quarto with Python</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="5-part2-developing-shiny-apps.html"><a href="5-part2-developing-shiny-apps.html#summary-4"><i class="fa fa-check"></i><b>5.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html"><i class="fa fa-check"></i><b>6</b> Running Shiny Apps Locally</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#r-2"><i class="fa fa-check"></i><b>6.1</b> R</a></li>
+<li class="chapter" data-level="6.2" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#python-2"><i class="fa fa-check"></i><b>6.2</b> Python</a></li>
+<li class="chapter" data-level="6.3" data-path="6-part2-run-shiny-locally.html"><a href="6-part2-run-shiny-locally.html#summary-5"><i class="fa fa-check"></i><b>6.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html"><i class="fa fa-check"></i><b>7</b> Sharing Your Shiny App</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-distributing-code"><i class="fa fa-check"></i><b>7.1</b> Distributing Code</a></li>
+<li class="chapter" data-level="7.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploying-shiny-apps"><i class="fa fa-check"></i><b>7.2</b> Deploying Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-deploy-to-shinyapps-io"><i class="fa fa-check"></i><b>7.2.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="7.2.2" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#part2-sharing-shinylive"><i class="fa fa-check"></i><b>7.2.2</b> Sharing Shinylive</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="7-part2-sharing-shiny-code.html"><a href="7-part2-sharing-shiny-code.html#summary-6"><i class="fa fa-check"></i><b>7.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>III Hosting Shiny Apps</b></span></li>
+<li class="chapter" data-level="8" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html"><i class="fa fa-check"></i><b>8</b> A Review of Shiny Hosting Options</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-hosting-patterns"><i class="fa fa-check"></i><b>8.1</b> Hosting Patterns for Shiny Apps</a></li>
+<li class="chapter" data-level="8.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-decision-framework"><i class="fa fa-check"></i><b>8.2</b> The Decision Framework</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#start-with-the-why"><i class="fa fa-check"></i><b>8.2.1</b> Start with the Why</a></li>
+<li class="chapter" data-level="8.2.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#requirements"><i class="fa fa-check"></i><b>8.2.2</b> Requirements</a></li>
+<li class="chapter" data-level="8.2.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#constraints"><i class="fa fa-check"></i><b>8.2.3</b> Constraints</a></li>
+<li class="chapter" data-level="8.2.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#picking-an-option"><i class="fa fa-check"></i><b>8.2.4</b> Picking an Option</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-important-prerequisites"><i class="fa fa-check"></i><b>8.3</b> Important Prerequisites</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-custom-domains"><i class="fa fa-check"></i><b>8.3.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="8.3.2" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#part3-https"><i class="fa fa-check"></i><b>8.3.2</b> HTTPS Access to Your App</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="8-part3-hosting-options.html"><a href="8-part3-hosting-options.html#summary-7"><i class="fa fa-check"></i><b>8.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html"><i class="fa fa-check"></i><b>9</b> Platforms for Shiny Hosting</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io"><i class="fa fa-check"></i><b>9.1</b> shinyapps.io</a></li>
+<li class="chapter" data-level="9.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-shinyapps-io-alternatives"><i class="fa fa-check"></i><b>9.2</b> shinyapps.io Alternatives</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-posit-connect-cloud"><i class="fa fa-check"></i><b>9.2.1</b> Posit Connect Cloud</a></li>
+<li class="chapter" data-level="9.2.2" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#paas-ploomber"><i class="fa fa-check"></i><b>9.2.2</b> Ploomber</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="9-platforms-shiny-hosting.html"><a href="9-platforms-shiny-hosting.html#summary-8"><i class="fa fa-check"></i><b>9.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html"><i class="fa fa-check"></i><b>10</b> Static Hosting for Shinylive</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#building-shinylive"><i class="fa fa-check"></i><b>10.1</b> Building Shinylive</a></li>
+<li class="chapter" data-level="10.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#github-pages"><i class="fa fa-check"></i><b>10.2</b> GitHub Pages</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#enabling-pages"><i class="fa fa-check"></i><b>10.2.1</b> Enabling Pages</a></li>
+<li class="chapter" data-level="10.2.2" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#accessing-the-published-site"><i class="fa fa-check"></i><b>10.2.2</b> Accessing the Published Site</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#other-static-site-hosting"><i class="fa fa-check"></i><b>10.3</b> Other Static Site Hosting Providers</a></li>
+<li class="chapter" data-level="10.4" data-path="10-part3-static-hosting.html"><a href="10-part3-static-hosting.html#summary-9"><i class="fa fa-check"></i><b>10.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html"><i class="fa fa-check"></i><b>11</b> Embedding Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#understanding-iframes"><i class="fa fa-check"></i><b>11.1</b> Understanding Iframes</a></li>
+<li class="chapter" data-level="11.2" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#styling-iframes"><i class="fa fa-check"></i><b>11.2</b> Styling Iframes</a></li>
+<li class="chapter" data-level="11.3" data-path="11-embedding-shiny-apps.html"><a href="11-embedding-shiny-apps.html#summary-10"><i class="fa fa-check"></i><b>11.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html"><i class="fa fa-check"></i><b>12</b> Hosting on Virtual Machines</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-custom-domains"><i class="fa fa-check"></i><b>12.1</b> Custom Domain Names</a></li>
+<li class="chapter" data-level="12.2" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-servers"><i class="fa fa-check"></i><b>12.2</b> Server Setup</a></li>
+<li class="chapter" data-level="12.3" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#part3-vm-setup-install"><i class="fa fa-check"></i><b>12.3</b> Installing Software for Shiny Hosting</a></li>
+<li class="chapter" data-level="12.4" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#reverse-proxies"><i class="fa fa-check"></i><b>12.4</b> Reverse Proxies</a></li>
+<li class="chapter" data-level="12.5" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#set-firewall"><i class="fa fa-check"></i><b>12.5</b> Setting the Firewall</a></li>
+<li class="chapter" data-level="12.6" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#monitoring-processes"><i class="fa fa-check"></i><b>12.6</b> Monitoring Processes</a></li>
+<li class="chapter" data-level="12.7" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#shutdown-and-reboot"><i class="fa fa-check"></i><b>12.7</b> Shutdown and Reboot</a></li>
+<li class="chapter" data-level="12.8" data-path="12-part3-vm-setup.html"><a href="12-part3-vm-setup.html#summary-11"><i class="fa fa-check"></i><b>12.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="13-shiny-server.html"><a href="13-shiny-server.html"><i class="fa fa-check"></i><b>13</b> Shiny Server</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#provisioning-a-server"><i class="fa fa-check"></i><b>13.1</b> Provisioning a Server</a></li>
+<li class="chapter" data-level="13.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#using-systemd"><i class="fa fa-check"></i><b>13.2</b> Using Systemd</a></li>
+<li class="chapter" data-level="13.3" data-path="13-shiny-server.html"><a href="13-shiny-server.html#configuring-shiny-server"><i class="fa fa-check"></i><b>13.3</b> Configuring Shiny Server</a></li>
+<li class="chapter" data-level="13.4" data-path="13-shiny-server.html"><a href="13-shiny-server.html#file-transfer-based-publishing"><i class="fa fa-check"></i><b>13.4</b> File Transfer Based Publishing</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#editing-files-on-the-server"><i class="fa fa-check"></i><b>13.4.1</b> Editing Files on the Server</a></li>
+<li class="chapter" data-level="13.4.2" data-path="13-shiny-server.html"><a href="13-shiny-server.html#secure-copy-files-to-the-server"><i class="fa fa-check"></i><b>13.4.2</b> Secure Copy Files to the Server</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="13-shiny-server.html"><a href="13-shiny-server.html#git-based-deployment"><i class="fa fa-check"></i><b>13.5</b> Git-based Deployment</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="13-shiny-server.html"><a href="13-shiny-server.html#apps-with-multiple-linux-users"><i class="fa fa-check"></i><b>13.5.1</b> Apps with Multiple Linux Users</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="13-shiny-server.html"><a href="13-shiny-server.html#licensing-considerations"><i class="fa fa-check"></i><b>13.6</b> Licensing Considerations</a></li>
+<li class="chapter" data-level="13.7" data-path="13-shiny-server.html"><a href="13-shiny-server.html#summary-12"><i class="fa fa-check"></i><b>13.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="14-posit-connect.html"><a href="14-posit-connect.html"><i class="fa fa-check"></i><b>14</b> Posit Connect</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="14-posit-connect.html"><a href="14-posit-connect.html#summary-13"><i class="fa fa-check"></i><b>14.1</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>IV Containerized Shiny Apps</b></span></li>
+<li class="chapter" data-level="15" data-path="15-part4-containers.html"><a href="15-part4-containers.html"><i class="fa fa-check"></i><b>15</b> Introduction to Containers</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-concepts"><i class="fa fa-check"></i><b>15.1</b> Docker Concepts</a>
+<ul>
+<li class="chapter" data-level="15.1.1" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-engine"><i class="fa fa-check"></i><b>15.1.1</b> Docker Engine</a></li>
+<li class="chapter" data-level="15.1.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-container-registries"><i class="fa fa-check"></i><b>15.1.2</b> Container Registries</a></li>
+<li class="chapter" data-level="15.1.3" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-images"><i class="fa fa-check"></i><b>15.1.3</b> Images</a></li>
+<li class="chapter" data-level="15.1.4" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-the-dockerfile"><i class="fa fa-check"></i><b>15.1.4</b> The Dockerfile</a></li>
+<li class="chapter" data-level="15.1.5" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-containers"><i class="fa fa-check"></i><b>15.1.5</b> Containers</a></li>
+<li class="chapter" data-level="15.1.6" data-path="15-part4-containers.html"><a href="15-part4-containers.html#part2-docker-cli"><i class="fa fa-check"></i><b>15.1.6</b> The Docker Command Line</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="15-part4-containers.html"><a href="15-part4-containers.html#summary-14"><i class="fa fa-check"></i><b>15.2</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="16-part2-images.html"><a href="16-part2-images.html"><i class="fa fa-check"></i><b>16</b> Container Images</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-existing-images"><i class="fa fa-check"></i><b>16.1</b> Working with Existing Images</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-image-names-tags"><i class="fa fa-check"></i><b>16.1.1</b> Image Names and Tags</a></li>
+<li class="chapter" data-level="16.1.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-pull"><i class="fa fa-check"></i><b>16.1.2</b> Pulling an Image</a></li>
+<li class="chapter" data-level="16.1.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-login"><i class="fa fa-check"></i><b>16.1.3</b> Docker Login</a></li>
+<li class="chapter" data-level="16.1.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-run"><i class="fa fa-check"></i><b>16.1.4</b> Running a Container</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-build"><i class="fa fa-check"></i><b>16.2</b> Building a New Image</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-r-shiny"><i class="fa fa-check"></i><b>16.2.1</b> R for Shiny</a></li>
+<li class="chapter" data-level="16.2.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-buildx-buildkit"><i class="fa fa-check"></i><b>16.2.2</b> Buildx and BuildKit</a></li>
+<li class="chapter" data-level="16.2.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-inspect"><i class="fa fa-check"></i><b>16.2.3</b> Inspecting the Image</a></li>
+<li class="chapter" data-level="16.2.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-python-shiny"><i class="fa fa-check"></i><b>16.2.4</b> Python for Shiny</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-managing-images"><i class="fa fa-check"></i><b>16.3</b> Managing Images</a></li>
+<li class="chapter" data-level="16.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-sharing-images"><i class="fa fa-check"></i><b>16.4</b> Sharing Images</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-push"><i class="fa fa-check"></i><b>16.4.1</b> Pushing Images</a></li>
+<li class="chapter" data-level="16.4.2" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registries"><i class="fa fa-check"></i><b>16.4.2</b> Docker Registries</a></li>
+<li class="chapter" data-level="16.4.3" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-login"><i class="fa fa-check"></i><b>16.4.3</b> Log In to a Registry</a></li>
+<li class="chapter" data-level="16.4.4" data-path="16-part2-images.html"><a href="16-part2-images.html#part2-docker-registry-local"><i class="fa fa-check"></i><b>16.4.4</b> Local Registry</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="16-part2-images.html"><a href="16-part2-images.html#summary-15"><i class="fa fa-check"></i><b>16.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html"><i class="fa fa-check"></i><b>17</b> Containerizing Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile"><i class="fa fa-check"></i><b>17.1</b> The Dockerfile</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-parent-image"><i class="fa fa-check"></i><b>17.1.1</b> The Parent Image</a></li>
+<li class="chapter" data-level="17.1.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-metadata"><i class="fa fa-check"></i><b>17.1.2</b> Metadata</a></li>
+<li class="chapter" data-level="17.1.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-dependencies"><i class="fa fa-check"></i><b>17.1.3</b> Dependencies</a></li>
+<li class="chapter" data-level="17.1.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-files-and-dirs"><i class="fa fa-check"></i><b>17.1.4</b> Directories and Files</a></li>
+<li class="chapter" data-level="17.1.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-user"><i class="fa fa-check"></i><b>17.1.5</b> Switching User</a></li>
+<li class="chapter" data-level="17.1.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-port"><i class="fa fa-check"></i><b>17.1.6</b> Expose a Port</a></li>
+<li class="chapter" data-level="17.1.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-env-and-arg"><i class="fa fa-check"></i><b>17.1.7</b> Variables</a></li>
+<li class="chapter" data-level="17.1.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dockerfile-cmd"><i class="fa fa-check"></i><b>17.1.8</b> Executable and Command</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images"><i class="fa fa-check"></i><b>17.2</b> Parent Images</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-r"><i class="fa fa-check"></i><b>17.2.1</b> R Parent Images</a></li>
+<li class="chapter" data-level="17.2.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-parent-images-python"><i class="fa fa-check"></i><b>17.2.2</b> Python Parent Images</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries"><i class="fa fa-check"></i><b>17.3</b> Installing System Libraries</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-manual"><i class="fa fa-check"></i><b>17.3.1</b> Manual Installation</a></li>
+<li class="chapter" data-level="17.3.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-r2u"><i class="fa fa-check"></i><b>17.3.2</b> Automated Dependency Resolution with r2u</a></li>
+<li class="chapter" data-level="17.3.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-system-libraries-alpine"><i class="fa fa-check"></i><b>17.3.3</b> Dependencies on Alpine Linux</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg"><i class="fa fa-check"></i><b>17.4</b> Installing R Packages</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-explicit"><i class="fa fa-check"></i><b>17.4.1</b> Explicitly Stating Dependencies</a></li>
+<li class="chapter" data-level="17.4.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-description"><i class="fa fa-check"></i><b>17.4.2</b> Using the DESCRIPTION File</a></li>
+<li class="chapter" data-level="17.4.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-renv"><i class="fa fa-check"></i><b>17.4.3</b> Using renv</a></li>
+<li class="chapter" data-level="17.4.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-r-pkg-deps"><i class="fa fa-check"></i><b>17.4.4</b> Using deps</a></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-install-python"><i class="fa fa-check"></i><b>17.5</b> Python Requirements</a></li>
+<li class="chapter" data-level="17.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps"><i class="fa fa-check"></i><b>17.6</b> Classic Shiny Apps</a>
+<ul>
+<li class="chapter" data-level="17.6.1" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-r"><i class="fa fa-check"></i><b>17.6.1</b> R</a></li>
+<li class="chapter" data-level="17.6.2" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-python"><i class="fa fa-check"></i><b>17.6.2</b> Python</a></li>
+<li class="chapter" data-level="17.6.3" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-rmd"><i class="fa fa-check"></i><b>17.6.3</b> R Markdown</a></li>
+<li class="chapter" data-level="17.6.4" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-r"><i class="fa fa-check"></i><b>17.6.4</b> Quarto with R</a></li>
+<li class="chapter" data-level="17.6.5" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-quarto-python"><i class="fa fa-check"></i><b>17.6.5</b> Quarto with Python</a></li>
+<li class="chapter" data-level="17.6.6" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-dynamic-shiny-apps-shiny-server"><i class="fa fa-check"></i><b>17.6.6</b> Shiny Server</a></li>
+</ul></li>
+<li class="chapter" data-level="17.7" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#part2-static-shiny-apps"><i class="fa fa-check"></i><b>17.7</b> Containerizing Shinylive</a></li>
+<li class="chapter" data-level="17.8" data-path="17-part2-containerizing-shiny-apps.html"><a href="17-part2-containerizing-shiny-apps.html#summary-16"><i class="fa fa-check"></i><b>17.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html"><i class="fa fa-check"></i><b>18</b> Working with Containers</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-run"><i class="fa fa-check"></i><b>18.1</b> Docker Run</a></li>
+<li class="chapter" data-level="18.2" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#part2-containers-managing"><i class="fa fa-check"></i><b>18.2</b> Managing Containers</a></li>
+<li class="chapter" data-level="18.3" data-path="18-part2-working-with-containers.html"><a href="18-part2-working-with-containers.html#summary-17"><i class="fa fa-check"></i><b>18.3</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>V Hosting Shiny with Containers</b></span></li>
+<li class="chapter" data-level="19" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html"><i class="fa fa-check"></i><b>19</b> Hosting Platforms</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-heroku"><i class="fa fa-check"></i><b>19.1</b> Heroku</a>
+<ul>
+<li class="chapter" data-level="19.1.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-from-the-command-line"><i class="fa fa-check"></i><b>19.1.1</b> Deployment from the Command Line</a></li>
+<li class="chapter" data-level="19.1.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deployment-using-the-web-dashboard"><i class="fa fa-check"></i><b>19.1.2</b> Deployment using the Web Dashboard</a></li>
+<li class="chapter" data-level="19.1.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domain-and-https"><i class="fa fa-check"></i><b>19.1.3</b> Custom Domain and HTTPS</a></li>
+<li class="chapter" data-level="19.1.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#scaling"><i class="fa fa-check"></i><b>19.1.4</b> Scaling</a></li>
+<li class="chapter" data-level="19.1.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-18"><i class="fa fa-check"></i><b>19.1.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-doap"><i class="fa fa-check"></i><b>19.2</b> DigitalOcean App Platform</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites"><i class="fa fa-check"></i><b>19.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.2.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#docker-hub-deployment"><i class="fa fa-check"></i><b>19.2.2</b> Docker Hub Deployment</a></li>
+<li class="chapter" data-level="19.2.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#github-deployment"><i class="fa fa-check"></i><b>19.2.3</b> GitHub Deployment</a></li>
+<li class="chapter" data-level="19.2.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#programmatic-deployment"><i class="fa fa-check"></i><b>19.2.4</b> Programmatic Deployment</a></li>
+<li class="chapter" data-level="19.2.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#logs"><i class="fa fa-check"></i><b>19.2.5</b> Logs</a></li>
+<li class="chapter" data-level="19.2.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#custom-domains"><i class="fa fa-check"></i><b>19.2.6</b> Custom Domains</a></li>
+<li class="chapter" data-level="19.2.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-19"><i class="fa fa-check"></i><b>19.2.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#general-paas-flyio"><i class="fa fa-check"></i><b>19.3</b> Fly.io</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#prerequisites-1"><i class="fa fa-check"></i><b>19.3.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="19.3.2" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#creating-a-fly.io-app"><i class="fa fa-check"></i><b>19.3.2</b> Creating a Fly.io App</a></li>
+<li class="chapter" data-level="19.3.3" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#deploying-to-fly.io"><i class="fa fa-check"></i><b>19.3.3</b> Deploying to Fly.io</a></li>
+<li class="chapter" data-level="19.3.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#metrics-and-logs"><i class="fa fa-check"></i><b>19.3.4</b> Metrics and Logs</a></li>
+<li class="chapter" data-level="19.3.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#setting-up-a-custom-domain"><i class="fa fa-check"></i><b>19.3.5</b> Setting up a Custom Domain</a></li>
+<li class="chapter" data-level="19.3.6" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#adding-tlsssl-certificate"><i class="fa fa-check"></i><b>19.3.6</b> Adding TLS/SSL certificate</a></li>
+<li class="chapter" data-level="19.3.7" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#autoscaling-in-multiple-regions"><i class="fa fa-check"></i><b>19.3.7</b> Autoscaling in Multiple-Regions</a></li>
+<li class="chapter" data-level="19.3.8" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-20"><i class="fa fa-check"></i><b>19.3.8</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#other-general-paas"><i class="fa fa-check"></i><b>19.4</b> Other Providers</a></li>
+<li class="chapter" data-level="19.5" data-path="19-hosting-platforms.html"><a href="19-hosting-platforms.html#summary-21"><i class="fa fa-check"></i><b>19.5</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html"><i class="fa fa-check"></i><b>20</b> Docker Compose</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-file"><i class="fa fa-check"></i><b>20.1</b> The Compose File</a></li>
+<li class="chapter" data-level="20.2" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#part2-compose-cli"><i class="fa fa-check"></i><b>20.2</b> Compose Command Line</a></li>
+<li class="chapter" data-level="20.3" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-vm"><i class="fa fa-check"></i><b>20.3</b> Docker Compose on a Virtual Machine</a></li>
+<li class="chapter" data-level="20.4" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#docker-compose-up-and-down"><i class="fa fa-check"></i><b>20.4</b> Docker Compose Up and Down</a></li>
+<li class="chapter" data-level="20.5" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#compose-scaling"><i class="fa fa-check"></i><b>20.5</b> Scaling with Docker Compose</a></li>
+<li class="chapter" data-level="20.6" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#server-maintenance"><i class="fa fa-check"></i><b>20.6</b> Server Maintenance</a></li>
+<li class="chapter" data-level="20.7" data-path="20-part2-docker-compose.html"><a href="20-part2-docker-compose.html#summary-22"><i class="fa fa-check"></i><b>20.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html"><i class="fa fa-check"></i><b>21</b> ShinyProxy</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#setting-up-shinyproxy-using-docker"><i class="fa fa-check"></i><b>21.1</b> Setting up ShinyProxy Using Docker</a>
+<ul>
+<li class="chapter" data-level="21.1.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#docker-compose-for-shinyproxy"><i class="fa fa-check"></i><b>21.1.1</b> Docker Compose for ShinyProxy</a></li>
+<li class="chapter" data-level="21.1.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config"><i class="fa fa-check"></i><b>21.1.2</b> ShinyProxy Configuration</a></li>
+<li class="chapter" data-level="21.1.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-general"><i class="fa fa-check"></i><b>21.1.3</b> General</a></li>
+<li class="chapter" data-level="21.1.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#sp-authentication"><i class="fa fa-check"></i><b>21.1.4</b> Authentication</a></li>
+<li class="chapter" data-level="21.1.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-config-applications"><i class="fa fa-check"></i><b>21.1.5</b> Applications</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#deploying-tls-with-shinyproxy-operator"><i class="fa fa-check"></i><b>21.2</b> Deploying TLS with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.3" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#user-interface"><i class="fa fa-check"></i><b>21.3</b> User Interface</a></li>
+<li class="chapter" data-level="21.4" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#spo-monitoring"><i class="fa fa-check"></i><b>21.4</b> Deploying Monitoring with ShinyProxy Operator</a></li>
+<li class="chapter" data-level="21.5" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#benchmarking-shinyproxy-applications"><i class="fa fa-check"></i><b>21.5</b> Benchmarking ShinyProxy Applications</a>
+<ul>
+<li class="chapter" data-level="21.5.1" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-docker-stats"><i class="fa fa-check"></i><b>21.5.1</b> Docker Stats</a></li>
+<li class="chapter" data-level="21.5.2" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#grafana-dashboard"><i class="fa fa-check"></i><b>21.5.2</b> Grafana Dashboard</a></li>
+</ul></li>
+<li class="chapter" data-level="21.6" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#shinyproxy-adding-apps"><i class="fa fa-check"></i><b>21.6</b> Adding and Removing Shiny Applications</a></li>
+<li class="chapter" data-level="21.7" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#other-considerations"><i class="fa fa-check"></i><b>21.7</b> Other Considerations</a></li>
+<li class="chapter" data-level="21.8" data-path="21-shinyproxy-deployment.html"><a href="21-shinyproxy-deployment.html#summary-23"><i class="fa fa-check"></i><b>21.8</b> Summary</a></li>
+</ul></li>
+<li class="part"><span><b>VI Production Shiny Apps</b></span></li>
+<li class="chapter" data-level="22" data-path="22-shiny-production.html"><a href="22-shiny-production.html"><i class="fa fa-check"></i><b>22</b> Considerations for Production</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#security"><i class="fa fa-check"></i><b>22.1</b> Security</a>
+<ul>
+<li class="chapter" data-level="22.1.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#ssl-certificates"><i class="fa fa-check"></i><b>22.1.1</b> SSL Certificates</a></li>
+<li class="chapter" data-level="22.1.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#storing-secrets"><i class="fa fa-check"></i><b>22.1.2</b> Storing Secrets</a></li>
+<li class="chapter" data-level="22.1.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#firewalls"><i class="fa fa-check"></i><b>22.1.3</b> Firewalls</a></li>
+<li class="chapter" data-level="22.1.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#private-networking"><i class="fa fa-check"></i><b>22.1.4</b> Private Networking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#authentication"><i class="fa fa-check"></i><b>22.2</b> Authentication</a>
+<ul>
+<li class="chapter" data-level="22.2.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#http-basic-auth"><i class="fa fa-check"></i><b>22.2.1</b> HTTP Basic Auth</a></li>
+<li class="chapter" data-level="22.2.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#third-party-auth"><i class="fa fa-check"></i><b>22.2.2</b> Third Party Auth</a></li>
+<li class="chapter" data-level="22.2.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#native-authentication"><i class="fa fa-check"></i><b>22.2.3</b> Native Authentication</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reliability"><i class="fa fa-check"></i><b>22.3</b> Reliability</a>
+<ul>
+<li class="chapter" data-level="22.3.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#backups"><i class="fa fa-check"></i><b>22.3.1</b> Backups</a></li>
+<li class="chapter" data-level="22.3.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#reserved-ip-addresses"><i class="fa fa-check"></i><b>22.3.2</b> Reserved IP Addresses</a></li>
+<li class="chapter" data-level="22.3.3" data-path="22-shiny-production.html"><a href="22-shiny-production.html#monitoring"><i class="fa fa-check"></i><b>22.3.3</b> Monitoring</a></li>
+<li class="chapter" data-level="22.3.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#benchmarking"><i class="fa fa-check"></i><b>22.3.4</b> Benchmarking</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="22-shiny-production.html"><a href="22-shiny-production.html#scaling-1"><i class="fa fa-check"></i><b>22.4</b> Scaling</a>
+<ul>
+<li class="chapter" data-level="22.4.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#options-for-scaling"><i class="fa fa-check"></i><b>22.4.1</b> Options for Scaling</a></li>
+<li class="chapter" data-level="22.4.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#part2-container-orchestration"><i class="fa fa-check"></i><b>22.4.2</b> Container Orchestration</a></li>
+</ul></li>
+<li class="chapter" data-level="22.5" data-path="22-shiny-production.html"><a href="22-shiny-production.html#operations-and-maintenance"><i class="fa fa-check"></i><b>22.5</b> Operations and Maintenance</a>
+<ul>
+<li class="chapter" data-level="22.5.1" data-path="22-shiny-production.html"><a href="22-shiny-production.html#continuous-integration-and-deployment"><i class="fa fa-check"></i><b>22.5.1</b> Continuous Integration and Deployment</a></li>
+<li class="chapter" data-level="22.5.2" data-path="22-shiny-production.html"><a href="22-shiny-production.html#logging"><i class="fa fa-check"></i><b>22.5.2</b> Logging</a></li>
+</ul></li>
+<li class="chapter" data-level="22.6" data-path="22-shiny-production.html"><a href="22-shiny-production.html#summary-24"><i class="fa fa-check"></i><b>22.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="23-what-is-next.html"><a href="23-what-is-next.html"><i class="fa fa-check"></i><b>23</b> What is Next</a></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Hosting Shiny Applications for R and Python</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<html>
+<img width='200px' src='images/logos/banner.png' alt="Hosting Shiny">
+</html>
+<div id="shinyproxy-deployment" class="section level1 hasAnchor" number="21">
+<h1><span class="header-section-number">Chapter 21</span> ShinyProxy<a href="21-shinyproxy-deployment.html#shinyproxy-deployment" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="noteblock">
+<p>This chapter covers ShinyProxy which is a tool
+to run containerized applications on your own self-hosted
+server. It can be more cost effective than hosting platforms,
+but requires more technical know-how.</p>
+<p>ShinyProxy is an enterprise-level deployment platform for
+containers and requires knowledge about containers (see Chapter <a href="15-part4-containers.html#part4-containers">15</a>)
+and familiarity with the command line (see Chapter <a href="3-part1-local-setup.html#part1-command-line">3.2</a>).</p>
+</div>
+<p>ShinyProxy is an open-source platform designed to host Shiny
+applications designed to support enterprise deployments
+by enabling authentication and app-level authorization.
+It allows for concurrent usage of Shiny applications with
+each user session isolated from other users via containerization.
+It also allows for Shiny apps with different dependency requirements
+to run at the same time.</p>
+<p>ShinyProxy allows for the following features because of containerization:</p>
+<ul>
+<li>Fully isolated user sessions</li>
+<li>Different R and Python versions, package versions, and
+dependencies per application</li>
+<li>Updates to one app not interfering with other apps</li>
+<li>Monitoring and resource management (RAM and CPU usage)</li>
+<li>A dashboard interface for users to login and select different applications to load</li>
+</ul>
+<p>ShinyProxy can be deployed directly on a server using a Jar (Java executable) file,
+making it straightforward to run and test ShinyProxy. We do not discuss the
+detailed setup required for the direct deployment, but we encourage interested
+readers to try the ShinProxy 1-click app from the DigitalOcean Marketplace
+<a href="https://marketplace.digitalocean.com/apps/shinyproxy" class="uri">https://marketplace.digitalocean.com/apps/shinyproxy</a>, and inspecting the
+setup scripts at <a href="https://github.com/analythium/shinyproxy-1-click" class="uri">https://github.com/analythium/shinyproxy-1-click</a>.
+The 1-click setup includes Nginx based reverse proxy and automated HTTPS setup,
+but for other production aspects of the deployment, i.e. monitoring, users
+need to do additional setup on their own.</p>
+<p>The ShinyProxy Operator is a deployment option that completely automates the
+deployment of ShinyProxy on both pure Docker hosts and Kubernetes.
+It also includes automatic deployment of Redis to keep track of app and users,
+automatic HTTPS setup using Caddy Server and Let’s Encrypt,
+and the full setup of the monitoring stack including Prometheus, Loki and Grafana.</p>
+<p>Using Java does not allow for seamless updates of ShinyProxy,
+while Kubernetes and Docker do allow that via the ShinyProxy Operator.
+However, at the time of writing, Kubernetes does not offer the automatic deployment
+of monitoring, and TLS certificates.</p>
+<p>This chapter will focus on deploying ShinyProxy with Docker in a single-server context,
+including how to deploy monitoring and setting up TLS certificates.</p>
+<div id="setting-up-shinyproxy-using-docker" class="section level2 hasAnchor" number="21.1">
+<h2><span class="header-section-number">21.1</span> Setting up ShinyProxy Using Docker<a href="21-shinyproxy-deployment.html#setting-up-shinyproxy-using-docker" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>You will need the virtual machine with Docker installed on Ubuntu Linux
+as explained in Chapter <a href="20-part2-docker-compose.html#docker-compose-vm">20.3</a>.
+If you have not installed Docker, you can do so by running the
+Docker install script as follows: <code>curl -fsSL https://get.docker.com | sh</code>.
+Make sure that you login and logout to enable Docker.
+You’ll need to also allow incoming traffic on ports 22 (ssh), 80 (http), and 443 (https).</p>
+<p>We recommend at least 1 CPU core and 2GB memory
+to set up the demo ShinyProxy deployment with ShinyProxy operator.
+You can provision a Linux-based virtual private server with your favorite cloud provider.
+Ensure that you have root user access, which is typically available as
+<code>root</code> or commands can be run as root by prepending the <code>sudo</code> command.</p>
+<p>You will also need a domain name if you wish to setup TLS certificates and
+access your app from a custom URL and not IP address.</p>
+<p>To check if you have installed Docker, type the following
+command in your terminal: <code>docker ps</code>. It should execute
+with no error and include a message beginning with
+<code>CONTAINER ID</code>.</p>
+<div id="docker-compose-for-shinyproxy" class="section level3 hasAnchor" number="21.1.1">
+<h3><span class="header-section-number">21.1.1</span> Docker Compose for ShinyProxy<a href="21-shinyproxy-deployment.html#docker-compose-for-shinyproxy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Next, you will have to make a ShinyProxy user for your host machine
+with the following command: <code>sudo useradd -m shinyproxy</code>.</p>
+<p>Finally, you will need to create the ShinyProxy directories
+and create a Docker Compose file that will be used to run ShinyProxy.
+To simplify this step, we have created a bash script as follows:</p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb249-1"><a href="21-shinyproxy-deployment.html#cb249-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb249-2"><a href="21-shinyproxy-deployment.html#cb249-2" tabindex="-1"></a></span>
+<span id="cb249-3"><a href="21-shinyproxy-deployment.html#cb249-3" tabindex="-1"></a><span class="co"># Get the ID of the shinyproxy user</span></span>
+<span id="cb249-4"><a href="21-shinyproxy-deployment.html#cb249-4" tabindex="-1"></a><span class="va">SHINYPROXY_USER_ID</span><span class="op">=</span><span class="va">$(</span><span class="fu">sudo</span> id <span class="at">-u</span> shinyproxy<span class="va">)</span></span>
+<span id="cb249-5"><a href="21-shinyproxy-deployment.html#cb249-5" tabindex="-1"></a></span>
+<span id="cb249-6"><a href="21-shinyproxy-deployment.html#cb249-6" tabindex="-1"></a><span class="co"># Get the ID of the docker group</span></span>
+<span id="cb249-7"><a href="21-shinyproxy-deployment.html#cb249-7" tabindex="-1"></a><span class="va">DOCKER_GROUP_ID</span><span class="op">=</span><span class="va">$(</span><span class="fu">sudo</span> getent group docker <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d:</span> <span class="at">-f3</span><span class="va">)</span></span>
+<span id="cb249-8"><a href="21-shinyproxy-deployment.html#cb249-8" tabindex="-1"></a></span>
+<span id="cb249-9"><a href="21-shinyproxy-deployment.html#cb249-9" tabindex="-1"></a><span class="co"># Create a directory for the configuration files of ShinyProxy</span></span>
+<span id="cb249-10"><a href="21-shinyproxy-deployment.html#cb249-10" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /opt/shinyproxy-docker-operator/data</span>
+<span id="cb249-11"><a href="21-shinyproxy-deployment.html#cb249-11" tabindex="-1"></a><span class="fu">sudo</span> <span class="at">-u</span> shinyproxy mkdir <span class="at">-p</span> /home/shinyproxy/shinyproxy/input</span>
+<span id="cb249-12"><a href="21-shinyproxy-deployment.html#cb249-12" tabindex="-1"></a><span class="fu">sudo</span> chown <span class="at">-R</span> shinyproxy:shinyproxy /opt/shinyproxy-docker-operator</span>
+<span id="cb249-13"><a href="21-shinyproxy-deployment.html#cb249-13" tabindex="-1"></a></span>
+<span id="cb249-14"><a href="21-shinyproxy-deployment.html#cb249-14" tabindex="-1"></a><span class="co"># Create the compose.yml file with the appropriate IDs</span></span>
+<span id="cb249-15"><a href="21-shinyproxy-deployment.html#cb249-15" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&lt;&lt;EOL</span> <span class="kw">|</span> <span class="fu">sudo</span> <span class="at">-u</span> shinyproxy tee /home/shinyproxy/shinyproxy/compose.yml <span class="op">&gt;</span> /dev/null</span>
+<span id="cb249-16"><a href="21-shinyproxy-deployment.html#cb249-16" tabindex="-1"></a><span class="st">services:</span></span>
+<span id="cb249-17"><a href="21-shinyproxy-deployment.html#cb249-17" tabindex="-1"></a><span class="st">  shinyproxy-operator:</span></span>
+<span id="cb249-18"><a href="21-shinyproxy-deployment.html#cb249-18" tabindex="-1"></a><span class="st">    image: openanalytics/shinyproxy-operator:2.3.1</span></span>
+<span id="cb249-19"><a href="21-shinyproxy-deployment.html#cb249-19" tabindex="-1"></a><span class="st">    environment:</span></span>
+<span id="cb249-20"><a href="21-shinyproxy-deployment.html#cb249-20" tabindex="-1"></a><span class="st">      SPO_ORCHESTRATOR: docker</span></span>
+<span id="cb249-21"><a href="21-shinyproxy-deployment.html#cb249-21" tabindex="-1"></a><span class="st">      SPO_DOCKER_GID: </span><span class="va">$DOCKER_GROUP_ID</span><span class="st"> # Docker group ID</span></span>
+<span id="cb249-22"><a href="21-shinyproxy-deployment.html#cb249-22" tabindex="-1"></a><span class="st">      SPO_CADDY_ENABLE_TLS: &quot;true&quot;</span></span>
+<span id="cb249-23"><a href="21-shinyproxy-deployment.html#cb249-23" tabindex="-1"></a><span class="st">    volumes:</span></span>
+<span id="cb249-24"><a href="21-shinyproxy-deployment.html#cb249-24" tabindex="-1"></a><span class="st">      - ./input:/opt/shinyproxy-docker-operator/input</span></span>
+<span id="cb249-25"><a href="21-shinyproxy-deployment.html#cb249-25" tabindex="-1"></a><span class="st">      - /var/run/docker.sock:/var/run/docker.sock:ro</span></span>
+<span id="cb249-26"><a href="21-shinyproxy-deployment.html#cb249-26" tabindex="-1"></a><span class="st">      - /opt/shinyproxy-docker-operator/data:/opt/shinyproxy-docker-operator/data</span></span>
+<span id="cb249-27"><a href="21-shinyproxy-deployment.html#cb249-27" tabindex="-1"></a><span class="st">    group_add:</span></span>
+<span id="cb249-28"><a href="21-shinyproxy-deployment.html#cb249-28" tabindex="-1"></a><span class="st">      - </span><span class="va">$DOCKER_GROUP_ID</span><span class="st"> # Docker group ID</span></span>
+<span id="cb249-29"><a href="21-shinyproxy-deployment.html#cb249-29" tabindex="-1"></a><span class="st">    networks:</span></span>
+<span id="cb249-30"><a href="21-shinyproxy-deployment.html#cb249-30" tabindex="-1"></a><span class="st">      - sp-shared-network</span></span>
+<span id="cb249-31"><a href="21-shinyproxy-deployment.html#cb249-31" tabindex="-1"></a><span class="st">    restart: always</span></span>
+<span id="cb249-32"><a href="21-shinyproxy-deployment.html#cb249-32" tabindex="-1"></a><span class="st">    labels:</span></span>
+<span id="cb249-33"><a href="21-shinyproxy-deployment.html#cb249-33" tabindex="-1"></a><span class="st">      app: shinyproxy-operator</span></span>
+<span id="cb249-34"><a href="21-shinyproxy-deployment.html#cb249-34" tabindex="-1"></a><span class="st">    user: &quot;</span><span class="va">$SHINYPROXY_USER_ID</span><span class="st">&quot; # ShinyProxy user ID</span></span>
+<span id="cb249-35"><a href="21-shinyproxy-deployment.html#cb249-35" tabindex="-1"></a><span class="st">networks:</span></span>
+<span id="cb249-36"><a href="21-shinyproxy-deployment.html#cb249-36" tabindex="-1"></a><span class="st">  sp-shared-network:</span></span>
+<span id="cb249-37"><a href="21-shinyproxy-deployment.html#cb249-37" tabindex="-1"></a><span class="st">    name: sp-shared-network</span></span>
+<span id="cb249-38"><a href="21-shinyproxy-deployment.html#cb249-38" tabindex="-1"></a><span class="op">EOL</span></span>
+<span id="cb249-39"><a href="21-shinyproxy-deployment.html#cb249-39" tabindex="-1"></a></span>
+<span id="cb249-40"><a href="21-shinyproxy-deployment.html#cb249-40" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;ShinyProxy operation configuration has been set up successfully.&quot;</span></span></code></pre></div>
+<p>The script above gets the necessary user ID for ShinyProxy and group ID
+for Docker, as well as create the ShinyProxy directories and generate
+the Docker Compose file for starting up ShinyProxy.</p>
+<p>To run the script, copy the text into a new file using an editor as follows:</p>
+<div class="sourceCode" id="cb250"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb250-1"><a href="21-shinyproxy-deployment.html#cb250-1" tabindex="-1"></a><span class="fu">nano</span> shinyproxy_setup.sh</span></code></pre></div>
+<p>Once the editor is open, paste the copied script into the editor.
+You can usually do this by right-clicking in the terminal or
+using the keyboard shortcut Ctrl + Shift + V.</p>
+<p>Finally, save the file, in the nano editor, you would:</p>
+<ul>
+<li>Press Ctrl + O (the letter O, not zero) to write out the file.</li>
+<li>Press Enter to confirm the filename.</li>
+<li>Press Ctrl + X to exit the nano editor.</li>
+</ul>
+<p>Before running the script, you need to ensure it has executable permissions.
+Use the following command:</p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb251-1"><a href="21-shinyproxy-deployment.html#cb251-1" tabindex="-1"></a><span class="fu">chmod</span> +x shinyproxy_setup.sh</span></code></pre></div>
+<p>Now you can execute the script by typing:</p>
+<div class="sourceCode" id="cb252"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb252-1"><a href="21-shinyproxy-deployment.html#cb252-1" tabindex="-1"></a><span class="ex">./shinyproxy_setup.sh</span></span></code></pre></div>
+<p>Feel free to modify the Docker Compose file located in <code>/home/shinyproxy/shinyproxy/compose.yml</code>
+to suit your needs using your preferred editor. If you are unsure how to execute
+this script, you can also copy the each line of the script and execute
+them in your terminal.</p>
+<p>Finally, you can start the ShinyProxy operator with
+<code>sudo docker compose -f  /home/shinyproxy/shinyproxy/compose.yml up -d</code>.</p>
+<div class="sourceCode" id="cb253"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb253-1"><a href="21-shinyproxy-deployment.html#cb253-1" tabindex="-1"></a><span class="ex">[+]</span> up 14/14</span>
+<span id="cb253-2"><a href="21-shinyproxy-deployment.html#cb253-2" tabindex="-1"></a> <span class="ex">✔</span> Image openanalytics/shinyproxy-operator:2.2.1 Pulled       7.0s</span>
+<span id="cb253-3"><a href="21-shinyproxy-deployment.html#cb253-3" tabindex="-1"></a> <span class="ex">✔</span> Network sp-shared-network                     Created      0.1s</span>
+<span id="cb253-4"><a href="21-shinyproxy-deployment.html#cb253-4" tabindex="-1"></a> <span class="ex">✔</span> Container shinyproxy-shinyproxy-operator-1    Created      0.4s</span></code></pre></div>
+<p>Congratulations, you have successfully set up the ShinyProxy operator.
+Next, you will need to set up ShinyProxy by creating a configuration file.</p>
+</div>
+<div id="shinyproxy-config" class="section level3 hasAnchor" number="21.1.2">
+<h3><span class="header-section-number">21.1.2</span> ShinyProxy Configuration<a href="21-shinyproxy-deployment.html#shinyproxy-config" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To setup ShinyProxy with the ShinyProxy operator, you will have
+to create a configuration file in the following folder:
+<code>/home/shinyproxy/shinyproxy/input/</code>. The input folder
+is polled every minute for updates, and ShinyProxy is
+automatically restarted when there are changes.</p>
+<p>Below is an example bash script to generate a configuration
+file:</p>
+<div class="sourceCode" id="cb254"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb254-1"><a href="21-shinyproxy-deployment.html#cb254-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb254-2"><a href="21-shinyproxy-deployment.html#cb254-2" tabindex="-1"></a></span>
+<span id="cb254-3"><a href="21-shinyproxy-deployment.html#cb254-3" tabindex="-1"></a><span class="co"># Set configuration variables here</span></span>
+<span id="cb254-4"><a href="21-shinyproxy-deployment.html#cb254-4" tabindex="-1"></a><span class="co"># Change this to your desired realm ID</span></span>
+<span id="cb254-5"><a href="21-shinyproxy-deployment.html#cb254-5" tabindex="-1"></a><span class="va">REALM_ID</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${REALM_ID</span><span class="op">:-</span>test<span class="va">}</span><span class="st">&quot;</span></span>
+<span id="cb254-6"><a href="21-shinyproxy-deployment.html#cb254-6" tabindex="-1"></a><span class="co"># Change this to your domain name for production</span></span>
+<span id="cb254-7"><a href="21-shinyproxy-deployment.html#cb254-7" tabindex="-1"></a><span class="va">FQDN</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${FQDN</span><span class="op">:-</span>shinyproxy-test.h10y.com<span class="va">}</span><span class="st">&quot;</span></span>
+<span id="cb254-8"><a href="21-shinyproxy-deployment.html#cb254-8" tabindex="-1"></a><span class="co"># Specify the ShinyProxy Docker image version</span></span>
+<span id="cb254-9"><a href="21-shinyproxy-deployment.html#cb254-9" tabindex="-1"></a><span class="va">DOCKER_IMAGE</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${DOCKER_IMAGE</span><span class="op">:-</span>openanalytics/shinyproxy:3.2.0<span class="va">}</span><span class="st">&quot;</span></span>
+<span id="cb254-10"><a href="21-shinyproxy-deployment.html#cb254-10" tabindex="-1"></a></span>
+<span id="cb254-11"><a href="21-shinyproxy-deployment.html#cb254-11" tabindex="-1"></a><span class="co"># Define the configuration file path</span></span>
+<span id="cb254-12"><a href="21-shinyproxy-deployment.html#cb254-12" tabindex="-1"></a><span class="va">CONFIG_FILE</span><span class="op">=</span><span class="st">&quot;/home/shinyproxy/shinyproxy/input/</span><span class="va">${REALM_ID}</span><span class="st">.shinyproxy.yaml&quot;</span></span>
+<span id="cb254-13"><a href="21-shinyproxy-deployment.html#cb254-13" tabindex="-1"></a></span>
+<span id="cb254-14"><a href="21-shinyproxy-deployment.html#cb254-14" tabindex="-1"></a><span class="co"># Create the input directory if it doesn&#39;t exist</span></span>
+<span id="cb254-15"><a href="21-shinyproxy-deployment.html#cb254-15" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">dirname</span> <span class="st">&quot;</span><span class="va">$CONFIG_FILE</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb254-16"><a href="21-shinyproxy-deployment.html#cb254-16" tabindex="-1"></a></span>
+<span id="cb254-17"><a href="21-shinyproxy-deployment.html#cb254-17" tabindex="-1"></a><span class="co"># Write the configuration to the file</span></span>
+<span id="cb254-18"><a href="21-shinyproxy-deployment.html#cb254-18" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&lt;&lt;EOL</span> <span class="op">&gt;</span> <span class="st">&quot;</span><span class="va">$CONFIG_FILE</span><span class="st">&quot;</span></span>
+<span id="cb254-19"><a href="21-shinyproxy-deployment.html#cb254-19" tabindex="-1"></a><span class="st">spring:</span></span>
+<span id="cb254-20"><a href="21-shinyproxy-deployment.html#cb254-20" tabindex="-1"></a><span class="st">  session:</span></span>
+<span id="cb254-21"><a href="21-shinyproxy-deployment.html#cb254-21" tabindex="-1"></a><span class="st">    store-type: redis</span></span>
+<span id="cb254-22"><a href="21-shinyproxy-deployment.html#cb254-22" tabindex="-1"></a><span class="st">image: </span><span class="va">$DOCKER_IMAGE</span></span>
+<span id="cb254-23"><a href="21-shinyproxy-deployment.html#cb254-23" tabindex="-1"></a><span class="st">fqdn: </span><span class="va">$FQDN</span></span>
+<span id="cb254-24"><a href="21-shinyproxy-deployment.html#cb254-24" tabindex="-1"></a><span class="st">proxy:</span></span>
+<span id="cb254-25"><a href="21-shinyproxy-deployment.html#cb254-25" tabindex="-1"></a><span class="st">  title: ShinyProxy</span></span>
+<span id="cb254-26"><a href="21-shinyproxy-deployment.html#cb254-26" tabindex="-1"></a><span class="st">  logo-url: https://h10y.com/img/logo.png</span></span>
+<span id="cb254-27"><a href="21-shinyproxy-deployment.html#cb254-27" tabindex="-1"></a><span class="st">  landing-page: /</span></span>
+<span id="cb254-28"><a href="21-shinyproxy-deployment.html#cb254-28" tabindex="-1"></a><span class="st">  favicon-path: favicon.ico</span></span>
+<span id="cb254-29"><a href="21-shinyproxy-deployment.html#cb254-29" tabindex="-1"></a><span class="st">  heartbeat-rate: 10000</span></span>
+<span id="cb254-30"><a href="21-shinyproxy-deployment.html#cb254-30" tabindex="-1"></a><span class="st">  heartbeat-timeout: 60000</span></span>
+<span id="cb254-31"><a href="21-shinyproxy-deployment.html#cb254-31" tabindex="-1"></a><span class="st">  docker:</span></span>
+<span id="cb254-32"><a href="21-shinyproxy-deployment.html#cb254-32" tabindex="-1"></a><span class="st">    internal-networking: true</span></span>
+<span id="cb254-33"><a href="21-shinyproxy-deployment.html#cb254-33" tabindex="-1"></a><span class="st">    image-pull-policy: Always</span></span>
+<span id="cb254-34"><a href="21-shinyproxy-deployment.html#cb254-34" tabindex="-1"></a><span class="st">  store-mode: Redis</span></span>
+<span id="cb254-35"><a href="21-shinyproxy-deployment.html#cb254-35" tabindex="-1"></a><span class="st">  stop-proxies-on-shutdown: false</span></span>
+<span id="cb254-36"><a href="21-shinyproxy-deployment.html#cb254-36" tabindex="-1"></a><span class="st">  realm-id: </span><span class="va">$REALM_ID</span></span>
+<span id="cb254-37"><a href="21-shinyproxy-deployment.html#cb254-37" tabindex="-1"></a><span class="st">  authentication: simple</span></span>
+<span id="cb254-38"><a href="21-shinyproxy-deployment.html#cb254-38" tabindex="-1"></a><span class="st">  admin-groups: admins</span></span>
+<span id="cb254-39"><a href="21-shinyproxy-deployment.html#cb254-39" tabindex="-1"></a><span class="st">  admin-users: admin</span></span>
+<span id="cb254-40"><a href="21-shinyproxy-deployment.html#cb254-40" tabindex="-1"></a><span class="st">  # Example: &#39;simple&#39; authentication configuration</span></span>
+<span id="cb254-41"><a href="21-shinyproxy-deployment.html#cb254-41" tabindex="-1"></a><span class="st">  users:</span></span>
+<span id="cb254-42"><a href="21-shinyproxy-deployment.html#cb254-42" tabindex="-1"></a><span class="st">  - name: admin</span></span>
+<span id="cb254-43"><a href="21-shinyproxy-deployment.html#cb254-43" tabindex="-1"></a><span class="st">    password: password</span></span>
+<span id="cb254-44"><a href="21-shinyproxy-deployment.html#cb254-44" tabindex="-1"></a><span class="st">    groups: admins</span></span>
+<span id="cb254-45"><a href="21-shinyproxy-deployment.html#cb254-45" tabindex="-1"></a><span class="st">  - name: user</span></span>
+<span id="cb254-46"><a href="21-shinyproxy-deployment.html#cb254-46" tabindex="-1"></a><span class="st">    password: password</span></span>
+<span id="cb254-47"><a href="21-shinyproxy-deployment.html#cb254-47" tabindex="-1"></a><span class="st">    groups: users</span></span>
+<span id="cb254-48"><a href="21-shinyproxy-deployment.html#cb254-48" tabindex="-1"></a><span class="st">  specs:</span></span>
+<span id="cb254-49"><a href="21-shinyproxy-deployment.html#cb254-49" tabindex="-1"></a><span class="st">  - id: faithful</span></span>
+<span id="cb254-50"><a href="21-shinyproxy-deployment.html#cb254-50" tabindex="-1"></a><span class="st">    display-name: Old Faithful App</span></span>
+<span id="cb254-51"><a href="21-shinyproxy-deployment.html#cb254-51" tabindex="-1"></a><span class="st">    description: A simple reactive histogram</span></span>
+<span id="cb254-52"><a href="21-shinyproxy-deployment.html#cb254-52" tabindex="-1"></a><span class="st">    container-cmd: [&quot;R&quot;, &quot;-e&quot;, &quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;]</span></span>
+<span id="cb254-53"><a href="21-shinyproxy-deployment.html#cb254-53" tabindex="-1"></a><span class="st">    container-image: ghcr.io/h10y/faithful/r-shiny:main</span></span>
+<span id="cb254-54"><a href="21-shinyproxy-deployment.html#cb254-54" tabindex="-1"></a><span class="st">    logo-url: https://h10y.com/img/0.png</span></span>
+<span id="cb254-55"><a href="21-shinyproxy-deployment.html#cb254-55" tabindex="-1"></a><span class="st">    access-groups: [admins, users]</span></span>
+<span id="cb254-56"><a href="21-shinyproxy-deployment.html#cb254-56" tabindex="-1"></a><span class="st">  - id: lbtest</span></span>
+<span id="cb254-57"><a href="21-shinyproxy-deployment.html#cb254-57" tabindex="-1"></a><span class="st">    display-name: Load Balancing</span></span>
+<span id="cb254-58"><a href="21-shinyproxy-deployment.html#cb254-58" tabindex="-1"></a><span class="st">    description: App to test session affinity</span></span>
+<span id="cb254-59"><a href="21-shinyproxy-deployment.html#cb254-59" tabindex="-1"></a><span class="st">    container-cmd: [&quot;R&quot;, &quot;-e&quot;, &quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;]</span></span>
+<span id="cb254-60"><a href="21-shinyproxy-deployment.html#cb254-60" tabindex="-1"></a><span class="st">    container-image: ghcr.io/h10y/lbtest/r-shiny:main</span></span>
+<span id="cb254-61"><a href="21-shinyproxy-deployment.html#cb254-61" tabindex="-1"></a><span class="st">    logo-url: https://h10y.com/img/1.png</span></span>
+<span id="cb254-62"><a href="21-shinyproxy-deployment.html#cb254-62" tabindex="-1"></a><span class="st">    access-groups: [admins]</span></span>
+<span id="cb254-63"><a href="21-shinyproxy-deployment.html#cb254-63" tabindex="-1"></a><span class="st">server:</span></span>
+<span id="cb254-64"><a href="21-shinyproxy-deployment.html#cb254-64" tabindex="-1"></a><span class="st">  forward-headers-strategy: native</span></span>
+<span id="cb254-65"><a href="21-shinyproxy-deployment.html#cb254-65" tabindex="-1"></a><span class="op">EOL</span></span>
+<span id="cb254-66"><a href="21-shinyproxy-deployment.html#cb254-66" tabindex="-1"></a></span>
+<span id="cb254-67"><a href="21-shinyproxy-deployment.html#cb254-67" tabindex="-1"></a><span class="co"># Output a message indicating the configuration file has been created</span></span>
+<span id="cb254-68"><a href="21-shinyproxy-deployment.html#cb254-68" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Configuration file created at </span><span class="va">$CONFIG_FILE</span><span class="st">&quot;</span></span></code></pre></div>
+<p>You can run it using similar steps for generating
+the ShinyProxy operator Docker Compose file,
+e.g. copy the contents into a file called <code>shinyproxy_config.sh</code>,
+set it as executable and run as:</p>
+<div class="sourceCode" id="cb255"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb255-1"><a href="21-shinyproxy-deployment.html#cb255-1" tabindex="-1"></a><span class="fu">chmod</span> +x shinyproxy_config.sh</span>
+<span id="cb255-2"><a href="21-shinyproxy-deployment.html#cb255-2" tabindex="-1"></a><span class="ex">./shinyproxy_config.sh</span></span></code></pre></div>
+<p>There are numerous variables to change in the script.
+The script defines the path for the configuration file as <code>&lt;REALM_ID&gt;.shinyproxy.yaml</code>.
+Several variables are also set:</p>
+<ul>
+<li><code>REALM_ID</code>: A string identifier for the namespace of the ShinyProxy deployment (set to “test”).</li>
+<li><code>FQDN</code>: The fully qualified domain name for accessing ShinyProxy on the server.</li>
+<li><code>DOCKER_IMAGE</code>: Specifies the ShinyProxy Docker image version to use.</li>
+</ul>
+<p>By setting different <code>REALM_ID</code> and <code>FQDN</code>, you can have multiple deployments
+of ShinyProxy on the same server. The way the script is set up, you can pass the
+values for these variables and use the script to write new configurations, e.g.:</p>
+<div class="sourceCode" id="cb256"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb256-1"><a href="21-shinyproxy-deployment.html#cb256-1" tabindex="-1"></a><span class="va">REALM_ID</span><span class="op">=</span>production <span class="va">FQDN</span><span class="op">=</span>example.com <span class="ex">./shinyproxy_config.sh</span></span></code></pre></div>
+<p>This will create the <code>production.shinyproxy.yaml</code> with <code>fdqn: example.com</code>
+as part of the config.</p>
+<p>As well, you can modify the ShinyProxy configuration under <code>proxy:</code> including
+setting authentication and defining what apps you would like to run under
+<code>specs:</code>. We delve into more of these options in the next section.</p>
+<p>ShinyProxy allows flexible configuration including how ShinyProxy will manage
+and display apps in general, how apps are authenticated, and how
+apps are initialized in containers.</p>
+<p>In this section, we refer to the ShinyProxy configuration defined under
+the <code>proxy</code> block as an example for how ShinyProxy can be configured.</p>
+</div>
+<div id="sp-general" class="section level3 hasAnchor" number="21.1.3">
+<h3><span class="header-section-number">21.1.3</span> General<a href="21-shinyproxy-deployment.html#sp-general" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The top part of the <code>proxy</code> block has some general properties that will
+affect the behavior of ShinyProxy in general and will apply to all the
+apps you deploy.</p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb257-1"><a href="21-shinyproxy-deployment.html#cb257-1" tabindex="-1"></a><span class="at">    </span><span class="fu">proxy</span><span class="kw">:</span></span>
+<span id="cb257-2"><a href="21-shinyproxy-deployment.html#cb257-2" tabindex="-1"></a><span class="at">      </span><span class="fu">title</span><span class="kw">:</span><span class="at"> ShinyProxy</span></span>
+<span id="cb257-3"><a href="21-shinyproxy-deployment.html#cb257-3" tabindex="-1"></a><span class="at">      </span><span class="fu">logo-url</span><span class="kw">:</span><span class="at"> https://h10y.com/img/logo.png</span></span>
+<span id="cb257-4"><a href="21-shinyproxy-deployment.html#cb257-4" tabindex="-1"></a><span class="at">      </span><span class="fu">landing-page</span><span class="kw">:</span><span class="at"> /</span></span>
+<span id="cb257-5"><a href="21-shinyproxy-deployment.html#cb257-5" tabindex="-1"></a><span class="at">      </span><span class="fu">favicon-path</span><span class="kw">:</span><span class="at"> favicon.ico</span></span>
+<span id="cb257-6"><a href="21-shinyproxy-deployment.html#cb257-6" tabindex="-1"></a><span class="at">      </span><span class="fu">heartbeat-rate</span><span class="kw">:</span><span class="at"> </span><span class="dv">10000</span></span>
+<span id="cb257-7"><a href="21-shinyproxy-deployment.html#cb257-7" tabindex="-1"></a><span class="at">      </span><span class="fu">heartbeat-timeout</span><span class="kw">:</span><span class="at"> </span><span class="dv">60000</span></span>
+<span id="cb257-8"><a href="21-shinyproxy-deployment.html#cb257-8" tabindex="-1"></a><span class="at">      </span><span class="fu">docker</span><span class="kw">:</span></span>
+<span id="cb257-9"><a href="21-shinyproxy-deployment.html#cb257-9" tabindex="-1"></a><span class="at">        </span><span class="fu">internal-networking</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb257-10"><a href="21-shinyproxy-deployment.html#cb257-10" tabindex="-1"></a><span class="at">        </span><span class="fu">image-pull-policy</span><span class="kw">:</span><span class="at"> Always</span></span>
+<span id="cb257-11"><a href="21-shinyproxy-deployment.html#cb257-11" tabindex="-1"></a><span class="at">      </span><span class="fu">store-mode</span><span class="kw">:</span><span class="at"> Redis</span></span>
+<span id="cb257-12"><a href="21-shinyproxy-deployment.html#cb257-12" tabindex="-1"></a><span class="at">      </span><span class="fu">stop-proxies-on-shutdown</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb257-13"><a href="21-shinyproxy-deployment.html#cb257-13" tabindex="-1"></a><span class="at">      </span><span class="fu">realm-id</span><span class="kw">:</span><span class="at"> $REALM_ID</span></span>
+<span id="cb257-14"><a href="21-shinyproxy-deployment.html#cb257-14" tabindex="-1"></a><span class="at">    ...</span></span></code></pre></div>
+<p>The general configuration for ShinyProxy includes:</p>
+<ul>
+<li><code>title</code>: the title is the text that is displayed in the top
+navigation bar of ShinyProxy beside the logo</li>
+<li><code>logo-url</code>: the URL of the logo beside the title in the top
+navigation bar of ShinyProxy (it can also be a file, <code>file://...</code>)</li>
+<li><code>landing-page</code>: the URL where the user is sent after logging in, the
+default <code>/</code> redirects the user to the list of applications</li>
+<li><code>favicon-path</code>: path to the favicon file to be used by ShinyProxy,
+the tiny PNG image that is displayed in the left corner of the
+browser tabs for easy recognition</li>
+<li><code>heartbeat-rate</code>: this is the time in milliseconds the user’s
+browser is sending a signal, called the heartbeat, to check in with
+the application, the default value is 10 seconds (10,000 ms)</li>
+<li><code>heartbeat-timeout</code>: this is the time in milliseconds the server
+waits after not receiving a heartbeat, when this time is passed the
+relevant proxy (instance of the app) will be released (the Docker
+container stopped) – 60 seconds (60,000 ms)</li>
+</ul>
+<p>Other general configuration includes your backend, which is defined as
+<code>docker</code> and its option <code>internal-networking</code> is configured to true
+because ShinyProxy is run as a container on the same Docker host.
+Also defined under <code>docker</code> is the image pull policy which can be set
+to <code>Never</code>, <code>IfNotPresent</code> and <code>Always</code>. <code>Never</code> means that you must
+already have your container image available in Docker. While
+<code>IfNotPresent</code> will pull your image if it does not already exist in
+Docker. <code>Always</code> will always try to pull a container image, meaning
+that you will get the latest version of your Shiny application every
+time you push an image of your Shiny application to the container
+image registry. If you are not familiar with container images, please
+refer back to how container images are built in Chapter <a href="16-part2-images.html#part2-existing-images">16.1</a>.</p>
+<p>You can maintain Shiny application persistence by setting
+<code>store-mode</code> with a backend like Redis and <code>stop-proxies-on-shutdown</code>
+to false. All the Shiny application sessions will be saved in Redis,
+so that when ShinyProxy is restarted, users can be redirected
+to their previous ShinyProxy containers.</p>
+<p>Finally, <code>realm-id</code> is a namespace identifier for ShinyProxy identifier
+to know which ShinyProxy instance is being managed by ShinyProxy operator.
+The <code>realm-id</code> is useful when you are managing multiple instances
+of ShinyProxy with the ShinyProxy operator and wanting to look at the
+logs of each ShinyProxy instance.</p>
+</div>
+<div id="sp-authentication" class="section level3 hasAnchor" number="21.1.4">
+<h3><span class="header-section-number">21.1.4</span> Authentication<a href="21-shinyproxy-deployment.html#sp-authentication" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>ShinyProxy supports many different types of authentication, starting
+from <code>none</code> (no authentication) and <code>simple</code> (user names and passwords
+defined in the config file) to various types of authentication servers
+and 3rd party providers (e.g., LDAP, OIDC, SAML). We explain how
+simple authentication works in this section, and more authentication
+providers can be configured by referring to the
+<a href="https://www.shinyproxy.io/documentation/configuration/#authentication">documentation</a>.</p>
+<p>User authorization happens on a <a href="https://shinyproxy.io/documentation/configuration/#apps">per-app basis using <strong>group-based
+authorization</strong></a>,
+see the <code>access-groups</code> field for the apps in the configuration as seen
+in Section <a href="21-shinyproxy-deployment.html#shinyproxy-config-applications">21.1.5</a>.
+Multiple users can get access to the admin interface by specifying the
+groups they belong to as part of the <code>admin-groups</code> field in the configuration.
+Group based authentication is available for all authentication providers.</p>
+<div class="sourceCode" id="cb258"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb258-1"><a href="21-shinyproxy-deployment.html#cb258-1" tabindex="-1"></a><span class="at">    </span><span class="fu">proxy</span><span class="kw">:</span></span>
+<span id="cb258-2"><a href="21-shinyproxy-deployment.html#cb258-2" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb258-3"><a href="21-shinyproxy-deployment.html#cb258-3" tabindex="-1"></a><span class="at">      </span><span class="fu">authentication</span><span class="kw">:</span><span class="at"> simple</span></span>
+<span id="cb258-4"><a href="21-shinyproxy-deployment.html#cb258-4" tabindex="-1"></a><span class="at">      </span><span class="fu">admin-groups</span><span class="kw">:</span><span class="at"> admins</span></span>
+<span id="cb258-5"><a href="21-shinyproxy-deployment.html#cb258-5" tabindex="-1"></a><span class="at">      </span><span class="fu">admin-users</span><span class="kw">:</span><span class="at"> admin</span></span>
+<span id="cb258-6"><a href="21-shinyproxy-deployment.html#cb258-6" tabindex="-1"></a><span class="co">      # Example: &#39;simple&#39; authentication configuration</span></span>
+<span id="cb258-7"><a href="21-shinyproxy-deployment.html#cb258-7" tabindex="-1"></a><span class="at">      </span><span class="fu">users</span><span class="kw">:</span></span>
+<span id="cb258-8"><a href="21-shinyproxy-deployment.html#cb258-8" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> admin</span></span>
+<span id="cb258-9"><a href="21-shinyproxy-deployment.html#cb258-9" tabindex="-1"></a><span class="at">        </span><span class="fu">password</span><span class="kw">:</span><span class="at"> password</span></span>
+<span id="cb258-10"><a href="21-shinyproxy-deployment.html#cb258-10" tabindex="-1"></a><span class="at">        </span><span class="fu">groups</span><span class="kw">:</span><span class="at"> admins</span></span>
+<span id="cb258-11"><a href="21-shinyproxy-deployment.html#cb258-11" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> user</span></span>
+<span id="cb258-12"><a href="21-shinyproxy-deployment.html#cb258-12" tabindex="-1"></a><span class="at">        </span><span class="fu">password</span><span class="kw">:</span><span class="at"> password</span></span>
+<span id="cb258-13"><a href="21-shinyproxy-deployment.html#cb258-13" tabindex="-1"></a><span class="at">        </span><span class="fu">groups</span><span class="kw">:</span><span class="at"> users</span></span>
+<span id="cb258-14"><a href="21-shinyproxy-deployment.html#cb258-14" tabindex="-1"></a><span class="at">    ...</span></span></code></pre></div>
+<ul>
+<li><code>authentication</code>: authentication method
+(one of <code>ldap</code>, <code>kerberos</code>, <code>keycloak</code>, <code>openid</code>, <code>saml</code>, <code>social</code>, <code>webservice</code>
+<code>simple</code> or <code>none</code>); see the relevant section below for
+configuration details regarding each of these authentication
+methods;</li>
+<li><code>admin-groups</code>: one (e.g. <code>admin</code>) or more groups (e.g.
+<code>[admins1, admins2]</code>) that have access to the administrative
+interface of ShinyProxy to view active sessions, defined according
+to the authentication backend; <code>admin-users</code> is currently required for
+the admin user to be able to access the Grafana monitoring dashboards;</li>
+<li><code>users</code>: list here the users, each one has 3 different properties,
+<code>name</code> and <code>password</code> to log in with, and <code>groups</code> that is used to
+define <a href="https://www.shinyproxy.io/documentation/configuration/?ref=hosting.analythium.io#simple-authentication">access to the
+apps</a>
+via the <code>access-groups</code> property – the <code>access-groups</code> field allows
+authorizing access per application</li>
+</ul>
+<p>It should also be noted that two environment variables are
+provided to the Shiny applications in a container initialized by
+ShinyProxy after successful authentication by a user, the username
+(<code>SHINYPROXY_USERNAME</code>) and groups that the user is a member of
+(<code>SHINYPROXY_USERGROUPS</code>, comma-separated value). You can
+use these values to personalize the application.</p>
+<p>The ShinProxy documentation provides detailed examples for setting up other
+types of authentication, including OpenID Connect, SAML, LDAP,
+header based custom authentication, etc. You can also turn off authentication by
+setting <code>authentication: "none"</code> in the YAML file. This will result in
+all apps being public. With authentication turned off, make sure to set the
+number of seats that can be run on a single container to higher than 1
+via the <code>seats-per-container</code> setting to avoid the server running out of memory
+due to provisioning a high number of containers for public users.</p>
+</div>
+<div id="shinyproxy-config-applications" class="section level3 hasAnchor" number="21.1.5">
+<h3><span class="header-section-number">21.1.5</span> Applications<a href="21-shinyproxy-deployment.html#shinyproxy-config-applications" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>All Shiny apps served by ShinyProxy have their configuration listed in
+the <code>specs</code> block in the configuration file.</p>
+<div class="sourceCode" id="cb259"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb259-1"><a href="21-shinyproxy-deployment.html#cb259-1" tabindex="-1"></a><span class="at">    </span><span class="fu">proxy</span><span class="kw">:</span></span>
+<span id="cb259-2"><a href="21-shinyproxy-deployment.html#cb259-2" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb259-3"><a href="21-shinyproxy-deployment.html#cb259-3" tabindex="-1"></a><span class="at">      </span><span class="fu">specs</span><span class="kw">:</span></span>
+<span id="cb259-4"><a href="21-shinyproxy-deployment.html#cb259-4" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> faithful</span></span>
+<span id="cb259-5"><a href="21-shinyproxy-deployment.html#cb259-5" tabindex="-1"></a><span class="at">        </span><span class="fu">display-name</span><span class="kw">:</span><span class="at"> Old Faithful App</span></span>
+<span id="cb259-6"><a href="21-shinyproxy-deployment.html#cb259-6" tabindex="-1"></a><span class="at">        </span><span class="fu">description</span><span class="kw">:</span><span class="at"> A simple reactive histogram</span></span>
+<span id="cb259-7"><a href="21-shinyproxy-deployment.html#cb259-7" tabindex="-1"></a><span class="at">        </span><span class="fu">container-cmd</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;R&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;-e&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;</span><span class="kw">]</span></span>
+<span id="cb259-8"><a href="21-shinyproxy-deployment.html#cb259-8" tabindex="-1"></a><span class="at">        </span><span class="fu">container-image</span><span class="kw">:</span><span class="at"> ghcr.io/h10y/faithful/r-shiny:main</span></span>
+<span id="cb259-9"><a href="21-shinyproxy-deployment.html#cb259-9" tabindex="-1"></a><span class="at">        </span><span class="fu">logo-url</span><span class="kw">:</span><span class="at"> https://h10y.com/img/0.png</span></span>
+<span id="cb259-10"><a href="21-shinyproxy-deployment.html#cb259-10" tabindex="-1"></a><span class="at">        </span><span class="fu">access-groups</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">admins</span><span class="kw">,</span><span class="at"> users</span><span class="kw">]</span></span>
+<span id="cb259-11"><a href="21-shinyproxy-deployment.html#cb259-11" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> lbtest</span></span>
+<span id="cb259-12"><a href="21-shinyproxy-deployment.html#cb259-12" tabindex="-1"></a><span class="at">        </span><span class="fu">display-name</span><span class="kw">:</span><span class="at"> Load Balancing</span></span>
+<span id="cb259-13"><a href="21-shinyproxy-deployment.html#cb259-13" tabindex="-1"></a><span class="at">        </span><span class="fu">description</span><span class="kw">:</span><span class="at"> App to test session affinity</span></span>
+<span id="cb259-14"><a href="21-shinyproxy-deployment.html#cb259-14" tabindex="-1"></a><span class="at">        </span><span class="fu">container-cmd</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;R&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;-e&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;</span><span class="kw">]</span></span>
+<span id="cb259-15"><a href="21-shinyproxy-deployment.html#cb259-15" tabindex="-1"></a><span class="at">        </span><span class="fu">container-image</span><span class="kw">:</span><span class="at"> ghcr.io/h10y/lbtest/r-shiny:main</span></span>
+<span id="cb259-16"><a href="21-shinyproxy-deployment.html#cb259-16" tabindex="-1"></a><span class="at">        </span><span class="fu">logo-url</span><span class="kw">:</span><span class="at"> https://h10y.com/img/1.png</span></span>
+<span id="cb259-17"><a href="21-shinyproxy-deployment.html#cb259-17" tabindex="-1"></a><span class="at">        </span><span class="fu">access-groups</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">admins</span><span class="kw">]</span></span>
+<span id="cb259-18"><a href="21-shinyproxy-deployment.html#cb259-18" tabindex="-1"></a><span class="at">    ...</span></span></code></pre></div>
+<ul>
+<li><code>id</code>: the identifier of the application, this is also the URL path
+the app is going to be available through the <a href="https://www.shinyproxy.io/documentation/configuration/#endpoint-urls">ShinyProxy API
+endpoints</a>
+either as <code>/app/&lt;id&gt;</code> (standard ShinyProxy interface with a toolbar,
+servers the Shiny app in an iframe) or <code>/app_direct/&lt;id&gt;</code> (without
+the iframe and navigation bar)</li>
+<li><code>display-name</code>: the name that will be displayed for the app on the
+ShinyProxy landing page as well as in the browser tab once the
+application is opened</li>
+<li><code>container-cmd</code>: the command that is run when the user launches the
+Docker container, the <code>CMD</code> line from the end of the Dockerfile</li>
+<li><code>container-image</code>: the Docker image tag to be started for every new
+user of this app</li>
+<li><code>logo-url</code>: the URL or a local file (<code>file://...</code>) of an image used
+as the logo for an application, when none of the applications in the
+<code>application.yml</code> specifies a <code>logo-url</code> field, the landing page of
+ShinyProxy will be a bullet list</li>
+<li><code>access-groups</code>: one or more groups (<code>[group1, group2]</code>) that the
+user needs to belong to in order to gain access to the app, apps for
+which <code>access-groups</code> are not specified will be handled as “public”
+applications in the sense that all authenticated users will be able
+to access these applications.</li>
+</ul>
+<p>This is the section you are most likely to edit often if you are going
+to be deploying one or more Shiny applications. For each new application,
+you would be adding an entry under specs.</p>
+</div>
+</div>
+<div id="deploying-tls-with-shinyproxy-operator" class="section level2 hasAnchor" number="21.2">
+<h2><span class="header-section-number">21.2</span> Deploying TLS with ShinyProxy Operator<a href="21-shinyproxy-deployment.html#deploying-tls-with-shinyproxy-operator" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Using the Docker ShinyProxy operator, TLS certificates for HTTPS can be automatically
+issued and installed by modifying the ShinyProxy operator configuration.
+This is because ShinyProxy operator manages all routing
+requests made to your host machine using the Caddy
+reverse proxy server.</p>
+<p>This section covers the most common use case of
+getting a certificate issued with Caddy, but it is also
+possible to use custom certificates which is explained
+further in the
+<a href="https://www.shinyproxy.io/documentation/shinyproxy-operator/docker/#using-custom-certificates">ShinyProxy operator documentation</a>.</p>
+<p>Some prerequisites for deploying include having a domain
+and configuring it to point to your server. More information
+on this can be found in Section <a href="12-part3-vm-setup.html#part3-vm-setup-custom-domains">12.1</a>.</p>
+<p>You can enable TLS by setting the Caddy TLS value to true
+<code>SPO_CADDY_ENABLE_TLS: "true"</code> under environment variable
+section to the <code>compose.yml</code> you created previously in
+<code>/home/shinyproxy/shinyproxy/compose.yml</code>.</p>
+<p>The default setting of the compose file is to use HTTPS with Caddy.
+Without making any changes, you should be able to access your ShinyProxy
+instance at your domain name you specified under <code>FQDN</code> in your
+ShinyProxy configuration. Otherwise, you can always debug
+the Caddy container with the command:
+<code>sudo docker logs -f sp-caddy</code> to see what might have went
+wrong when issuing or installing a certificate.</p>
+<p>If you set the value to <code>"false"</code> the site will be accessible over HTTP only.
+After you made changes to the <code>SPO_CADDY_ENABLE_TLS</code>
+run these commands in your terminal so the change takes effect:</p>
+<div class="sourceCode" id="cb260"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb260-1"><a href="21-shinyproxy-deployment.html#cb260-1" tabindex="-1"></a><span class="fu">sudo</span> docker compose <span class="at">-f</span> /home/shinyproxy/shinyproxy/compose.yml down</span>
+<span id="cb260-2"><a href="21-shinyproxy-deployment.html#cb260-2" tabindex="-1"></a><span class="fu">sudo</span> docker stop sp-caddy</span>
+<span id="cb260-3"><a href="21-shinyproxy-deployment.html#cb260-3" tabindex="-1"></a><span class="fu">sudo</span> docker rm sp-caddy</span>
+<span id="cb260-4"><a href="21-shinyproxy-deployment.html#cb260-4" tabindex="-1"></a><span class="fu">sudo</span> docker compose <span class="at">-f</span> /home/shinyproxy/shinyproxy/compose.yml up <span class="at">-d</span></span></code></pre></div>
+<p>The commands stop your current ShinyProxy operator container.
+Removes the Caddy reverse proxy container started by ShinyProxy
+and restarts ShinyProxy which re-creates the Caddy reverse proxy container.</p>
+</div>
+<div id="user-interface" class="section level2 hasAnchor" number="21.3">
+<h2><span class="header-section-number">21.3</span> User Interface<a href="21-shinyproxy-deployment.html#user-interface" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If you followed the ShinyProxy setup instructions so far, you should see the
+login page as in Figure <a href="21-shinyproxy-deployment.html#fig:sp-01-login">21.1</a>.
+The user interface is the same irrespective of the ShinyProxy backend and
+deployment approach, i.e. with or without Docker.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:sp-01-login"></span>
+<img src="images/shinyproxy/sp-01-login.png" alt="ShinyProxy login page." width="100%" />
+<p class="caption">
+Figure 21.1: ShinyProxy login page.
+</p>
+</div>
+<p>With the simple authentication setup, we defined two users: <code>admin</code> and <code>user</code>.
+The admin user has access to both the <code>faithful</code> and the <code>lbtest</code> apps, while
+the other user can only see the <code>faithful</code> app. The admin user can click the
+Admin button in the top navigation bar to see the running proxies (i.e. instances
+of various apps, Fig. <a href="21-shinyproxy-deployment.html#fig:sp-04-admin-view">21.2</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:sp-04-admin-view"></span>
+<img src="images/shinyproxy/sp-04-admin-view.png" alt="ShinyProxy admin interface." width="100%" />
+<p class="caption">
+Figure 21.2: ShinyProxy admin interface.
+</p>
+</div>
+</div>
+<div id="spo-monitoring" class="section level2 hasAnchor" number="21.4">
+<h2><span class="header-section-number">21.4</span> Deploying Monitoring with ShinyProxy Operator<a href="21-shinyproxy-deployment.html#spo-monitoring" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Monitoring and observability of ShinyProxy and the Shiny applications
+is enabled through installing the following tool stack:</p>
+<ul>
+<li><strong>Grafana</strong>: User interface for visualizing and analyzing data.</li>
+<li><strong>Grafana Loki</strong>: Log aggregation system for collecting and querying logs.</li>
+<li><strong>Loki Docker Driver</strong>: Sends Docker container logs to Grafana Loki.</li>
+<li><strong>Prometheus</strong>: Monitoring toolkit for collecting metrics of ShinyProxy and the deployed Shiny apps.</li>
+<li><strong>cAdvisor</strong>: Monitors container performance and resource usage in real-time.</li>
+</ul>
+<p>The tool stack is automatically installed by setting
+an environment variable with the exception of the Loki Docker Driver
+which requires installing a Docker plugin.</p>
+<p>To install the Loki Docker plugin, use the script bundled in the ShinyProxy operator image:</p>
+<div class="sourceCode" id="cb261"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb261-1"><a href="21-shinyproxy-deployment.html#cb261-1" tabindex="-1"></a><span class="fu">sudo</span> docker run <span class="at">--group-add</span> <span class="va">$(</span><span class="fu">getent</span> group docker <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d:</span> <span class="at">-f3</span><span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb261-2"><a href="21-shinyproxy-deployment.html#cb261-2" tabindex="-1"></a>  <span class="at">-v</span> /var/run/docker.sock:/var/run/docker.sock:ro <span class="dt">\</span></span>
+<span id="cb261-3"><a href="21-shinyproxy-deployment.html#cb261-3" tabindex="-1"></a>  openanalytics/shinyproxy-operator:2.2.1 /install_plugins.sh</span></code></pre></div>
+<p>This command starts a new container with <code>docker</code> group permissions, mounts the Docker socket,
+and executes the <code>install_plugins.sh</code> script within the container.</p>
+<p>Now that the Loki Docker plugin is installed, you can modify the <code>compose.yml</code>
+file located in <code>/home/shinyproxy/shinyproxy/compose.yml</code> if you were following
+along earlier in the book. Add <code>SPO_ENABLE_MONITORING: "true"</code> to the environment
+variables section. You will also need to add the logging configuration under
+the <code>shinyproxy-operator</code> service:</p>
+<div class="sourceCode" id="cb262"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb262-1"><a href="21-shinyproxy-deployment.html#cb262-1" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb262-2"><a href="21-shinyproxy-deployment.html#cb262-2" tabindex="-1"></a><span class="at">  </span><span class="fu">shinyproxy-operator</span><span class="kw">:</span></span>
+<span id="cb262-3"><a href="21-shinyproxy-deployment.html#cb262-3" tabindex="-1"></a><span class="co">    # ...</span></span>
+<span id="cb262-4"><a href="21-shinyproxy-deployment.html#cb262-4" tabindex="-1"></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
+<span id="cb262-5"><a href="21-shinyproxy-deployment.html#cb262-5" tabindex="-1"></a><span class="at">      ...</span></span>
+<span id="cb262-6"><a href="21-shinyproxy-deployment.html#cb262-6" tabindex="-1"></a><span class="at">      </span><span class="fu">SPO_ENABLE_MONITORING</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;true&quot;</span></span>
+<span id="cb262-7"><a href="21-shinyproxy-deployment.html#cb262-7" tabindex="-1"></a><span class="co">    # ...</span></span>
+<span id="cb262-8"><a href="21-shinyproxy-deployment.html#cb262-8" tabindex="-1"></a><span class="at">    </span><span class="fu">logging</span><span class="kw">:</span></span>
+<span id="cb262-9"><a href="21-shinyproxy-deployment.html#cb262-9" tabindex="-1"></a><span class="at">      </span><span class="fu">driver</span><span class="kw">:</span><span class="at"> loki</span></span>
+<span id="cb262-10"><a href="21-shinyproxy-deployment.html#cb262-10" tabindex="-1"></a><span class="at">      </span><span class="fu">options</span><span class="kw">:</span></span>
+<span id="cb262-11"><a href="21-shinyproxy-deployment.html#cb262-11" tabindex="-1"></a><span class="at">        </span><span class="fu">loki-url</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;http://localhost:3100/loki/api/v1/push&quot;</span></span>
+<span id="cb262-12"><a href="21-shinyproxy-deployment.html#cb262-12" tabindex="-1"></a><span class="at">        </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> non-blocking</span></span>
+<span id="cb262-13"><a href="21-shinyproxy-deployment.html#cb262-13" tabindex="-1"></a><span class="at">        </span><span class="fu">loki-external-labels</span><span class="kw">:</span><span class="at"> app=shinyproxy-operator,namespace=default</span></span></code></pre></div>
+<p>Finally, you will need to restart the ShinyProxy operator container, for the
+changes to take effect, to do so run the following commands:</p>
+<div class="sourceCode" id="cb263"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb263-1"><a href="21-shinyproxy-deployment.html#cb263-1" tabindex="-1"></a><span class="fu">sudo</span> docker compose <span class="at">-f</span> /home/shinyproxy/shinyproxy/compose.yml down</span>
+<span id="cb263-2"><a href="21-shinyproxy-deployment.html#cb263-2" tabindex="-1"></a><span class="fu">sudo</span> docker compose <span class="at">-f</span> /home/shinyproxy/shinyproxy/compose.yml up <span class="at">-d</span></span></code></pre></div>
+<p>The commands stop the ShinyProxy operator service and starts it up again in the background.
+Ensure that the users you wish to have access to monitoring is added to the list of admin users
+in the configuration (see Section <a href="21-shinyproxy-deployment.html#sp-authentication">21.1.4</a>). After the monitoring tool stack has started,
+you will be able to access the monitoring dashboard via <code>http://&lt;location to ShinyProxy (FQDN)&gt;/grafana</code>.
+Through the Grafana dashboard, you can access ShinyProxy and app logs,
+app usage metrics, and resource usage stats, etc. (Fig. <a href="21-shinyproxy-deployment.html#fig:sp-11-grafana-usage">21.3</a>).
+You can also share or export monitoring results in various formats using the
+Grafana user interface.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:sp-11-grafana-usage"></span>
+<img src="images/shinyproxy/sp-11-grafana-usage.png" alt="ShinyProxy app usage metrics in the Grafana dashboard." width="100%" />
+<p class="caption">
+Figure 21.3: ShinyProxy app usage metrics in the Grafana dashboard.
+</p>
+</div>
+</div>
+<div id="benchmarking-shinyproxy-applications" class="section level2 hasAnchor" number="21.5">
+<h2><span class="header-section-number">21.5</span> Benchmarking ShinyProxy Applications<a href="21-shinyproxy-deployment.html#benchmarking-shinyproxy-applications" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are two ways to benchmark applications running in ShinyProxy
+to estimate the amount of CPU and Memory needed. First, is using
+the <code>docker stats</code> command, and the other option is to
+enable ShinyProxy monitoring and view the Grafana dashboard.</p>
+<div id="shinyproxy-docker-stats" class="section level3 hasAnchor" number="21.5.1">
+<h3><span class="header-section-number">21.5.1</span> Docker Stats<a href="21-shinyproxy-deployment.html#shinyproxy-docker-stats" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Docker provides a built-in stats system for understanding
+the resources containers are using in real time.
+It can be used for basic benchmarking to understand
+the amount of CPU and Memory needed for a host machine.</p>
+<p>To get Docker stats, type <code>sudo docker stats</code> into the terminal.
+You will be presented with CPU and Memory Usage like the following table:</p>
+<table>
+<colgroup>
+<col width="23%" />
+<col width="14%" />
+<col width="13%" />
+<col width="31%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Container ID</strong></th>
+<th><strong>Name</strong></th>
+<th><strong>CPU %</strong></th>
+<th><strong>Memory Usage / Limit</strong></th>
+<th><strong>Memory %</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>e2f0</td>
+<td>Shiny App</td>
+<td>2.00%</td>
+<td>55.8 MiB / 1 GiB</td>
+<td>5.00%</td>
+</tr>
+<tr class="even">
+<td>b7a9</td>
+<td>Shiny App2</td>
+<td>0.80%</td>
+<td>30.7 MiB / 1 GiB</td>
+<td>5.99%</td>
+</tr>
+<tr class="odd">
+<td>f1d8</td>
+<td>Shiny App3</td>
+<td>12.35%</td>
+<td>120.9 MiB / 1 GiB</td>
+<td>6.23%</td>
+</tr>
+</tbody>
+</table>
+<p>Using the table, you can extrapolate how much CPU and Memory you would need.
+For example, the ShinyApp container with Container ID <code>e2f0</code> uses 2.00% of CPU
+and 5.00% of memory. Therefore, you would be able to support approximately 20 app
+containers of ShinyApp as the limit is (100%/min(5% memory, 2% CPU)) = 20.
+You can then take this number and estimate how much more memory and CPU
+you’d need to support all expected concurrent users.</p>
+<p>Docker Stats can provide a simple way to benchmark applications without the installation
+of additional software. For more detailed information about your applications over time,
+you can enable ShinyProxy monitoring and use the Grafana dashboard.</p>
+</div>
+<div id="grafana-dashboard" class="section level3 hasAnchor" number="21.5.2">
+<h3><span class="header-section-number">21.5.2</span> Grafana Dashboard<a href="21-shinyproxy-deployment.html#grafana-dashboard" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Grafana dashboard is a platform for observing the
+logs of ShinyProxy and ShinyProxy operator. It is
+enabled when you set up ShinyProxy monitoring
+as described in Section <a href="21-shinyproxy-deployment.html#spo-monitoring">21.4</a>.</p>
+<p>To access the grafana dashboard, you would go to <code>http://&lt;location to ShinyProxy (FQDN)&gt;/grafana</code>.
+By clicking <code>Dashboards</code> in the sidebar you will be presented with a list of dashboards which we categorize in the following
+subsections.</p>
+<p><strong>Usage Metrics</strong> – These dashboards cover mainly how users use ShinyProxy including logins and time spent in an app.</p>
+<ul>
+<li><em>ShinyProxy Aggregated Usage</em> captures how many times apps are used.</li>
+<li><em>ShinyProxy Usage</em> shows information about ShinyProxy including Startup Time,
+Container Schedule Time, Image Pull Time, Container Initialization Time,
+Application Startup Time, Usage Time, Apps, Users, Users Active, Auth failures,
+App start failures. App crashes.</li>
+</ul>
+<p><strong>Application Logs</strong> – This dashboard displays the output of a Shiny app as if you were running it from the terminal on your machine.</p>
+<ul>
+<li><em>ShinyProxy App Logs</em> captures the output of the Shiny app running.</li>
+</ul>
+<p><strong>Resource Metrics</strong> – The resource metrics are good for benchmarking how much
+CPU and memory and application needs and whether or not
+you need a bigger host machine. These can provide more details than the
+approximation described in Section <a href="21-shinyproxy-deployment.html#shinyproxy-docker-stats">21.5.1</a>.
+The usage of CPU and memory over time by Shiny Apps can tell you how much
+CPU and memory you need for your ShinyProxy instance.</p>
+<ul>
+<li><em>ShinyProxy App Resources</em> shows the resources (CPU and memory) consumed by apps.</li>
+</ul>
+<p><strong>System Logs</strong> – These dashboards show the the terminal output of ShinyProxy
+and ShinyProxy operator.</p>
+<ul>
+<li><em>ShinyProxy Logs</em> shows the logs of ShinyProxy.</li>
+<li><em>ShinyProxy Operator Logs</em> shows the logs of ShinyProxy Operator which manages ShinyProxy.</li>
+</ul>
+<p><strong>Pre-Initialized and Shared Container Metrics</strong> – These dashboards cover
+monitoring the more advanced delegate app features (container pre-initialization
+and sharing) of ShinyProxy. The delegate app features of ShinyProxy delegate
+users to pre-initialized containers, and can even delegate multiple multiple users to
+a container with multiple seats. The log and resource dashboards are similar to
+the non-delegate dashboards.</p>
+<ul>
+<li><em>ShinyProxy Seats</em> shows the performance of apps using pre-initialization or
+container-sharing. This includes seat wait time and number of seats.</li>
+<li><em>ShinyProxy Delegate App Logs</em> shows the logs of containers that are shared
+for multiple seats or are pre-initialized.</li>
+<li><em>ShinyProxy Delegate App Resources</em> shows the resources (CPU and memory)
+consumed by delegate apps. These are the containers used by apps using
+pre-initialization or container-sharing.</li>
+</ul>
+</div>
+</div>
+<div id="shinyproxy-adding-apps" class="section level2 hasAnchor" number="21.6">
+<h2><span class="header-section-number">21.6</span> Adding and Removing Shiny Applications<a href="21-shinyproxy-deployment.html#shinyproxy-adding-apps" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Adding Shiny applications involves editing the <code>application.yaml</code>
+that configures your ShinyProxy and adding a new entry under the <code>specs</code>
+indentation such as the following:</p>
+<div class="sourceCode" id="cb264"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb264-1"><a href="21-shinyproxy-deployment.html#cb264-1" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> bananas</span></span>
+<span id="cb264-2"><a href="21-shinyproxy-deployment.html#cb264-2" tabindex="-1"></a><span class="at">        </span><span class="fu">display-name</span><span class="kw">:</span><span class="at"> Bananas Shiny App</span></span>
+<span id="cb264-3"><a href="21-shinyproxy-deployment.html#cb264-3" tabindex="-1"></a><span class="at">        </span><span class="fu">description</span><span class="kw">:</span><span class="at"> Classifying ripening bananas based on their color.</span></span>
+<span id="cb264-4"><a href="21-shinyproxy-deployment.html#cb264-4" tabindex="-1"></a><span class="at">        </span><span class="fu">container-cmd</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;R&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;-e&quot;</span><span class="kw">,</span><span class="at"> </span><span class="st">&quot;shiny::runApp(host=&#39;0.0.0.0&#39;, port=3838)&quot;</span><span class="kw">]</span></span>
+<span id="cb264-5"><a href="21-shinyproxy-deployment.html#cb264-5" tabindex="-1"></a><span class="at">        </span><span class="fu">container-image</span><span class="kw">:</span><span class="at"> ghcr.io/h10y/bananas/r-shiny:main</span></span>
+<span id="cb264-6"><a href="21-shinyproxy-deployment.html#cb264-6" tabindex="-1"></a><span class="at">        </span><span class="fu">logo-url</span><span class="kw">:</span><span class="at"> https://h10y.com/img/2.png</span></span>
+<span id="cb264-7"><a href="21-shinyproxy-deployment.html#cb264-7" tabindex="-1"></a><span class="at">        </span><span class="fu">access-groups</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">admins</span><span class="kw">]</span></span></code></pre></div>
+<p>More configuration options can be found in Section <a href="21-shinyproxy-deployment.html#shinyproxy-config-applications">21.1.5</a>.
+Once the entry is added, ShinyProxy operator will automatically reload
+ShinyProxy with your new app configuration.</p>
+<p>There are two ways of updating apps already deployed with ShinyProxy.
+The first option involves taking the <code>container-image</code> value in the
+configuration, rebuilding another container image with the same value
+as the prior <code>container-image</code> and pushing the image to the container
+registry. Because the <code>application.yaml</code> file remains the same,
+there is no need to connect to the server and make changes.
+As long as the <code>image-pull-policy</code> is set to <code>Always</code>, ShinyProxy will
+look for any updates to the container image.
+Note that if you are using private images, you will have to provide
+the registry details in the app specs:</p>
+<div class="sourceCode" id="cb265"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb265-1"><a href="21-shinyproxy-deployment.html#cb265-1" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> bananas</span></span>
+<span id="cb265-2"><a href="21-shinyproxy-deployment.html#cb265-2" tabindex="-1"></a><span class="at">        </span><span class="fu">container-image</span><span class="kw">:</span><span class="at"> ghcr.io/h10y/bananas/r-shiny:main</span></span>
+<span id="cb265-3"><a href="21-shinyproxy-deployment.html#cb265-3" tabindex="-1"></a><span class="at">        </span><span class="fu">docker-registry-username</span><span class="kw">:</span><span class="at"> your_docker_username</span></span>
+<span id="cb265-4"><a href="21-shinyproxy-deployment.html#cb265-4" tabindex="-1"></a><span class="at">        </span><span class="fu">docker-registry-password</span><span class="kw">:</span><span class="at"> your_docker_token</span></span>
+<span id="cb265-5"><a href="21-shinyproxy-deployment.html#cb265-5" tabindex="-1"></a><span class="at">        </span><span class="fu">docker-registry-domain</span><span class="kw">:</span><span class="at"> ghcr.io</span></span></code></pre></div>
+<p>The second option, requires you to connect to the server and modify the
+<code>application.yaml</code> file, i.e. updating the container image to the new
+version: <code>ghcr.io/h10y/bananas/r-shiny:v2</code>.
+Changes will be rolled out automatically by ShinyProxy Operator.</p>
+<p>We advise to use the second option and change version tags in production
+environments. This way it is easier to easily roll back any unwanted
+changes by simply changing the container image tag back to the previous
+value. As opposed to this, during development, it might be more desirable
+to always pull the new version of the image that is based on the development
+branch of the Git repository.</p>
+</div>
+<div id="other-considerations" class="section level2 hasAnchor" number="21.7">
+<h2><span class="header-section-number">21.7</span> Other Considerations<a href="21-shinyproxy-deployment.html#other-considerations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>While we have covered the basics of deploying ShinyProxy using the ShinyProxy
+Operator to run your Shiny applications, there are several other options to consider.
+Despite its name, ShinyProxy is not limited to Shiny apps. It can run any container image,
+allowing you to host other web applications that are containerized as well.</p>
+<p>The login and dashboard interface of ShinyProxy is highly configurable.
+You can edit the HTML template files to customize the user interface, aligning it with your own branding.
+For more details, refer to the ShinyProxy custom HTML template documentation at
+<a href="https://github.com/openanalytics/shinyproxy-config-examples/blob/master/04-custom-html-template/README.md" class="uri">https://github.com/openanalytics/shinyproxy-config-examples/blob/master/04-custom-html-template/README.md</a>.</p>
+<p>Lastly, while we did not cover dynamically configuring the applications of ShinyProxy,
+the <em>Spring Expression Language (SpEL)</em> enables you to determine the values of variables at runtime.
+Additional information is available at <a href="https://shinyproxy.io/documentation/spel/" class="uri">https://shinyproxy.io/documentation/spel/</a>.</p>
+<p>ShinyProxy can also be configured for larger deployments on clusters of
+computers (Docker Swarm and Kubernetes backends). This can support large
+and number of users and can scale with demand in high availability settings.</p>
+<p>By default, ShinyProxy provisions a new container for every active user/app
+combinations on the server. This is useful when the goal is secure isolation
+of the instances so that no data can be leaked across user sessions.
+This works well when the number of concurrent users is small and a small-to-medium
+sized server, or when running ShinyProxy in a scalable cluster environment.
+You can use the monitoring metrics (Section <a href="21-shinyproxy-deployment.html#spo-monitoring">21.4</a>)
+to determine the optimal specifications for your use case.</p>
+<p>This most-secure default configuration can be relaxed by allowing multiple users
+sharing the same container instance by setting the <code>seats-per-container</code> value
+to be higher than 1 in the app specification.
+This setting controls the number of seats that can be run on a single container.
+Note that when container sharing is turned on,
+ShinyProxy doesn’t pass the username and groups using environment variables,
+but these are passed to the app using HTTP headers.</p>
+<p>It is also possible to specify the number of seats ShinyProxy should keep
+available for new users via setting the <code>minimum-seats-available</code> in the
+app specification to a value higher than 0. This feature is useful when
+starting the app takes longer than desired (often referred to as cold-start).
+With container pre-initialization, ShinyProxy will start new containers
+waiting for new users, therefore, the user has almost no waiting time
+for the container to start up.</p>
+</div>
+<div id="summary-23" class="section level2 hasAnchor" number="21.8">
+<h2><span class="header-section-number">21.8</span> Summary<a href="21-shinyproxy-deployment.html#summary-23" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>ShinyProxy is a popular, free, and open-source option to host any type
+of containerized web application, including but not limited to Shiny
+apps, Python/Dash, Streamlit, RStudio IDE, Jupyter notebooks, R markdown
+documents, etc.</p>
+<p>ShinyProxy operator is an application designed to manage instances of ShinyProxy
+via connecting to Docker or Kubernetes.
+The Docker container-based deployment of ShinyProxy with ShinyProxy operator
+comes with all the benefits,
+such as isolation, dev-prod parity, resource management, observability, and
+scalability.</p>
+<p>Enterprise features such as monitoring and single sign on authentication come built-in with extensive documentation.
+The manual labour spent on integrating the moving parts of ShinyProxy pays dividends by
+saving a lot on licensing fees for more commercial solutions.
+It is a real contender in the enterprise
+sphere for deploying Shiny applications.</p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="20-part2-docker-compose.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="22-shiny-production.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/h10y/book/edit/main/book-source/05-03-vm-shinyproxy.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section",
+    "scroll_highlight": true
+  }
+});
+});
+</script>
+
+</body>
+
+</html>
