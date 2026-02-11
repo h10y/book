@@ -3,6 +3,8 @@
 \usepackage{bbm}
 \usepackage[bf,singlelinecheck=off]{caption}
 
+\usepackage{awesomebox}
+
 \usepackage{framed,color}
 \definecolor{shadecolor}{RGB}{248,248,248}
 
@@ -24,6 +26,36 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{kotex}
+
+% break code lines 
+\usepackage{pdfpages} 
+\usepackage{fvextra} 
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},breaklines=true, breakanywhere=true}
+
+% Info Box for Cloud Providers
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\newcommand{\cloudservice}[5]{
+    \begin{tcolorbox}[colback=blue!5!white, colframe=blue!80!black, title={\textbf{#1} \textbf{Key Considerations}}, sharp corners=southwest, boxrule=0.5mm]
+        \textbf{Costs:} 
+        \begin{itemize}
+            #2
+        \end{itemize}
+        \textbf{Skill Level:} 
+        \begin{itemize}
+            #3
+        \end{itemize}
+        \textbf{Support:} 
+        \begin{itemize}
+            #4
+        \end{itemize}
+        \textbf{Scale \& Performance:}
+        \begin{itemize}
+            #5
+        \end{itemize}
+    \end{tcolorbox}
+}
+%%
 
 % Changed via Rob Hyndman's suggestions
 % https://robjhyndman.com/hyndsight/latex-floats/

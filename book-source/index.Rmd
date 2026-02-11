@@ -1,4 +1,4 @@
---- 
+---
 title: "`r ifelse(knitr::is_latex_output(), 'Hosting Shiny Applications for R and Python', 'Hosting Shiny Applications for R and Python')`"
 subtitle: "Everything you wanted to know about hosting Shiny apps"
 author: "`r ifelse(knitr::is_latex_output(), 'Péter Sólymos and Kalvin Eng', 'Péter Sólymos and Kalvin Eng')`"

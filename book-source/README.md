@@ -31,7 +31,36 @@ docker run -it --rm --platform linux/amd64 \
   /bin/bash /home/root/bookdown/_build.sh
 ```
 
-## Overview of Parts & Chapters
+## Overview of Parts & Chapters [NEW]
+
+Revised TOC after 1st round of reviews.
+
+- **PART 1**
+  - Intro/background
+  - Hosting cycle (~taxonomy???)
+  - ? Tools
+  - ? Networking fundamentals (incl. DNS)
+- **PART 2**
+  - Developing shiny (locally)
+  - Deploy to shinyapps.io
+- **PART 3**
+  - Hosting shiny review
+  - PaaS without Docker: Shinylive & gh pages, DOAP static, iframe
+  - VM setup & reverse proxy
+  - Shiny Server OS
+  - Posit Connect
+- **PART 4**
+  - Docker (locally)
+  - PaaS with Docker
+  - Docker Compose
+  - ShiyProxy
+- **PART 5**
+  - Advanced
+- **APPENDICES**
+  - Appendices: banas app, etc.
+
+
+## Overview of Parts & Chapters [OLD]
 
 - **Part I**: Getting Started
   - Background (DEvOps, Shiny hosting cycle)
@@ -100,7 +129,8 @@ WE ARE HERE
     - Fly.io (& other firecracker based ones)
     - Fargate-like offerings, Elastic Beanstalk, ...
     - Multiple apps using containerized Shiny Server
-  - Virtual Private Servers (https://cloud.google.com/learn/what-is-a-virtual-private-server)
+    - Static Hosting for Shinylive
+  - Virtual Machines
     - Setup
       - DO droplet & ssh login
       - Navigation & commands
@@ -121,7 +151,7 @@ WE ARE HERE
         - File server & dynamic apps example
         - Containerized ShinyProxy
   - Hybrid setups
-    - Embedding onto your website (Iframes): Shinyapps does not provide HTTPS for custom domains, but uses HTTPS for their own subdomains --> how to serve; or Heroku you can set up costom domain but not a path redirect; or embed in a blog (WP or Ghost), explain iframe and maybe CSS based spinner
+    - Embedding onto your website (Iframes): Shinyapps does not provide HTTPS for custom domains, but uses HTTPS for their own subdomains --> how to serve; or Heroku you can set up custom domain but not a path redirect; or embed in a blog (WP or Ghost), explain iframe and maybe CSS based spinner
   - Considerations for Production
     - Security
       - security groups
@@ -250,11 +280,11 @@ Devops, docker, etc.
 
 Reference it in text like:
 
-Now consider Fig. \@ref(fig:part1-hosting-cycle), which shows the cycle.
+Now consider Fig. \@ref(fig:hosting-cycle), which shows the cycle.
 
 Use the R code chunk like this:
 
-        ```{r part1-hosting-cycle, eval=TRUE, echo=FALSE, fig.cap="Shiny hosting cycle."}
+        ```{r hosting-cycle, eval=TRUE, echo=FALSE, fig.cap="Shiny hosting cycle."}
         include_graphics("images/part-01/hosting-cycle.png")
         ```
 
@@ -347,3 +377,93 @@ Mention swarm mode:
 - need to disambiguate docker swarm and swarm mode of the docker engine
 - this belongs to advanced / what is next besides Kubernetes
 - <https://stackoverflow.com/questions/40039031/what-is-the-difference-between-docker-swarm-and-swarm-mode>
+
+## Deploying Static Files with Shinylive
+
+How to deploy to GH pages etc.
+
+Share Shinylive: https://shiny.posit.co/py/docs/shinylive.html
+
+
+FIXME: this needs a visuals. Include relevant links:
+
+> Code for deploying Shiny applications that will run completely in the browser, using Pyodide and webR (Python and R compiled to WebAssembly).
+
+- <https://ropensci.org/blog/2023/11/17/runiverse-wasm/>
+- <https://github.com/posit-dev/shinylive>
+- <https://shinylive.io/r/examples/> and <https://shinylive.io/py/examples/>
+
+> Exporting 'shiny' applications with 'shinylive' allows you to run them entirely in a web browser, without the need for a separate R server. The traditional way of deploying 'shiny' applications involves in a separate server and client: the server runs R and 'shiny', and clients connect via the web browser. When an application is deployed with 'shinylive', R and 'shiny' run in the web browser (via 'webR'): the browser is effectively both the client and server for the application. This allows for your 'shiny' application exported by 'shinylive' to be hosted by a static web server. -- <https://cran.r-project.org/web/packages/shinylive/index.html>
+
+## Deploying Shiny Apps to shinyapps.io
+
+- Share your Shiny app as a web page
+  - synamic Shiny deployment (Shinyapps)
+  - static Shiny deployment (Shinylive + GH pages)
+
+IDE has button to deploy to Shinyapps, also show the rsconnect ways fr R & Python
+
+The developers of Shiny have developed one-click solutions for deploying to  [ShinyApps.io](http://ShinyApps.io). The caveat is that hosting costs can become quite costly, and there are limitations to the hours that an app can be run for in the free tier.
+
+To begin, sign up for [ShinyApps.io](http://ShinyApps.io).
+
+### R
+
+To deploy in RStudio, install the rsconnect package, load the rsconnect package.
+
+**shinyapps.io**: free or paid cloud hosting with push-button  publishing.
+Push-button publishing is available for shinyapps.io 
+from the RStudio IDE (desktop or server edition) or from any R console
+using the [rsconnect](https://cran.r-project.org/package=rsconnect) R extension package.
+
+FIXME: add more here.
+
+### Python
+
+To deploy with Python, install the `rsconnect-python` pacakge, run the rsconnect commands in the command line.
+
+FIXME: add more here.
+
+
+# Save draw.io diagrams
+
+<https://tomd.xyz/how-i-use-drawio/>
+
+```bash
+FILE=apps-users
+FILE=shiny-app-websocket
+
+FILEPATH=./book-source-v2/images/${FILE}/${FILE}
+/Applications/draw.io.app/Contents/MacOS/draw.io -x -f png -s 2.5 -b 50 -o ${FILEPATH}.png ${FILEPATH}.drawio
+/Applications/draw.io.app/Contents/MacOS/draw.io -x -f pdf --crop -s 2.5 -b 200 -o ${FILEPATH}.pdf ${FILEPATH}.drawio
+```
+
+Call system command from R:
+
+```R
+fl <- list.files("book-source-v2/images", recursive = TRUE, pattern = ".drawio",full.names = T)
+for (f in fl) {
+  message(f)
+  system2("/Applications/draw.io.app/Contents/MacOS/draw.io",
+    c("-x", "-f", "png", "-s", "2.5", "-b", "50", "-o", paste0(gsub("drawio$", "png", f)), f))
+  system2("/Applications/draw.io.app/Contents/MacOS/draw.io",
+    c("-x", "-f", "png", "--crop", "-s", "2.5", "-b", "50", "-o", paste0(gsub("drawio$", "pdf", f)), f))
+}
+```
+
+Template for Figure \@ref(fig:chunk-title), etc.
+
+```{r chunk-title, eval=TRUE, echo=FALSE,out.width="100%", fig.pos = "bt", fig.cap="Add here caption."}
+if (is_latex_output()) {
+    include_graphics("images/path/file.pdf")
+} else {
+    include_graphics("images/path/file.png")
+}
+```
+
+When it is just a PNG (Fig. \@ref(fig:chunk-title)), use like:
+
+```{r chunk-title, eval=TRUE, echo=FALSE, out.width="100%", fig.pos = "bt", fig.cap="Caption."}
+# use PNG in both the html and latex versions
+include_graphics("images/connect-cloud/connect-cloud-08.png")
+```

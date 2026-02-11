@@ -8,47 +8,87 @@ rmd_files:
     "index.Rmd",
     "00-01-foreword.Rmd",
     "00-02-preface.Rmd",
+
     "01-01-background.Rmd",
     "01-02-hosting-concepts.Rmd",
     "01-03-tools.Rmd",
     "01-04-examples.Rmd",
-    "02-01-a-developing-shiny.Rmd",
-    "02-01-b-developing-shiny.Rmd",
-    "02-01-c-developing-shiny.Rmd",
-    "02-02-a-containerizing-shiny.Rmd",
-    "02-02-b-containerizing-shiny.Rmd",
-    "02-02-c-containerizing-shiny.Rmd",
-    # "03-01-hosting-shiny.Rmd",
-    # "03-02-shiny-in-production.Rmd",
-    # "04-01-what-is-next.Rmd",
-    # "05-01-appendix-bananas.Rmd",
-    # "05-02-appendix-lbtest.Rmd",
-    # "05-03-appendix-cheatsheet.Rmd",
-    # "05-04-appendix-setup.Rmd",
-    "05-99-references.Rmd"
+
+    "02-01-developing-shiny.Rmd",
+    "02-02-running-locally.Rmd",
+    "02-03-sharing-apps.Rmd",
+
+    "03-01-hosting-shiny.Rmd",
+    "03-02-paas-for-shiny.Rmd",
+    "03-03-shinylive.Rmd",
+    "03-04-embedding-shiny.Rmd",
+    "03-05-vm-setup.Rmd",
+    "03-06-shiny-server.Rmd",
+    "03-07-posit-connect.Rmd",
+
+    "04-01-container-technology.Rmd",
+    "04-02-container-images.Rmd",
+    "04-03-containerizing-shiny.Rmd",
+    "04-04-working-with-containers.Rmd",
+
+    "05-01-a-paas-with-docker.Rmd",
+    "05-01-b-paas-with-docker.Rmd",
+    "05-01-c-paas-with-docker.Rmd",
+    "05-01-d-paas-with-docker.Rmd",
+    "05-01-e-paas-with-docker.Rmd",
+    "05-02-vm-docker-compose.Rmd",
+    "05-03-vm-shinyproxy.Rmd",
+
+    "06-01-shiny-in-production.Rmd",
+    # "06-02-advanced-docker.Rmd",
+    # "06-02-what-is-next.Rmd",
+
+    "99-00-endmatter.Rmd",
+    # "99-01-appendix.Rmd",
+    "99-99-references.Rmd"
     ]
   latex: [
     "index.Rmd",
     "00-01-foreword.Rmd",
     "00-02-preface.Rmd",
+
     "01-01-background.Rmd",
     "01-02-hosting-concepts.Rmd",
     "01-03-tools.Rmd",
     "01-04-examples.Rmd",
-    "02-01-a-developing-shiny.Rmd",
-    "02-01-b-developing-shiny.Rmd",
-    "02-01-c-developing-shiny.Rmd",
-    "02-02-a-containerizing-shiny.Rmd",
-    "02-02-b-containerizing-shiny.Rmd",
-    "02-02-c-containerizing-shiny.Rmd",
-    # "03-01-hosting-shiny.Rmd",
-    # "03-02-shiny-in-production.Rmd",
-    # "04-01-what-is-next.Rmd",
-    # "05-01-appendix-bananas.Rmd",
-    # "05-02-appendix-lbtest.Rmd",
-    # "05-03-appendix-cheatsheet.Rmd",
-    # "05-04-appendix-setup.Rmd",
-    "05-99-references.Rmd"
+
+    "02-01-developing-shiny.Rmd",
+    "02-02-running-locally.Rmd",
+    "02-03-sharing-apps.Rmd",
+
+    "03-01-hosting-shiny.Rmd",
+    "03-02-paas-for-shiny.Rmd",
+    "03-03-shinylive.Rmd",
+    "03-04-embedding-shiny.Rmd",
+    "03-05-vm-setup.Rmd",
+    "03-06-shiny-server.Rmd",
+    "03-07-posit-connect.Rmd",
+
+    "04-01-container-technology.Rmd",
+    "04-02-container-images.Rmd",
+    "04-03-containerizing-shiny.Rmd",
+    "04-04-working-with-containers.Rmd",
+
+    "05-01-a-paas-with-docker.Rmd",
+    "05-01-b-paas-with-docker.Rmd",
+    "05-01-c-paas-with-docker.Rmd",
+    "05-01-d-paas-with-docker.Rmd",
+    "05-01-e-paas-with-docker.Rmd",
+    "05-02-vm-docker-compose.Rmd",
+    "05-03-vm-shinyproxy.Rmd",
+
+    "06-01-shiny-in-production.Rmd",
+    # "06-02-advanced-docker.Rmd",
+    # "06-02-what-is-next.Rmd",
+
+    "99-00-endmatter.Rmd",
+    # "99-01-appendix.Rmd",
+    "99-99-references.Rmd"
     ]
 language:
   label:

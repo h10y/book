@@ -3,7 +3,7 @@
 ## Motivation {-}
 
 Shiny is a reactive web application framework used by **R** and 
-**Python** users to communicate their results to others. Whether 
+**Python** users to communicate their data analysis results to others. Whether 
 you are just starting out with Shiny, or you are a seasoned programmer, at 
 some point you'll need to share your app with your colleagues and users. 
 You might decide to send them scripts or deploy the app and share the URL 
@@ -12,8 +12,10 @@ ecosystem are phenomenal resources. However, these resources focus on the
 development of the applications and decidedly cover very little about what to 
 do once the app is deployed. 
 
-It might surprise you, but there are at least /FIXME: CHECK THIS NUMBER/ 20 hosting options for Shiny. 
-Navigating these options and finding up-to-date advice on choosing one and 
+There are over 
+<!-- /FIXME: CHECK THIS NUMBER/ -->
+20 hosting options for Shiny. 
+Navigating these options and finding advice on choosing the best one and 
 getting started is not easy or trivial. Information about Shiny hosting is 
 scattered around the Internet and is often incomplete. Recommendations are 
 usually narrowly focused and never really ask important questions such as: 
@@ -25,9 +27,9 @@ Current available books focus on the R aspect of Shiny,
 which is not surprising given that Shiny for Python is a relatively recent
 addition to the Shiny ecosystem. Luckily, Shiny 
 for R and Python have very similar deployment and hosting patterns. Therefore, 
-we can cover both in the same book. We think this is important, because with the 
+we cover both in the same book. We think this is important, because with the 
 increasing popularity of Shiny available for R and Python, learning more about 
-the hosting side of the application life-cycle will be a critical need for 
+the hosting side of the application lifecycle will be a critical need for 
 programming enthusiasts and data science professionals alike.
 
 ## Who Is This Book For? {-}
@@ -43,13 +45,14 @@ If you are not (yet) asking these questions, but want to learn about servers,
 cloud instances, and containers from the perspective of Shiny apps, this book is 
 still for you.
 
-You might be a researchers in academia, government, and at a nonprofit 
+You might be a researcher in academia, government, or at a nonprofit 
 organization who wants to self-host Shiny apps so that you can show your
 results to your colleagues, your stakeholders, or to the public.
 You might work at a small agency or a startup and want to securely host 
 apps for your clients and users. Or you might be a data scientist who wants 
 to effectively collaborate with people in the IT and engineering department
-on Shiny app deployment and hosting.
+on Shiny app deployment and hosting. This book is an invaluable resource
+to learn about all aspects of hosting Shiny applications.
 
 ## What Will You Learn? {-}
 
@@ -63,13 +66,14 @@ The book is structured into four main parts:
 - Part III. Hosting Shiny Apps -- This part describes all the ways of how Shiny
   apps can be hosted on **remote** machines, like cloud servers. This part is
   the longest, because there are quite a few hosting options.
-- Part IV. What is next -- You'll find a summary of all the things you might
-  want to do next with your Shiny app, things that might either be too advanced
-  or are harder to describe in a physical book format.
+- Part IV. What is Next? -- You will find an overview of more advanced options 
+  for your Shiny app. This includes topics like hosting your own deployment platform 
+  and managing infrastructure as code—concepts that are more challenging to cover fully 
+  in a physical book format.
 
-The book does not end on the last page. You can find online supplements,
+The book does not end on the last page. You can find up-to-date supplementary online material,
 including the HTML version of the book and all the code that we present
-in the book and more on the book's website at FIXME: add final website.
+in the book and more on the book's website at <https://hostingshiny.com>.
 
 ## What Will You Not Learn? {-}
 
@@ -130,16 +134,16 @@ he has authored 70 peer-reviewed publications and several statistical software
 packages. He is passionate about using statistics and data science to bridge 
 the gap between data and decision making. His focus is on enabling this by 
 helping organizations adopting cloud-native practices into their operations.
-FIXME: revise.
-<https://peter.solymos.org>
+<!-- FIXME: revise.
+<https://peter.solymos.org> -->
 
 Kalvin Eng is a PhD candidate in Computing Science at the University of Alberta 
 with over 15 years of software development experience. His research involves 
 understanding and improving the processes of software engineering. He is 
 passionate about helping organizations develop efficient processes to build 
 software more effectively.  
-FIXME: revise.
-<https://kalvineng.com>
+<!-- FIXME: revise.
+<https://kalvineng.com> -->
 
 ## Acknowledgements {-}
 
@@ -152,8 +156,11 @@ held by the authors at the _Edmonton R User Group (YEGRUG)_. We are thankful
 for the Statistical Society of Canada for inviting us to teach the course
 _Delivering applied statistics from concept to production_.
 
-FIXME: add here more names as needed
+We also want to give a shout out to the _Felice Cafe_ in Edmonton where
+we spent many hours working on the book.
+
 <!--
+FIXME: add here more names as needed
 - The authors would like to thank a whole bunch more people.
 - Who provided reviews and we know there names.
 - Alex Ellis
@@ -164,3 +171,23 @@ FIXME: add here more names as needed
 
 <!-- For use only in PDF, is skipped in HTML -->
 \mainmatter
+
+<!--
+REVIEW:
+- "The documentation and books about the Shiny ecosystem are phenomenal resources" - this sentence seems out of 
+   place, does not flow with the paragraph.
+- Second paragraph mentions that "finding up-to-date advice" is hard, implying that this book will 
+  provide that. Since this book will be a print format, it will certainly not be "up-to-date" for 
+  a very long time. If this was an online book, you could argue that the author would continuously 
+  update the book to keep it updated. But if this is planned to be printed, I would not mention 
+  the "up-to-date" issue because this book is not going to fix that.
+- The "Who Is This Book For?" section ends awkwardly. It needs a good strong sentence or short paragraph to end with
+- One of the most important definitions is missing. What is "hosting", what exactly is meant by "hosting a Shiny app"?
+- I'm noticing many awkward sentence structures and choices of words, this book should go through a proper copy editor
+- Part IV is called "What is next", it should be changed to "What's next" which is a much more natural phrase
+- Conventions: Ironically, this paragraph needs to follow conventions more strictly. Sometimes examples 
+  are in parentheses and sometimes not, sometimes examples include the word "e.g." and sometimes not, sometimes 
+  URLs have a trailing slash and sometimes not. The inconsistency is distracting.
+- Conventions: it's strange to read this as a paragraph. It might be easier to read as bullet points.
+- In general, the written tone is EXTREMELY casual. Perhaps this is on purpose and is fine. I just want to point it out, because to me it makes the book be perceived as a little less legitimate/professional. But this is a design decision, perhaps it's a conscious decision.
+-->

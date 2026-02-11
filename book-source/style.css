@@ -1,0 +1,7 @@
+.noteblock {
+  padding: 1em 1em 1em 1em;
+  margin-bottom: 2em;
+  border: 2px solid lightblue;
+  border-radius: 10px;
+  background: #f5f5f5 5px center/3em no-repeat;
+}

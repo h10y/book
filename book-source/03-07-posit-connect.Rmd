@@ -1,0 +1,92 @@
+# Posit Connect {#posit-connect}
+
+::: {.noteblock data-latex=""}
+Posit Connect is a solution that you self-host on
+your virtual machine to deploy your Shiny application.
+It offers one-click deployment similar to other
+Shiny deployment platforms.
+:::
+
+[Posit Connect](https://posit.co/products/enterprise/connect/) is
+a product Posit to deploy and share data science work across teams.
+<!-- It offers robust Shiny hosting capabilities for organizations. -->
+Data scientists can use Posit Connect to securely share results in the form of
+reports or interactive apps like Shiny, automate and scale the execution of tasks.
+For system administrators, it offers detailed metrics and logs,
+secure deployments and configuration options.
+
+Posit Connect is a self-hosted system which means that customers
+are responsible to pay licensing fee and operating costs for hosting servers
+that meet the requirements of the team using the product.
+Licensing fee is currently not shared on the website, last published
+pricing started $15,000 USD per year. Discounts might be available for 
+small businesses and academic institutions.
+
+Posit Connect only comes as the software itself, server costs are
+entirely independent of Posit Connect. The recommended
+requirements of Posit Connect, at the time of writing,
+includes 4+ CPUs, 8+ GB of RAM, 100+ GB of disk storage.
+For reference a typical configuration with the minimum
+hardware requirements would be at least $480 USD a year
+with a cloud provider like DigitalOcean.
+
+In general, the larger the team, the more capable server you'll need to
+handle the workload. In the end, server costs can easily be multiples of
+this minimum cost with factors such as larger teams, backups, mounted volumes.
+Having multiple servers for development, staging, and production
+environments, or a high availability setup using a compute cluster.
+
+Posit Connect can host Shiny apps, R markdown and Quarto documents, APIs,
+Jupyter Notebooks, Streamlit, Dash, and many more. Shiny apps can be
+deployed with a click of a button right from the RStudio IDE or through 
+Git repository integration.
+
+As a user, no DevOps skills are required, but as an admin/maintainer you 
+will have the responsibility of configuring and managing the server(s) that Posit
+Connect is running on including setting up HTTPS for secure
+connections to the server. Besides Posit Connect itself, you have to
+install R, Python, system dependencies, packages etc. The Posit Workbench and
+the Posit Package Manager might be needed for more complex setups to
+organize and centralize packages across your organization.
+The server might also need to have professional drivers 
+for various database backends to support data persistence.
+
+In terms of the meeting scaling and performance needs, Posit Connect
+allows for the complete control over the deployment environment, 
+with no limitations on active hours or 
+the number of applications that can be deployed, aside from server capabilities. 
+These capabilities can be upgraded as necessary to meet performance demands.
+Full control over the servers running Posit Connect allows for 
+hosting in any data region, allowing for compliance with data residency laws.
+Further, Posit Connect comes with a set of security and
+auditing features including guaranteeing HTTPS and audit logs.
+Another security responsibility is operating system patching for 
+the maintained server.
+
+Posit Connect integrates with various third-party products and authentication providers for 
+user authentication, including options for single sign-on (SSO) such as Azure Entra, 
+Google OpenID, Kerberos, etc. Authenticated users are assigned roles (administrator, publisher, 
+viewer, or anonymous) that dictate their default capabilities. Permissions for accessing and 
+managing content is determined by content owners and can be managed through user groups. 
+Notably, anonymous users do not need to authenticate, and only authenticated users 
+count towards the pricing model based on named users.
+
+Full control over the server address enables the selection of a preferred domain or subdomain, 
+allowing for customization of the web address for how users access the Shiny app. 
+This enhances user experience and reinforces brand identity, making it easier for users to 
+recognize and connect with the application.
+
+Support for Posit Connect is available through Posit itself, its certified partners, 
+and the wider community making Posit Connect a highly supported hosting solution. 
+It is also a fast evolving product, so we won't have instructions here but
+instead we refer interested readers to the Posit Connect admin guide at
+<https://docs.posit.co/connect/admin/>.
+
+## Summary
+
+Posit Connect is the enterprise-level publishing solution for medium
+and large teams with powerful capabilities and integration possibilities. 
+If you are looking for a comprehensive solution for your data science team,
+Posit Connect might be the best solution out there. If you are only
+looking for a way to host your Shiny apps, Posit Connect might be too
+expensive and you might want to pick another option instead.

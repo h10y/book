@@ -1,0 +1,694 @@
+# (PART) Production Shiny Apps {-}
+
+# Considerations for Production {#shiny-production}
+
+::: {.noteblock data-latex=""}
+This chapter covers considerations for your
+deployed Shiny application. It addresses key elements that will influence 
+your Shiny app's performance and user experience after launch.
+
+These considerations apply to any Shiny application you share with
+the public, regardless of hosting platform.
+:::
+
+Once your Shiny application is deployed, you'll need to consider key factors 
+such as: security; app authentication; reliability; scaling; as well as operations
+and maintenance.
+
+Security encompasses safeguarding the hosting of your app, while app authentication
+covers which end-users can access your app. Reliability and scaling
+focus on making sure your app can scale up to meet user
+demand. Operations and maintenance includes setting up pipelines and alerts 
+for seamless future deployments.
+
+We have already touched on many of these subjects earlier on in the
+book when explaining the hosting options. This section summarizes
+the key concepts you should be aware of when hosting a
+production Shiny application.
+
+## Security
+
+In terms of security, at a minimum, measures should include 
+serving your application over HTTPS, which requires certificates for 
+signing requests. If your app relies on sensitive secret variables
+like database credentials, they should be securely stored
+with a secrets management service. Furthermore, if you are
+connecting to backend services, the connections should
+be isolated via private networking.
+
+###  SSL Certificates
+In Section \@ref(part3-https), we outline the importance of HTTPS 
+(Hypertext Transfer Protocol Secure) when accessing your app.
+To enable HTTPS, your application requires an SSL certificate, 
+which encrypts traffic and verifies the server's identity. 
+These certificates are issued by trusted Certificate Authorities (CAs), 
+either for a fee (e.g., GlobalSign, Comodo) or for free (e.g., Let's Encrypt). 
+Many hosting platforms handle SSL certificate issuance and HTTPS configuration, 
+often requiring only the setup of DNS records for your custom domain.
+
+
+SSL certificates have an expiry date and need to be periodically renewed 
+through a CA.
+By using hosting platforms or tools like Let's Encrypt, your certficate
+can be automatically renewed. The only requirement is the initial setup
+of DNS with your domain provider.
+
+To ensure that your certificate has been installed properly, and that 
+your site is accessible via HTTPS, you can tools like the 
+[Qualys SSL Server Test ](https://www.ssllabs.com/ssltest/). 
+
+###   Storing Secrets
+When deploying information, sensitive information such
+as database or API credentials (secrets) should not be hardcoded into
+an application. Instead, an application should use secrets
+from an environment variable or a secrets service.
+
+#### Env Files {-}
+
+Environment variables can be stored in a file
+named `.env` and are typically used to load
+secrets at runtime. The idea of a `.env` file is
+to store secrets locally on your machine and is
+not included with application source code.
+
+Here is an example of a `.env` file which stores
+secrets in a `KEY=VALUE` format:
+```dotenv
+API_KEY="your_api_key"
+```
+Value can be enclosed in quotation marks to handle special characters.
+
+While `.env` files provide a convenient way to manage environment variables, 
+one downside is that they store secrets in plaintext, 
+which can be read by anybody with access to your machine.
+To enhance security, it is better to store your secrets in a 
+secrets management service instead of using a `.env` file.
+
+#### Secrets Management Service {-}
+
+A secrets management service centralizes the storage
+of sensitive credentials such as database logins
+and API keys. It offers several advantages, including
+including access logs that track when and how
+secrets are used, the ability to revoke access
+to secrets, and a simplified process to update
+or rotate credentials.
+
+A secrets management service is similar to a 
+password manager that you would use to manage
+your own password. In fact, password managers
+such as 1password and bitwarden offer secrets
+management as a service in addition to their password
+management service.
+
+A secrets management service works by replacing
+sensitive credentials with code that retrieves 
+credentials directly from the service. Every time
+a credential is retrieved, the secrets management
+service logs details such as what was retrieved,
+when it was retrieved, and who retrieved it.
+
+There are numerous options for a secrets management
+service, but not all have native support for
+Shiny R apps. Here are some of the cloud based 
+options:
+
+- [1password](https://1password.com/developers/secrets-management) offers secrets management 
+  through a Python library, command-line tool, and REST API.
+- [Google Cloud Secret Manager](https://cloud.google.com/security/products/secret-manager) enables 
+  secrets management with a Python library, command-line tool, and REST API.
+- [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) provides secrets management with an R package,
+  Python library, command-line tool, and REST API.
+- [Azure Key Vault](https://azure.microsoft.com/en-us/products/key-vault) supports secrets management 
+  with both an R package and Python library, along with a REST API.
+- [Bitwarden Secrets Manager](https://bitwarden.com/products/secrets-manager/) delivers secrets management 
+  with a Python library and command-line tool.
+- [Infisical](https://github.com/Infisical/infisical) offers secrets management with a Python library, 
+  REST API, and command-line tool.
+
+You can also self-host your secrets management service
+with tools like [Infisical](https://github.com/Infisical/infisical),
+but keeping up with maintenance and updates and Uptime
+is more trouble than it is worth.
+
+### Firewalls {#firewalls}
+Firewalls are a tool to control who can access your server.
+They are only a concern for self-hosted solutions where you
+are responsible for managing your own server. In contrast, with
+platform-based hosting solutions, server access is managed by 
+the platform provider.
+
+Firewalls operate at different levels, including the operating
+system, server, or physical level.
+At the physical level, a dedicated hardware device
+is used to filter traffic to your server.
+While at the operating system and server levels, software
+is employed to filter traffic to your server. In this book,
+focus on self-hosted deployments with cloud
+providers, meaning that the physical level is not relevant.
+
+At the operating system level, Uncomplicated Firewall (UFW)
+can be used to control access to the server, making it useful
+when you would like to block specific users from SSHing into 
+your server based on their IP address.
+
+Similarly, at a server level, cloud providers offer security
+groups which function like UFW but apply filtering at the
+cloud provider level, controlling traffic before it
+even reaches your virtual machine instance.
+
+Here are some key firewall rules to consider when 
+managing access to your server hosting your Shiny app:
+
+- Allow HTTP port 80 so that your Shiny app is accessible via
+  the web browser
+- Allow HTTPS port 443 so that your Shiny app is accessible via
+  the web browser over a secure connection
+- Allow SSH port 22 but restrict it to your IP address so that
+  only authorized users like yourself can access the server
+  instance to re-deploy your Shiny app
+- Allow Internet Control Message Protocol (ICMP) so that you can test 
+  your server's reachability from the command line
+
+Also remember when providing access to ports that should
+not be public like SSH to use the principle of least privilege
+which means that only whitelisting the IP addresses of your
+authorized users and nobody else.
+
+Another layer of security you can add is to install `fail2ban`
+on your server, which can restrict users, by IP address, 
+that fails to successfully SSH into your server.
+
+### Private Networking
+
+Another consideration for your production grade Shiny
+application is the use of private networking
+to establish connections to your backend services.
+This means that only trusted computers should
+be able to make connections to your databases and
+storage services.
+
+Consider using a virtual private cloud (VPC) to
+host your backend services. If a VPC is not possible,
+then at least restrict access with a firewall (Section \@ref(firewalls))
+ensuring that only authorized IP addresses can connect.
+
+By ensuring strict access control to your backend services
+via a VPC or firewall rules, you can significantly reduce the 
+likelihood of unauthorized sensitive data access.
+
+## Authentication
+
+Another consideration for your production Shiny application
+is controlling the access of users for your app. Authentication
+through username and password can happen within your app or 
+through your hosting solution.
+
+There are three categories of authentication solutions:
+HTTP Auth, Third Party Auth Providers, and Native Authentication. 
+HTTP Auth and Third Party Auth Providers
+provide authentication outside the Shiny app
+meaning that you do not need
+to change the app source code to provide login
+functionality, but you will still need to change the app
+source code to serve user specific content.
+While Native Authentication occurs by writing code in your
+Shiny app to validate users.
+
+<!-- FIXME: Highlight things like when users get locked out, registration, password reset, etc. -->
+
+### HTTP Basic Auth
+
+HTTP basic authentication works by verifying a user, 
+by username and password, before processing any request.
+If a user cannot be authenticated, then an error code is returned.
+
+There are a couple options for implementing HTTP basic authentication including:
+
+- Using a reverse proxy, such as Caddy or Nginx, to authenticate users
+  before serving your Shiny app.
+- Ploomber Cloud (Pro Plan) which enables you to set a single username and 
+  password to authenticate with your app.
+
+With HTTP authentication, the user is prompted to login through the browser's
+built-in authentication dialog. However, HTTP basic auth has limited customization,
+and can be difficult to scale and manage effectively as you have to define each 
+username and password with no option for sign-up. Furthermore, there is no option to
+implement multifactor authentication which is common in most web apps nowadays.
+Using third party authentication providers, explained in the next section, 
+can address the shortcomings of HTTP Basic auth.
+
+### Third Party Auth
+
+Third party authentication services manage
+usernames and passwords outside of a Shiny
+application, passing user information to the 
+Shiny application for decryption and verification,
+which can then be used to serve personalized content.
+
+Third party authentication providers can be
+integrated directly into a Shiny application
+or through a hosting solution. At the time of writing,
+there appears to be no libraries for integrating
+third party authentication into Python Shiny applications,
+but R has many solutions.
+
+Third party authentication usually works through
+standardized protocols such as OpenID Connect (OIDC)
+and Security Assertion Markup Language (SAML).
+This allows for a standardized way for users to be 
+authenticated in your application.
+
+#### R Shiny Authentication Libraries {-}
+
+For R Shiny apps, there are two libraries that simplify the
+integration of third party authentication services.
+
+The [Auth0 package](https://github.com/curso-r/auth0)
+connects with the [Auth0](https://auth0.com/) authentication
+service and helps manage user sessions, handle login/logout
+flows in an R Shiny app.
+
+The [polished package](https://github.com/Tychobra/polished)
+provides user authentication and user management through
+[Polished](https://www.polished.tech/).
+
+<!--
+### Auth0 OICD with ShinyProxy
+
+Follow: https://www.shinyproxy.io/documentation/configuration/#openid-connect-oidc
+
+Callback: http(s)://(your-shinyproxy-url)/login/oauth2/code/shinyproxy
+
+<https://auth0.com/docs/authenticate/login/logout/log-users-out-of-auth0>
+
+Note, need to use the event object (user is not available on its own):
+
+```
+exports.onExecutePostLogin = async (event, api) => {
+  api.idToken.setCustomClaim("https://shinyproxy.io/shinyproxy_roles", event.user.app_metadata.shinyproxy_roles);
+};
+```
+
+Finally, add the Action you created to the Login Flow. To learn how to attach Actions to Flows, read the "Attach the Action to a flow" section in Write Your First Action.
+
+<https://www.shinyproxy.io/documentation/configuration/#auth0>
+
+<https://auth0.com/docs/manage-users/user-accounts/metadata>, <https://auth0.com/docs/get-started/applications/configure-application-metadata>: Actions > Libraru > Create action > Build from scratch > Deploy
+
+<https://auth0.com/docs/secure/tokens/json-web-tokens/create-custom-claims>
+
+The yaml:
+
+# ```yaml
+# proxy:
+# ...
+
+#   authentication: openid
+#   admin-groups: ShinyAdmin
+#   openid:
+#     client-id: ${CLIENT_ID}
+#     client-secret: ${CLIENT_SECRET}
+#     jwks-url: https://${AUTH0_DOMAIN}/.well-known/jwks.json
+#     auth-url: https://${AUTH0_DOMAIN}/authorize
+#     token-url: https://${AUTH0_DOMAIN}/oauth/token
+#     userinfo-url: https://${AUTH0_DOMAIN}/userinfo
+#     logout-url: "https://${AUTH0_DOMAIN}/oidc/logout?post_logout_redirect_uri=${HOST_URL}/logout-success&id_token_hint=#{oidcUser.idToken.tokenValue}"
+#     scopes: ["email","openid","profile"]
+#     roles-claim: https://shinyproxy.io/shinyproxy_roles
+# ...
+# ```
+
+<https://auth0.com/docs/authenticate/login/logout/log-users-out-of-auth0>:
+https://{yourDomain}/oidc/logout?id_token_hint={yourIdToken}&post_logout_redirect_uri={yourCallbackUrl}
+
+
+The env vars:
+
+```bash
+CLIENT_ID=xxx
+CLIENT_SECRET=xxx
+AUTH0_DOMAIN=dev-analythium.eu.auth0.com
+HOST_URL=https://cognito-test.analythium.cloud
+```
+
+Testing:
+
+- start ShinyProxy droplet (178.128.234.201)
+- set domain name and HTTPS (xxx-testing.analythium.cloud)
+
+```bash
+export HOST=178.128.234.201
+ssh root@$HOST
+# follow prompts
+
+# edit /etc/shinyproxy/.env
+# edit /etc/shinyproxy/application.yml
+
+systemctl restart shinyproxy
+tail -f /etc/shinyproxy/logs/shinyproxy.log
+```
+-->
+
+#### Hosted Solutions {-}
+
+<!-- FIXME: Expand on the platform solutions and what they offer, refer back to prior chapters -->
+
+With hosted solutions, the hosting provider manages
+user authentication on its platform. This enables support
+for both Shiny R and Shiny Python applications.
+
+Options include:
+
+- [ShinyApps.io](http://ShinyApps.io) is a dedicated hosting Shiny application platform, 
+  offering user authentication through Google accounts, GitHub accounts, or 
+  their own platform under the standard and professional plans. 
+- Posit Connect is an enterprise-level hosting solution that integrates with various third-party authentication providers that
+  use standardized protocols, including OpenID Connect (OIDC) and SAML. 
+  It supports user authentication through providers like Auth0, Okta, and Cognito with the OIDC protocol.
+- ShinyProxy is a self-hosted open-source platform that serves containerized Shiny applications. 
+  It supports authentication through OIDC such as Auth0, Okta, and Cognito as well as SAML.
+  Additionally, it allows for username and password authentication configured directly in its settings.  
+- [Ploomber Cloud (Teams Plan)](https://docs.cloud.ploomber.io/en/latest/user-guide/password.html) allows for authentication through the Auth0 service integrated with its
+  deployment platform.
+
+Hosted platforms offer user authentication management to help secure both Shiny R 
+and Shiny Python applications. 
+These platforms integrate with popular authentication providers like Auth0, Okta, 
+Google, and GitHub to handle user access.
+
+### Native Authentication
+
+Native authentication means that all authentication logic
+is handled directly within the Shiny app. 
+Currently, there are no
+Python packages that support native authentication
+for Shiny Python. However, for R Shiny, there are two packages
+that facilitate native authentication:
+
+- [shinyauthr](https://github.com/PaulC91/shinyauthr) is an R package
+  that provides login/logout UIs for authenticating with Shiny apps.
+  Passwords are managed in a dataframe (i.e. hardcoded), but can be hashed
+  with the [sodium](https://github.com/r-lib/sodium). Shinyauthr is more
+  of a starting point for building native Shiny authentication and 
+  more development will need to be done to allow for options like user sign up.
+- [shinymanager](https://datastorm-open.github.io/shinymanager/) is a more
+  full fledged solution for authentication, offering encrypted storage
+  of user credentials in a database and offers a login user interface, as well as and 
+  admin panel to manage users and view access logs.
+
+While there are no native authentication solutions for Shiny Python at the moment, 
+R Shiny offers two packages, shinyauthr for scaffolding needs and
+shinymanager for more robust user authentication management.
+
+## Reliability
+
+Keeping your Shiny app accessible at all times is important
+for user experience and satisfaction. At a hosting level
+you want to ensure that your app is available at all
+times through monitoring and scaling. At an app level,
+you want to ensure that your code is optimal to prevent
+unnecessary slow downs. In this section, we will focus
+on the hosting level. If you would like to learn more
+about improving Shiny app performance, we recommend looking
+at the performance chapter in the 
+[Mastering Shiny Book](https://mastering-shiny.org/performance.html)
+which focuses on Shiny R apps, but the same principles apply to
+Shiny Python apps.
+
+### Backups
+It is recommended to keep backups of your deployments.
+If on a deployed service, ensure that you have saved your
+code using version control. If managing your own instance,
+ensure that you have a backup of your deployment configurations,
+file storage, and databases.
+
+Cloud providers provide backup services for a fee of your running
+instance. For example, DigitalOcean has the Snapshots feature
+to create images of your current running virtual machine instance,
+so that it can be deployed on another instance.
+
+<!-- FIXME: Elaborate -->
+
+### Reserved IP Addresses
+
+If you are self-hosting with a cloud provider, you should be
+aware of reserved IP addresses. Reserving an IP address ensures
+that even if your virtual machine is deleted, you can
+re-assign a reserved IP address to it. This means that
+you will have a consistent IP address for your virtual machine,
+and you will not have to change your DNS records if you decide
+to create a new virtual machine to deploy another instance
+of your application.
+
+###  Monitoring
+
+Monitoring is important to ensure the uptime of your application
+and that users can still access your application.
+
+Metrics that you should measure include:
+
+-   CPU Utilization
+-   Memory Utilization
+-   Disk I/O Utilization
+-   Network traffic
+-   Uptime (is your site down)
+
+Monitoring is often built into hosted providers, and cloud and platform providers
+also offer monitoring solutions. On the server after logging in with `ssh`
+you can use the `htop` command which will open an interactive interface 
+showing all running processes, along with CPU, memory, and swap usage.
+
+There are also 3rd party libraries for error and uptime monitoring.
+[Sentry](https://sentry.io/) provides end-to-end distributed tracing
+to identify and debug performance issues and errors. The Sentry SDK library
+for Python enables automatic reporting of errors and performance data in your 
+application. The R package [sentryR](https://CRAN.R-project.org/package=sentryR)
+is an unofficial R client for Sentry.
+[GlitchTip](https://glitchtip.com/) is an open source error tracker similar to
+Sentry that you can self host. Track errors, monitor performance, and check 
+site uptime. GlitchTip is compatible with Sentry client SDKs.
+
+Besides traditional metrics and error tracking, you might also want to
+monitor app usage when the setup includes multiple applications and users.
+We explained how the monitoring stack with ShinyProxy works using Grafana and Prometheus
+(Section \@ref(spo-monitoring)) which provides detailed app usage statistics.
+
+###  Benchmarking
+
+You may not know how well your app can handle traffic.
+How many instances of your app can be run before going down?
+To test this you can do load testing.
+For Shiny R apps, you can use the [shinyloadtest library](https://rstudio.github.io/shinyloadtest/)
+library which supports web socket versions of the Shiny app.
+For all other apps, [Locust](https://locust.io/) tool which allows user
+behavior to be defined in Python and replayed multiple times to
+simulate simultaneous users accessing your application.
+
+By benchmarking, you can understand the limits of your application
+and create the right size of virtual machine while minimizing costs.
+There is also the option of scaling up app instances to handle peaks
+in traffic, which we describe in the next section.
+
+<!-- 
+### Mitigating DDoS
+Explain what DDoS is. Use CloudFlare to prevent denial of service. 
+-->
+
+
+## Scaling
+
+There are two kinds of scaling: vertical scaling and horizontal scaling.
+Scaling leads to higher availability of your app in cases of traffic spikes.
+
+Vertical scaling means resizing your instance to have more resources to details
+with increased load.
+Horizontal scaling means creating additional instances to distribute the workload
+needed to serve users your Shiny App. To manage the distribution of workload, a
+load balancer is deployed to direct traffic to different instances.
+Something to be aware about in horizontal scaling is that the initial instance your user connects to, 
+they will need to keep connecting to the same instance as Shiny holds its session information 
+in the instance's memory. This means that the load balancer needs to maintain a "sticky" session.  
+
+With a single instance present, all users are sent to the same server
+instance. No load balancing is required.
+When there are multiple instances of the same app running, load
+balancing is needed to distribute the workload among the server
+processes.
+
+The simplest load-balancing option is called round robin when requests are
+sent to the instance that is next in line. When there are no more
+instances it starts over. A similar option is to select instances randomly.
+The problems with this type of load balancing can arise when the internet
+connection is severed for some reason, e.g. due to poor cell coverage.
+If saving the users' state is important for the app to work, e.g. the
+user uploads files etc., round robin or random won't be ideal.
+
+This is when load balancing with session affinity\index{Session affinity} is needed. This simply
+means that the load balancer keeps track of the users via some mechanism
+and makes sure that the same user reconnects to the same server process.
+The sticky mechanism can be based on the user's IP address or a cookie.
+
+### Options for Scaling
+
+shinyapps.io allows for horizontal scaling by allowing you to tune the number of 
+workers that run in each Application Instance, the number of 
+Application Instances that you wish to run, how many Instances should start by 
+default, how long to wait before your applications are considered 
+idle and can be shut down. Posit Connect and Shiny Server Pro (sales discontinued) 
+allow scaling by processes and connections per process using.
+
+Many hosting platforms allow to deploy multiple replicas but session affinity
+is not provided out of the box. To our knowledge, only Heroku provides
+load balancing with "sticky" sessions across the replicas.
+
+Using a reverse proxy to load balance between multiple replicas is the best
+solution which requires setup whether you are running the apps on a single server 
+or in a cluster. We demonstrated load balancing with session affinity for
+Shiny apps using Docker Compose and Caddy Server (Section \@ref(compose-scaling)).
+
+ShinyProxy has various mechanisms to maintain connection across many different
+"proxies". It can use cookies, and Redis to keep track of apps and user sessions.
+
+### Container Orchestration {#part2-container-orchestration}
+
+Complexity does not stop at managing multiple containers. The number of 
+containers might not stay constant as you might to demand by scaling up and down. 
+You might also want to roll out new versions by causing minimal disruption in 
+the system. Even Docker Compose might be insufficient for
+use cases at such scale. This is where container orchestration\index{Container orchestration} comes in.
+
+Container orchestration makes this complexity manageable for development and 
+operations (DevOps). Container orchestration automates the provisioning, 
+deployment, scaling, and management of containerized applications.
+It also abstracts away the underlying infrastructure.
+
+Kubernetes is a widely used container orchestration platform.
+Running Shiny apps with Kubernetes is an advanced topic, but all that you have 
+learnt about containerized application development will be useful if you ever 
+need to use Kubernetes for your production deployment.
+Posit Connect and ShinyProxy support Kubernetes as a backend. These can be
+used in demanding high-availability setups that can scale and reliably balance 
+traffic for a large number of users.
+
+## Operations and Maintenance
+
+To ensure the smooth operation of your hosted
+ShinyApp you should be maintaining your source
+code in version control.
+
+To further simplify the maintenance of your hosting,
+you should consider the use of CI/CD (continuous integration and
+continuous deployment) pipelines.
+
+With the running of your app and deployment, you should be tracking 
+your logs in case anything goes awry.
+
+### Continuous Integration and Deployment 
+
+Continuous Integration and Deployment (CI/CD) automates some of the build and 
+deployment operations of your application to prevent defects and save time.
+
+For example, you may wish to test your app and build a container image each 
+time you make a change to your application. By continuously building your 
+Shiny app, you are ensuring that there are no failures when building your app. 
+You can extend this further by having auto deployment to your service (continuous deployment).
+
+Continuous deployment can be integrated by polling for changes in your Git Repository,
+directly pushing changes to your hosting provider, or sending a webhook notification
+to your hosting provider to update your application.
+
+You can deploy apps to any platform that supports programmatic deployments 
+or can integrate with GitHub.
+Deployments through GitHub Actions or GitLab Pipelines can be set up to send you 
+alerts when CI/CD fails so you can troubleshoot.
+
+It is also possible to set up GitHub Actions with Docker to build, tag, and push
+container images to a container registry (<https://docs.docker.com/guides/gha/>). 
+New version of the images can be quickly deployed when the image pull policy
+on the server (e.g. in ShinyProxy) set to always look for a new version.
+Otherwise, a simple cron job can also pull new images every day or other schedule. 
+You can apply the following command to pull all images present on the server:
+
+```bash
+docker images | grep -v REPOSITORY | \
+  awk '{print $1":"$2}' | xargs -L1 docker pull
+```
+
+An alternative to polling (the server looking for updates) is pushing changes
+using a webhook. The [webhook](https://github.com/adnanh/webhook) is a 
+lightweight configurable tool that allows you to create HTTP endpoints (hooks) 
+on your server, which you can use to execute configured commands. 
+You can also pass data from the HTTP request to your commands. 
+It can integrate with GitHub, Docker Hub, etc. Trigger rules can be used
+to make the execution secure, i.e. only execute the script when certain
+rules are met, i.e. matching signatures and tokens.
+
+### Logging
+
+Logging helps provide provenance to when an issue might have
+occurred when deploying and running your hosting application.
+Logs are everywhere in the process, from the Shiny app itself
+to the hosting solution. For example, if self-hosting on your
+own instance, and you notice that your app no longer loads in the web
+browser, you would check systemctl to see if anything can be gleaned
+from the logs.
+
+Other services exist for aggregating logs including
+[Sentry](https://sentry.io/) is a paid service that can capture exceptions in your 
+Shiny app at an application level, [GlichTip](https://glitchtip.com/) is an
+open source alternative to Sentry that you can self host.
+[Papertrail](https://www.papertrail.com/) and [Openobserve](https://openobserve.ai/)
+are services that can aggregate logs from your server and app into one platform.
+
+The Loki is a log aggregation system inspired by Prometheus, but it focuses on 
+logs instead of metrics. We explained how to set up Loki for ShinyProxy 
+in Section \@ref(spo-monitoring) to collect all the logs in one place.
+
+<!-- FIXME: Keep? - yes but put the details into the other chapters, and give a recap here -->
+
+<!-- How to monitor and troubleshoot (PaaS: where to go to see it,
+systemctl, log files). -->
+
+## Summary
+Securing your application through authentication, isolated access, firewalls, and secrets management
+are important considerations when deploying your Shiny application in a production setting.
+
+Monitoring is also crucial for ensuring the uptime and accessibility of your Shiny application. 
+By measuring metrics such as CPU and memory utilization, you can proactively identify performance 
+issues before they affect user experience. Using R and Python libraries like Sentry, that work within your Shiny application, 
+can also enhance your monitoring capabilities by ensuring that you are informed about application 
+errors and overall application performance.
+
+In addition to monitoring, benchmarking allows you to understand your Shiny application's limits and prepare 
+for varying traffic loads. Load testing can give insights into how many users your app can support simultaneously. 
+This information is important for optimizing your infrastructure, leading to a more resilient application 
+deployment that can handle increases in user demand.
+
+Scaling ensures that your Shiny application remains responsive to the demand of users
+as usage grows. Implementing load balancers and maintaining session affinity are 
+important during scaling to enable a smooth user experience. 
+The ability to dynamically adjust resources based on demand can enhance your 
+Shiny application's reliability.
+
+Finally, streamlined operations and maintenance practices by keeping your source code in version control, 
+leveraging CI/CD pipelines, and using logging strategies 
+can help simplify deployment and troubleshooting. 
+
+# What is Next
+
+This book covered many aspects of hosting Shiny applications
+from how the Shiny application runs to the different options
+for distributing your Shiny application to a wider audience.
+
+We have explored many different ways of hosting shiny from click-button
+publishing platforms to self-hosted containerized solutions.
+But Shiny hosting is an ever changing landscape. Options we took for granted
+might disappear while new ones will appear.
+We will do our best to keep the online version of the book up-to-date
+to reflect these changes.
+
+However, the journey of Shiny hosting does not end here,
+you may wish to further optimize your Shiny hosting, 
+and explore other options such as orchestrating more containers on a cluster.
+We hope that this book will serve a good foundation for that.

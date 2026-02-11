@@ -1,0 +1,281 @@
+# Working with Containers {#part2-working-with-containers}
+
+::: {.noteblock data-latex=""}
+This chapter covers how to run your Shiny app
+in a container environment using images which are 
+explained in Chapter \@ref(part2-images) and Chapter \@ref(part2-containerizing-shiny-apps). 
+
+A container environment
+is beneficial as you do not need to install
+dependencies for your Shiny application as it is
+already included in the container environment.
+
+If you can run your container locally in this chapter, you will be ready
+for deploying your containerized Shiny application to platforms explained
+in Chapter \@ref(hosting-platforms). The platforms will enable sharing
+your containerized Shiny application with a wider audience.
+:::
+
+You have learnt how to build images using the Dockerfile to contain a Shiny app.
+A "live" version of this image is called the container, that is the 
+runtime instance of the docker image. Besides the image, it 
+consists of a set of instructions that you specify before or during run time,
+and an execution environment. Let's see how you can create, start, and manage
+Docker containers.
+
+<!--
+REVIEW:
+- My previous comment is now strengthened. I feel like all of chapter 6 could be split into 2 chapters: one for explaining Docker, and one for a practical guide on how to use Docker for containerizing Shiny apps. It's mentally challenging and doesn't flow very well to bounce back and forth between the two. Explaining what "docker run" does in this section, after so much has already been talked about, and some examples were given, feels much too late.
+- This chapter is great and very useful. But it definitely belongs earlier, as having this info would help readers understand a lot more of the previous chapters
+- When teaching about Compose, it would be easier to follow if you would introduce what the example will be doing before giving the example. Seeing a compose YAML file before having any idea what we're working towards is not ideal.
+- While this chapter provides good information, it's almost entirely generic and not related to shiny. It would benefit from being tailored more towards the usecase of shiny rather than being a general Docker tutorial.
+-->
+
+## Docker Run {#part2-containers-run}
+
+The `docker run` command is a versatile tool because it can
+not only create and run a new container from an image, but it can also pull
+the image if needed.
+
+You have seen that we usually set the `-p` or `--publish` option and map the 
+host port 8080 to the container port 3838 as e.g. `-p 8080:3838`.
+Setting the port is needed when running a web application, such as Shiny.
+This way you can view the application in your browser.
+
+When you start a Docker container it executes a command that you specified
+before in the Docker image's configuration, the `Dockerfile`. 
+The default settings from the image usually work well, but you can 
+also change them if needed.
+You may set or override many of the instructions from your Dockerfile:
+
+- `--expose` exposes a port or a range of ports,
+- `--user` provides a username to be used,
+- `--workdir` sets the working directory inside the container,
+- `--entrypoint` overwrites the default `ENTRYPOINT` instruction.
+
+It is common to use the `--rm` flag to automatically remove the container and 
+its associated anonymous volumes when it exits. This way, when you hit CTRL+C,
+it will not only stop the container, but it will also remove it and
+`docker ps -a` will not list it any more. This is best suited for development.
+
+You can provide environment variables through the `-e` or `--env` option
+or provide a file with the variables using `--env-file`.
+
+Specifying the platform via `--platform` is needed when working with different
+architectures, such as ARM64 and AMD64.
+Setting resources available for the container is possible with the 
+`--cpus` (number of CPUs) and setting memory limits by `--memory`.
+
+Docker containers and their file systems are considered ephemeral, which means
+they are not expected to persist data for long. Therefore, it is recommended
+to rely on external storage (databases, object stores) for anything that
+needs to persist and you do not want it to disappear when the container is
+deleted.
+
+Docker can persist data on the file system using 
+[bind mounts or volumes](https://docs.docker.com/storage/).
+Bind mounts may be stored anywhere on the host system and you can specify
+this via the `--mount` option in `docker run`.
+Compared to mounts, volumes are stored in a part of the host filesystem 
+which is managed by Docker and other processes should not modify this part of 
+the filesystem. You can specify volumes with the `--volume` option.
+Persisting data on the file system is an advanced topic that we'll see some 
+examples of later. We mention it here because managing file systems is also
+part of the magic of `docker run`.
+
+One more important flag is the `-d` or `--detach` flag. This starts the 
+container as a background process. You get back your terminal and can start
+typing other commands. It can be a good idea to also add a name to the container
+so we can find it easier without looking for its ID:
+
+```bash
+docker run \
+  --rm \
+  -d \
+  -p 8080:3838 \
+  --name r-shiny \
+  --restart=always \
+  ghcr.io/h10y/faithful/r-shiny:latest
+
+docker ps
+
+# CONTAINER ID   IMAGE
+# 592caa564860   ghcr.io/h10y/faithful/r-shiny:latest
+
+# COMMAND                    CREATED          STATUS
+# "R -e 'shiny::runApp..."   15 seconds ago   Up 14 seconds
+
+# PORTS                    NAMES
+# 0.0.0.0:8080->3838/tcp   r-shiny
+```
+
+The `docker ps` command lists running containers. You see not only the info
+we provided with `docker run` or that were defined in the `Dockerfile`, but also
+for how long the container has been running (time since its creation) and also
+the status of the container.
+
+The `docker run` command is equivalent of first creating a container that 
+consumes no resources yet with `docker create <image-name>` and then starting 
+this container with `docker start <container-name-or-id>`, but it is much
+more convenient to use `docker run`.
+
+When the container is running in the background, you cannot stop it with CTRL+C.
+You have to manage it using the container ID or the container name.
+To stop the container, use `docker stop <container-name-or-id>`.
+This will "gracefully" shut down the Shiny app by sending a so-called SIGTERM
+signal to it. If you use `docker kill <container-name-or-id>` instead, the process
+will be abruptly killed with a so-called SIGKILL signal. Try `docker stop`
+first.
+
+None of these commands will remove the container. This means you can start it 
+again with `docker start <container-name-or-id>`, or remove it with 
+`docker rm <container-name-or-id>`. Notice the subtle difference between
+`docker rm` (remove a container) and `docker rmi` (remove an image).
+Most of the docker commands have aliases, use these if you want to be more
+specific, e.g. `docker rmi` is an alias for `docker image rm`, whereas
+`docker rm` is an alias for `docker container rm`.
+
+If for some reason, the container running in the background experiences an issue,
+like an unexpected user input, or it runs out of memory, the container will be
+stopped by default. If you want a different behavior, use the `--restart` to
+specify a restart policy:
+
+- `on-failure`: restart only if the container exits with a non-zero exit status,
+- `unless-stopped`: restart the container unless it is explicitly stopped or 
+  Docker itself is stopped or restarted,
+- `always`: the Docker daemon tries to restart the container indefinitely
+  irrespective of the cause.
+
+A non-zero exit status and running out of resources are clear signs of the app
+not running as expected. You will see in a bit how to troubleshoot 
+using the Docker logs. But in less serious cases, we might not know the 
+"health" of the container without looking at the logs or a user telling us
+that something is not right. This is where health checks come in.
+Before we introduce health checks, let's stop the container:
+
+```bash
+docker stop r-shiny
+```
+
+We used the `--rm` flag, so the container will be removed after being stopped.
+If we haven't used the `--rm` flag, we would still see it listed with 
+`docker ps -a`.
+
+## Managing Containers {#part2-containers-managing}
+
+Here we summarize the most important commands related to containers.
+The `docker ps` command lists the containers. If you have container
+running, you will see those listed with status `Up` (i.e. `running`). 
+
+```bash
+docker ps
+# CONTAINER ID   IMAGE
+# c31e8c365534   ghcr.io/h10y/faithful/r-shiny:latest
+# c2a7f34d38bc   ghcr.io/h10y/faithful/r-shiny:latest
+
+# COMMAND                    CREATED          STATUS
+# "R -e 'shiny::runApp..."   14 minutes ago   Up 14 minutes (unhealthy)
+# "R -e 'shiny::runApp..."   14 minutes ago   Up 14 minutes (healthy)
+
+# PORTS                    NAMES
+# 0.0.0.0:8081->3838/tcp   unhealthy
+# 0.0.0.0:8080->3838/tcp   healthy
+```
+
+`docker container stats` displays a live stream of the containers' resource 
+usage statistics (hit CTRL+C to exit):
+
+```
+CONTAINER ID   NAME        CPU %     MEM USAGE / LIMIT     MEM %
+c8c4dad4e371   unhealthy   0.18%     94.35MiB / 7.657GiB   1.20%
+3b44c40aadb7   healthy     0.11%     122MiB / 7.657GiB     1.56%
+```
+
+Use `docker logs <container-name-or-id>` will print (all) the logs\index{Logging} for a
+given container. Logs are made up of the container's STDOUT and STDERR.
+To print only the tail of the logs use
+`docker logs -n 10 <container-name-or-id>` that will print the last 10 lines.
+To follow the logs in real time, use `docker logs -f <container-name-or-id>`.
+
+The `docker exec` command executes a command in a running container.
+For example `docker exec -it healthy sh` will start a shell in the `healthy`
+container we still have running. The `-it` flag stands for the combination of 
+`--interactive` (keep standard input, STDIN, open) and `--tty` (pseudo
+"teletypewriter") so we can use the shell interactively.
+
+Start poking around, try typing a few commands:
+
+- `whoami` should return `app` as the user name,
+- `pwd` should return `/home/app` as per our Dockerfile instructions,
+- `env` lists environment variables.
+
+Exit the container's shell with `exit`.
+
+To evaluate a command in the container, try 
+`docker exec -it healthy sh -c "whoami"`.
+
+Let's stop the containers with `docker stop healthy unhealthy` (yes, you can
+pass an array of container names to `docker stop`).
+You can also stop all running containers with `docker stop $(docker ps -q)`
+and all (running and stopped) containers with `docker stop $(docker ps -a -q)`.
+The `$(...)` shell expression executes the command within the parentheses and
+inserts the output and `$(docker ps -q)` will print out the container IDs.
+
+If you stopped all the containers, you will not see any running containers listed
+with `docker ps`. To see the stopped but not removed containers, 
+use the `docker ps -a` command. We started the `healthy` and `unhealthy`
+containers with the `--rm` flag, so those were removed after being stopped.
+As a result, not even `docker ps -a` will list them.
+
+Sometimes you need to be able to manage containers because the kill signal
+is not properly relayed to the container when using CTRL+C. This happens when
+the `CMD` instruction is provided in shell form 
+(i.e. `CMD R -e "shiny::runApp()"` instead of `CMD ["R", "-e", "shiny::runApp()"]`).
+The shell form runs as a child process of `/bin/sh -c` (default `ENTRYPOINT`), 
+and the executable does not receive Unix signals.
+If this happens, you need to find a way to stop the container.
+
+These are the most commonly used commands with containers:
+
+- `docker container stop <container-id>`: gracefully stop a running container 
+  (wait for the process to stop),
+- `docker container start <container-id>`: start a stopped container,
+- `docker container restart <container-id>`: restart a container,
+- `docker container rm <container-id>`; remove a container,
+- `docker container kill <container-id>`: kill a container (abruptly terminate 
+  the entry point process).
+
+`docker container rm --force <container-id>` will remove running containers too.
+You can make sure the container is removed after CTRL+C if you add the `--rm` 
+option to the `docker run` command and it will automatically remove the container 
+when it exits.
+
+## Summary
+
+The use of Docker with other open source software such as R and Python has been 
+transformative over the past decade [@rocker; @Rockerverse; @Eng_2021]. 
+You can find examples for almost anything ranging from interactive data science 
+to asynchronous APIs in Kubernetes.
+
+With the newfound ability to wrap any Shiny app in a Docker container,
+you'll be able to deploy these images to many different hosting
+platforms. Of course, there is a lot more to learn, e.g. about handling
+dependencies, persisting data across sessions and containers, and so on.
+We'll cover these use cases in due time. Until then, celebrate this
+milestone, check out further readings, and try to containerize some of
+your own Shiny apps.
+
+You can also share Docker images with others. This, however, will require the 
+recipient of your app to have Docker installed and be able to run it locally.
+
+In the next Part, we'll cover options for hosting your app, so that others
+will only need a browser to be able to access it. No R, Python, or Docker
+runtime environment is needed on the user's part. Hosting the app for your
+users will also be the preferred option in case you do not want to share
+the source code or the Docker image with the users.
+
+<!-- Further reading:
+
+- [Docker glossary](https://docs.docker.com/glossary/)
+- [Docker reference](https://docs.docker.com/reference/)
+- [Docker Compose](https://docs.docker.com/compose/) -->

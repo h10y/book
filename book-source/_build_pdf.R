@@ -3,7 +3,7 @@
 # Keep all the intermediary files so they can be copied below. This step also
 # generates the .tex file in the `docs` folder
 options(tinytex.clean = FALSE)
-bookdown::render_book("index.Rmd", 
+bookdown::render_book("index.Rmd",
   bookdown::pdf_book(
     pandoc_args="--top-level-division=chapter",
     latex_engine = "xelatex",

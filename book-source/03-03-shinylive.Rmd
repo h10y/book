@@ -1,0 +1,113 @@
+# Static Hosting for Shinylive {#part3-static-hosting}
+
+::: {.noteblock data-latex=""}
+In Chapter \@ref(part2-shinylive), we introduce the concept of Shinylive which allows
+a Shiny app to run entirely in a browser without the need for a server. Since there's no 
+dependence on a server, applications can be hosted statically without the need for a dynamic 
+server to generate content. This makes hosting your Shiny application much simpler and affordable.
+
+It should be noted that Shinylive is meant to be used for micro apps.
+:::
+
+Shinylive is designed primarily for micro apps, where small interactive graphics and calculations
+using pre-existing data can be generated in the browser of a client's computer.
+Its ideal use cases include applications that don't require credentials for data access. 
+Because everything is run in WebAssembly, adding too many packages can slow down loading times in your browser.
+
+One of the most popular providers to host static files is Github Pages (Chapter \@ref(github-pages)).
+There also many other free static site hosting providers (Chapter \@ref(other-static-site-hosting)) 
+that you may consider for your needs, but we do not provide in-depth instructions for all of them.
+
+<!-- FIXME: Shinylive and Quarto+Shinylive based outputs hosted on GitHub Pages. -->
+
+## Building Shinylive {#building-shinylive}
+
+The first step to deploying Shinylive is to build its static files. Below are the commands
+that you would run from a Shiny project folder to build a Shiny app. More details of this
+process is explained in Chapter \@ref(part2-shinylive).
+
+For Python you would run the following command in the terminal:
+
+```bash
+shinylive export py-shiny py-shinylive
+```
+
+This results in static files generated into the `py-shinylive` folder 
+using the code in the `py-shiny` folder.
+
+
+For R, you would run the following command in the R console:
+
+```R
+shinylive::export("r-shiny", "r-shinylive")
+```
+
+This results in static files generated into the `r-shinylive` folder 
+using the code in the `r-shiny` folder.
+
+Using the static files in these folders, we outline in the following chapters how to deploy to
+GitHub Pages. Both of these platforms allow for the deployment from a GitHub repository.
+
+## GitHub Pages {#github-pages}
+
+GitHub Pages is a static site hosting service that works by uploading your files
+to a GitHub repository and publishing from a branch of your git repository. 
+To understand the concepts of git and upload your files to a repository, we recommend looking
+at Chapter \@ref(part1-scm-git) which explains how to manage your Shiny app's source
+code using git.
+
+### Enabling Pages
+
+Navigate to the Settings page of your GitHub repository.
+Look for the "Pages" navigation link and click on it.
+Under Source, leave the "Deploy from branch option".
+Under Branch, select the "main" branch. And for folder select the folder 
+containing your static files. Click "Save" and you are done.
+
+### Accessing the Published Site
+
+To access the site you can go to `https://<github-username>.github.io/<repository-name>`.
+
+If you would like to have a custom domain, there should be a "Custom Domain" option on the "Pages" page in 
+the settings. Type in your custom domain name, and add the A records to your DNS settings.
+
+Take a look at the GitHub Pages setup of the Faithful example
+(<https://github.com/h10y/faithful>) that is inside the `docs` folder.
+It includes Shinylive apps and examples with Shinylive apps inside Quarto documents
+with both R and Python.
+
+<!-- FIXME: Explain domains better -->
+
+<!-- ### Netlify {#netlify}
+
+Netlify helps publish a static website via by linking your GitHub account to Netlify.
+
+Netlify then gathers the static files and serves them on a Netlify subdomain. -->
+
+## Other Static Site Hosting Providers {#other-static-site-hosting}
+
+Other static site hosting providers you might consider are Surge, Cloudflare Pages, 
+DigitalOcean App Platform, Netlify, and Vercel which offer free tiers for static site hosting.
+Surge allows for easy deployment from the command line. Cloudflare Pages, DigitalOcean App Platform,  
+Netlify, and Vercel allows for deployment from a GitHub repository much like GitHub Pages and Netlify.
+Most websites allow uploading the static content as a zip file too.
+
+Publicly accessible static sites are free to host on most of these cloud based
+providers. Hosting pages based on private GitHub repositories, or
+user authentication for static pages via Netlify requires a paid subscription.
+
+You may also self-host on your own file server, see Chapter \@ref(part3-vm-setup).
+
+## Summary
+
+In this static site hosting chapter, we have outlined how to deploy from a GitHub repository
+with GitHub Pages. We have also noted the other free-tier platforms: 
+Surge, Cloudflare Pages, DigitalOcean App Platform, Netlify, and Vercel. Static site hosting is for
+Shinylive applications and offers a low-cost option to demo interactive visual demos without the
+need for a managed server.
+
+Static site hosting is meant for Shinylive which is designed for micro applications.
+Therefore, Shinylive might not meet your needs as you need 
+intensive calculations that cannot be done client side leading to slow app performance.
+You may want to explore more performant solutions outlined in Chapter \@ref(platforms-shiny-hosting) and
+Chapter \@ref(hosting-platforms).

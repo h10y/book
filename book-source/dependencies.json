@@ -1,0 +1,74 @@
+{
+  "version": "1.0",
+  "rver": null,
+  "repos": [],
+  "sysreqs": [],
+  "packages": [
+    {
+      "package": "bookdown",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "curl",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "devtools",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "ggplot2",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "kableExtra",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "knitr",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "lintr",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "pkgpurl",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "reactable",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "rmarkdown",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    },
+    {
+      "package": "urlchecker",
+      "installed": false,
+      "dev": false,
+      "source": "cran"
+    }
+  ]
+}

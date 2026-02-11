@@ -1,0 +1,58 @@
+# (PART) Hosting Shiny with Containers {-} 
+
+# Hosting Platforms {#hosting-platforms}
+
+::: {.noteblock data-latex=""}
+This chapter covers how to run your
+containerized Shiny application on a hosting platform.
+A hosting platform enables you to deploy your application
+without worrying about managing a server.
+
+If you are unfamiliar with containers, please refer to Chapter \@ref(part4-containers).
+:::
+
+Hosting platforms are services that provide the infrastructure and environment needed 
+to deploy, manage, and serve applications over the Internet. They offer a range of 
+solutions to meet different needs, from hosting static sites to running dynamic web applications 
+without worrying about the underlying infrastructure. These platforms typically provide features such as 
+automated deployment, scalability, performance optimization, and security measures. 
+
+By abstracting the complexities of server management, hosting platforms allow developers to focus on 
+building and improving their applications. In this section, we
+explain how to get started on different PaaS's while highlighting the
+costs and maintenance/support efforts.
+
+Previously, we mentioned Shiny Shiny-Specific PaaS in Sections \@ref(part2-deploy-to-shinyapps-io) 
+and \@ref(platforms-shiny-hosting). This section focuses on more general PaaS that rely on the
+use of containerization technology to deploy Shiny applications.
+
+General PaaS (Platform as a Service) refers to cloud providers that provide a managed
+solution for deploying applications that are not necessarily Shiny such as javascript 
+web applications. General PaaS are often cheaper due to competition among different providers.
+Most providers provide a core set of features which includes deployment using command line tools,
+routing traffic to your application with custom domains, and analytics of your application's usage.
+
+As General PaaS need to support a multitude of applications, the recommended way to deploy
+applications on these cloud providers is to containerize your Shiny application. With containerization, 
+all the required dependencies for your Shiny application are installed in a separate container. 
+This allows you to deploy your application on different computers and platforms without worrying 
+about compatibility issues related to dependencies. We outline how to containerize your Shiny
+application in Chapter \@ref(part2-containerizing-shiny-apps).
+
+Most of the services presented in this section will require familiarity with the command line, 
+as many of the deployment platforms require deployment to their platform with their own
+command line tools. We recommend reviewing at least Chapter \@ref(part1-command-line) if you
+need a refresher on using the command line.
+
+In this section, we outline how to deploy containerized Shiny applications for 
+Heroku (Section \@ref(general-paas-heroku)), DigitalOcean App Platform 
+(Section \@ref(general-paas-doap)), and Fly.io (Section \@ref(general-paas-flyio)). The services that we introduce
+requires a nominal hosting fee for getting setup, as these platforms manage all the backend infrastructure for you.
+Our introduction to General PaaS is non-exhaustive, and there are 
+many other platforms that support the deployment of containerized Shiny applications that we mention in 
+Section \@ref(other-general-paas).
+
+In each of the sections we outline in a box at the beginning some of the considerations you might make
+before choosing the hosting platforms including: costs, skill level, support, and scale and performance.
+<!--costs, dependencies, scale and performance,
+user management, security, and branding.-->

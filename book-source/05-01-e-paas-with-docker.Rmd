@@ -1,0 +1,122 @@
+## Other Providers {#other-general-paas}
+
+We have outlined the processes for deploying your Shiny application using 
+platforms such as Heroku, DigitalOcean App Platform, 
+and Fly.io in this chapter. These platforms simplify deployment by handling 
+networking and application execution, while also providing analytics 
+to monitor your Shiny application's performance. The platforms that we have 
+outlined are not comprehensive, and there are several other deployment 
+options you may want to explore:
+
+- **shinyapps.io** offers native support for the deployment of Python Shiny 
+  and R Shiny applications. It is the only platform to do so. We cover how to 
+  use shinyapps.io in Sections \@ref(part2-deploy-to-shinyapps-io) 
+  and \@ref(platforms-shiny-hosting).
+- **Posit Connect Cloud** natively supports Python 
+  and R Shiny applications as explained in Section \@ref(paas-posit-connect-cloud).
+- **Ploomber** natively supports deploying R Shiny applications as explored 
+  in Section \@ref(paas-ploomber) and also supports R and Python Shiny deployment 
+  via Dockerfiles.
+- **Hugging Face Spaces** offers a service for deploying applications, 
+  requiring Shiny apps to be containerized with a Dockerfile. 
+  Detailed information on deploying Shiny apps (both R and Python) can be 
+  found in their documentation at <https://huggingface.co/docs/hub/en/spaces-sdks-docker-shiny>.
+- **Northflank** provides a deployment service similar to Heroku, with the 
+  option to build applications using buildpacks or deploy containerized Shiny applications.
+- **webapp.io** uses a unique specification called a "Layerfile" (similar to 
+  Dockerfiles) to deploy applications. Once a Layerfile is committed to a 
+  repository, it's used to deploy your application on the webapp.io platform.
+- **porter** allows you to deploy applications directly from a GitHub repository 
+  or Docker registry, supporting both buildpacks and Dockerfiles for deployment.
+- **Coolify** simplifies deployment using a format similar to Docker Compose, 
+  providing an easy way to deploy your containerized application on their platform.
+- **AWS Elastic Beanstalk** supports Shiny application deployment using Dockerfiles, 
+  providing a scalable cloud environment for your app.
+- **Railway** allows you to deploy Shiny applications via Dockerfiles, 
+  streamlining the process of getting your app online.
+- **Koyeb** supports both buildpacks and Dockerfiles for deploying Shiny 
+  applications, offering flexibility in how you package your app.
+- **Render** is another platform that supports Shiny application deployment 
+  using Dockerfiles, providing a reliable and easy-to-use deployment solution.
+- **Qovery** allows you to deploy Shiny applications using either buildpacks or 
+  Dockerfiles by acting as a middleware between a cloud provider. It has support
+  to create deployments on AWS, GCP, and Scaleway. Qovery can also manage 
+  deployments on Kubernetes clusters.
+
+  Almost every platform offers a container deployment option.
+  A possible alternative to a containerized application is buildpacks
+  or nixpacks which define the dependencies needed for your application
+  and are used to build container images of your application.
+  However, buildpacks and nixpacks require configuration that is not
+  covered in this book.
+
+<!-- See convo on https://github.com/posit-dev/py-shiny/issues/372 -->
+
+<!-- ### Important notes about Ploomber: {-}
+Some R packages depend on C libraries, which are not installed by default. 
+To fix this, you can use the Docker deployment option and install necessary system libraries.
+There is a Ploomber example for the Faithful example, but
+for a successful deployment, your app must run on port 80.
+This means that non-privileged users cannot run the app on lower ports, such as 80.
+Therefore the app must run as root, which is a code smell and bad practice.
+Currently there is no way for to select an alternative port.
+You also need to upload the app code and the Dockerfile together as a
+zip file or use the github integration to build the Docker image
+in the Ploomber cloud. You can not simply use an existing image. -->
+
+## Summary
+
+We have explained multiple options to host your Shiny application.
+We have shown how to deploy on Heroku, DigitalOcean App Platform, and Fly.io.
+We have also provided alternative platforms to deploy to.
+
+A common theme among these platforms is the use of buildpacks and containerization 
+to deploy Shiny applications while varying in different costs,
+and abilities to deploy from code repositories so you may want to explore them 
+further to find the best fit for your Shiny application (Table \@ref(tab:paas-comparison)).
+
+Table \@ref(tab:paas-comparison) summarizes the providers in the previous Chapter \@ref(other-general-paas).
+The "Platform" column are all the platforms that support hosting Shiny apps. The subsequent
+columns outline the features of each platform. The "Shiny" column refer to native Shiny application
+support, while "Container", "Buildpack", "Registry", "Nixpack" denote the platforms support
+for using container images, building from buildpacks, pulling from container registries,
+and building from nixpacks.
+
+```{r paas-comparison, eval=TRUE, echo=FALSE}
+capt <- "Platform-as-a-Service (PaaS) offerings that can be used to host Shiny applications."
+z <- matrix(c(
+    "shinyapps.io", "R, Python",        "", "", "", "", 
+    "Posit Connect Cloud", "R, Python", "", "", "", "", 
+    "Ploomber",     "R",                "✔", "", "", "", 
+    "Heroku", "",                       "✔", "✔", "✔", "", 
+    "DigitalOcean App Platform", "",    "✔", "✔", "✔", "", 
+    "Fly.io", "",                       "✔", "✔", "✔", "✔", 
+    "Hugging Face Spaces", "",          "✔", "", "", "", 
+    "Northflank", "",                   "✔", "", "", "", 
+    "webapp.io", "",                    "✔", "", "", "", 
+    "porter", "",                       "✔", "✔", "✔", "", 
+    "Coolify", "",                      "✔", "", "✔", "✔", 
+    "AWS Elastic Beanstalk", "",        "✔", "", "✔", "", 
+    "Railway", "",                      "✔", "", "", "✔", 
+    "Koyeb", "",                        "✔", "✔", "✔", "", 
+    "Render", "",                       "✔", "", "✔", "", 
+    "Qovery", "",                       "✔", "✔", "✔", ""
+), ncol = 6, byrow = TRUE)
+colnames(z) <- c(c("Platform", "Shiny", "Container", "Buildpack", 
+    "Registry", "Nixpack"))
+z2 <- as.data.frame(z[,c(1,2,3,5,4,6)], make.names = FALSE)
+if (!is_latex_output()) {
+    z2 |>
+        kableExtra::kbl(booktabs = TRUE, caption = capt,
+            align = c("l", "c", "c", "c", "c", "c")) |>
+        kableExtra::kable_styling(
+            font_size = NULL)
+} else {
+    z2[z2 == "✔"] <- "Yes"
+    z2 |>
+        kableExtra::kbl(booktabs = TRUE, caption = capt, escape = FALSE, 
+            align = c("l", "c", "c", "c", "c", "c")) |>
+        kableExtra::kable_styling(
+            font_size = NULL)
+}
+```

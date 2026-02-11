@@ -2,7 +2,7 @@
 
 This is the online version of _Hosting Shiny Applications for R and Python_
 by Péter Sólymos and Kalvin Eng,
-a book **currently under development** and intended for a 2025 release by 
+a book **currently under development** and intended for a 2026 release by 
 [CRC Press](https://www.routledge.com/corporate/about-us/crc-press).
 
 Visit the [GitHub repository for this site](https://h10y.github.io/book/).

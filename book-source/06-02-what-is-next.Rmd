@@ -1,0 +1,89 @@
+# What is Next? {#what-is-next}
+
+<!-- EXCLUDE from draft 2 -->
+
+::: {.noteblock data-latex=""}
+This final part explains possible further avenues of exploration 
+for more advanced concepts of hosting
+that we did not cover in this book.
+:::
+
+This book covers all aspects of hosting Shiny applications
+from how the Shiny application runs to the different options
+for distributing your Shiny application to a wider audience.
+However, the journey of Shiny hosting does not end here,
+you may wih to further explore other options to optimize
+your Shiny hosting. This includes self-hosting your
+own PaaS, and using infrastructure as code (IaC) to deploy servers.
+
+
+Shiny hosting is an ever changing landscape: options might disappear, new ones will appear.
+The online version will be updated regularly to reflect these changes.
+
+Proxmox?
+
+Things you might want to consider but are not covered in the book.
+
+- Self-Hosted PaaS (Firecracker) --> move this to Part 4 What is Next
+
+## Self-Hosted PaaS
+
+Provide summaries of other options to consider
+
+cloudfoundry
+
+### Kubernetes
+
+Explain briefly what it does. ShinyProxy and Connect supports it as backend.
+
+<!-- ### MicroVM-based Platforms
+
+Explain the MicroVM/Firecracker setup at high level. <https://firecracker-microvm.github.io/>
+https://opennebula.io/firecracker/ -->
+
+### Open Source Platforms
+Aim to copy Heroku
+
+https://tsuru.io/
+https://github.com/caprover/caprover
+https://dokku.com/
+
+Aim to copy heroku/netlify/etc.
+https://github.com/coollabsio/coolify?tab=readme-ov-file
+
+## Infrastructure as Code
+
+Mention things like Packer and Terraform/OpenTofu, and explain 
+what these do and provide some links.
+
+<!--## Licensing
+LICENSING AGPL, GPL-3
+
+## Quarto -->
+
+## Summary
+
+<!-- # Conclusions -->
+
+This book has covered a wide breadth of topics on how to run and share Shiny apps
+after you have developed them. This book serves a foundation for understanding
+the basics of hosting applications which includes becoming familiar with the
+command line and managing servers.
+
+At this point in the book you should be comfortable with:
+- Running Shiny apps from the terminal
+- Converting Shiny apps to run in containers
+- Connecting to remote servers via SSH
+- Navigating around a remote server using the terminal
+- Starting Shiny container apps with Docker
+- Exploring different platform options to run your Shiny container apps
+
+We also have covered how to manage Shiny apps in production in
+Chapter \@ref(shiny-production). We also cover the next steps 
+in Chapter \@ref(what-is-next).
+
+
+
+<!-- Conclusions & next steps
+
+This is what you've learnt, and this is what you haven't. Go here to find out more. -->
